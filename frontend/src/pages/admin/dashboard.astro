@@ -825,7 +825,7 @@ import '../../styles/admin.css';
                 body: { status: newStatus }
               });
               showStatus('Booking status updated.', 'bookings-status');
-              updateStats();
+              loadBookings(state.bookings.page);
             } catch (err: any) {
               showStatus(err.message || 'Failed to update.', 'bookings-status', true);
             }
@@ -891,6 +891,7 @@ import '../../styles/admin.css';
                 body: { status: newStatus }
               });
               showStatus('Lead status updated.', 'leads-status');
+              loadLeads(state.leads.page);
             } catch (err: any) {
               showStatus(err.message || 'Failed to update lead.', 'leads-status', true);
             }
@@ -1129,15 +1130,19 @@ import '../../styles/admin.css';
     const now = new Date();
     const upcoming = (state.bookings.rows || [])
       .map(b => {
-        const dateStr = b.call_date || (b.call_scheduled_at ? new Date(b.call_scheduled_at).toISOString().slice(0, 10) : '');
-        const timeStr = b.call_time || '';
         let when: Date | null = null;
-        if (dateStr) {
-          when = timeStr ? new Date(`${dateStr}T${timeStr}`) : new Date(dateStr);
+        if (b.call_scheduled_at) {
+          when = new Date(b.call_scheduled_at);
+        } else {
+          const dateStr = b.call_date ? b.call_date.slice(0, 10) : '';
+          const timeStr = b.call_time || '';
+          if (dateStr) {
+            when = timeStr ? new Date(`${dateStr}T${timeStr}`) : new Date(dateStr);
+          }
         }
         return { b, when };
       })
-      .filter(x => x.when && x.when.getTime() >= now.getTime() && x.b.status === 'confirmed')
+      .filter(x => x.when && !isNaN(x.when.getTime()) && x.when.getTime() >= now.getTime() && x.b.status === 'confirmed')
       .sort((a, b) => (a.when as Date).getTime() - (b.when as Date).getTime())[0];
 
     if (upcoming?.b && upcoming?.when) {

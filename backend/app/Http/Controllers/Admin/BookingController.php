@@ -29,6 +29,10 @@ class BookingController extends Controller
             'call_scheduled_at'=> 'sometimes|nullable|date',
         ]));
 
+        if ($booking->status === 'confirmed' && $booking->lead) {
+            $booking->lead->update(['status' => 'booked']);
+        }
+
         return response()->json($booking);
     }
 
@@ -43,7 +47,12 @@ class BookingController extends Controller
             'call_scheduled_at'=> 'nullable|date',
             'plan'             => 'nullable|string|max:50',
             'notes'            => 'nullable|string|max:2000',
+            'status'           => 'sometimes|string|in:pending,confirmed,completed,cancelled',
         ]));
+
+        if ($booking->status === 'confirmed' && $booking->lead) {
+            $booking->lead->update(['status' => 'booked']);
+        }
 
         return response()->json($booking, 201);
     }
