@@ -1264,7 +1264,18 @@ import '../../styles/admin.css';
 
     if (upcoming?.b && upcoming?.when) {
       const lead = upcoming.b.lead || {};
-      if (statNextWhen) statNextWhen.textContent = upcoming.when.toLocaleString();
+      if (statNextWhen) {
+        const d = upcoming.when;
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = String(d.getFullYear()).slice(-2);
+        let hours = d.getHours();
+        const minutes = String(d.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        statNextWhen.textContent = `${day}/${month}/${year}, ${hours}:${minutes} ${ampm}`;
+      }
       if (statNextWho) statNextWho.textContent = `${lead.name || '—'} • ${lead.email || '—'}`;
       if (statNextPill) statNextPill.textContent = 'Confirmed';
     } else {
