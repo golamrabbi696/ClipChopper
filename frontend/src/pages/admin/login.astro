@@ -3,51 +3,315 @@ import Layout from '../../layouts/Layout.astro';
 import '../../styles/admin.css';
 ---
 
-<Layout title="Admin Login — ClipChopper" description="Admin login">
-  <main class="admin-shell">
-    <div class="wrap admin-center admin-login">
-      <header class="admin-topbar">
-        <div class="admin-brand">
-          <div class="admin-badge">CC</div>
-          <div class="admin-titleblock">
-            <span class="admin-kicker">Admin</span>
-            <div class="admin-title">Sign in</div>
-            <div class="admin-subtitle">Use your admin email and password.</div>
+<Layout title="Admin Login — ClipChopper" description="Secure Admin Login Panel">
+  <main class="login-container">
+    <div class="login-glow"></div>
+    <div class="login-card">
+      <div class="login-header">
+        <a href="/" class="logo">
+          <span class="logomark">CC</span>
+          <span class="logotype">CLIPCHOPPER</span>
+        </a>
+        <div class="badge">ADMIN PORTAL</div>
+      </div>
+      
+      <div class="login-body">
+        <h1>Sign In</h1>
+        <p class="subtitle">Access the secure admin control panel.</p>
+        
+        <form id="admin-login-form" class="login-form">
+          <div class="field">
+            <label for="al-email">Admin Email</label>
+            <div class="input-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              <input id="al-email" name="email" type="email" placeholder="admin@clipchopper.com" autocomplete="username" required />
+            </div>
           </div>
-        </div>
-        <div class="admin-actions">
-          <a class="btn btn-ghost" href="/">Back to site</a>
-        </div>
-      </header>
-
-      <section class="admin-main">
-        <section class="admin-card admin-card--login">
-          <div class="admin-card__header">
-            <h3>Login</h3>
-            <p class="admin-help">This area is protected. Only admins can access the dashboard.</p>
+          
+          <div class="field">
+            <label for="al-pass">Password</label>
+            <div class="input-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="input-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <input id="al-pass" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required />
+            </div>
           </div>
-
-          <form id="admin-login-form" class="admin-form">
-            <div class="field">
-              <label for="al-email">Email</label>
-              <input id="al-email" name="email" type="email" autocomplete="username" required />
-            </div>
-            <div class="field">
-              <label for="al-pass">Password</label>
-              <input id="al-pass" name="password" type="password" autocomplete="current-password" required />
-            </div>
-            <div class="admin-form__actions">
-              <button class="btn btn-gold" type="submit">Sign in</button>
-            </div>
-            <p class="admin-status" id="admin-auth-status" aria-live="polite"></p>
-            <div class="admin-sep"></div>
-            <p class="admin-footerhint">Tip: if you just seeded the DB, use the demo admin credentials you created.</p>
-          </form>
-        </section>
-      </section>
+          
+          <button class="submit-btn" type="submit">
+            <span>Sign In</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+          
+          <p class="status-message" id="admin-auth-status" aria-live="polite"></p>
+        </form>
+      </div>
+      
+      <div class="login-footer">
+        <p class="hint">Use your seeded admin or demo admin credentials.</p>
+        <a class="back-link" href="/">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Back to website
+        </a>
+      </div>
     </div>
   </main>
 </Layout>
+
+<style is:global>
+  .login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at top right, rgba(231, 178, 76, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at bottom left, rgba(20, 24, 41, 0.8) 0%, transparent 50%),
+                #0f111a;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  .login-glow {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(231, 178, 76, 0.08) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 440px;
+    background: rgba(20, 24, 41, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px) saturate(120%);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .login-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+  }
+
+  .login-header .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .login-header .logomark {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #e7b24c;
+    color: #141829;
+    font-weight: 850;
+    font-size: 14px;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 0 15px rgba(231, 178, 76, 0.3);
+  }
+
+  .login-header .logotype {
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    color: #ffffff;
+  }
+
+  .login-header .badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 4px 8px;
+    background: rgba(231, 178, 76, 0.1);
+    border: 1px solid rgba(231, 178, 76, 0.2);
+    color: #e7b24c;
+    border-radius: 6px;
+  }
+
+  .login-body h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    margin-bottom: 6px;
+  }
+
+  .login-body .subtitle {
+    font-size: 14px;
+    color: #8c8c9e;
+    margin-bottom: 28px;
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .login-form .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .login-form label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #c4c4d4;
+    letter-spacing: 0.01em;
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 14px;
+    color: #5c5c6e;
+    pointer-events: none;
+    transition: color 0.2s ease;
+    z-index: 5;
+  }
+
+  .login-form input {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px 0 44px;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 10px !important;
+    font-size: 15px !important;
+    color: #ffffff !important;
+    outline: none !important;
+    box-shadow: none !important;
+    transition: all 0.2s ease;
+  }
+
+  .login-form input::placeholder {
+    color: #4a4a5a;
+  }
+
+  .login-form input:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .login-form input:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: #e7b24c !important;
+    box-shadow: 0 0 12px rgba(231, 178, 76, 0.15),
+                0 0 0 1px #e7b24c !important;
+  }
+
+  .login-form input:focus + .input-icon,
+  .login-form input:focus-within + .input-icon {
+    color: #e7b24c;
+  }
+
+  .submit-btn {
+    margin-top: 10px;
+    width: 100%;
+    height: 48px;
+    border-radius: 10px;
+    background: #e7b24c;
+    color: #141829;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 15px rgba(231, 178, 76, 0.25);
+  }
+
+  .submit-btn:hover {
+    background: #f0c06a;
+    transform: translateY(-1.5px);
+    box-shadow: 0 6px 20px rgba(231, 178, 76, 0.4);
+  }
+
+  .submit-btn:active {
+    transform: translateY(0);
+  }
+
+  .status-message {
+    min-height: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    color: #e7b24c;
+    margin-top: 4px;
+    transition: all 0.2s ease;
+  }
+
+  .status-message.is-error {
+    color: #ff6b6b;
+  }
+
+  .login-footer {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .login-footer .hint {
+    font-size: 12px;
+    color: #5c5c6e;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .back-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8c8c9e;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: #e7b24c;
+  }
+</style>
 
 <script>
   const API_BASE = 'http://127.0.0.1:8000';
@@ -99,16 +363,18 @@ import '../../styles/admin.css';
 
   loginForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    status.textContent = '';
+    if (!status) return;
+    status.textContent = 'Signing in...';
     status.classList.remove('is-error');
 
-    const data = Object.fromEntries(new FormData(loginForm));
+    const data = Object.fromEntries(new FormData(loginForm as HTMLFormElement));
     try {
       const payload = await api('/api/v1/auth/login', { method: 'POST', body: data });
       if (payload?.user?.role !== 'admin') throw new Error('Forbidden. Admin access only.');
       setToken(payload.token, payload.user);
+      status.textContent = 'Login successful! Redirecting...';
       window.location.href = '/admin/dashboard';
-    } catch (err) {
+    } catch (err: any) {
       status.textContent = err.message || 'Login failed.';
       status.classList.add('is-error');
     }

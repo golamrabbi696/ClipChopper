@@ -1,19 +1,18 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import '../../styles/admin.css';
-import AdminSidebar from '../../components/admin/AdminSidebar.astro';
 ---
 
-<Layout title="Admin Dashboard - ClipChopper" description="Admin dashboard">
+<Layout title="Admin Dashboard - ClipChopper" description="Secure ClipChopper Admin Dashboard">
   <main class="admin-shell">
     <div class="wrap">
       <header class="admin-topbar">
         <div class="admin-brand">
-          <div class="admin-badge">CC</div>
+          <div class="admin-badge" id="dash-logomark">CC</div>
           <div class="admin-titleblock">
-            <div class="admin-kicker">Admin</div>
-            <div class="admin-title">Dashboard</div>
-            <div class="admin-subtitle" id="admin-who">Signed in</div>
+            <div class="admin-kicker">Admin Portal</div>
+            <div class="admin-title" id="dash-logotype">CLIPCHOPPER</div>
+            <div class="admin-subtitle" id="admin-who">Signed in as admin@clipchopper.com</div>
           </div>
         </div>
         <div class="admin-actions">
@@ -24,10 +23,39 @@ import AdminSidebar from '../../components/admin/AdminSidebar.astro';
       </header>
 
       <div class="admin-app">
-        <AdminSidebar active="dashboard" />
+        <aside class="admin-sidebar" aria-label="Admin navigation">
+          <div class="admin-sidebar__label">Navigation</div>
+          <nav class="admin-nav" id="admin-tab-nav">
+            <button class="admin-nav__link is-active" data-tab="bookings">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+              <span>Bookings</span>
+            </button>
+            <button class="admin-nav__link" data-tab="leads">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <span>Leads</span>
+            </button>
+            <button class="admin-nav__link" data-tab="subscribers">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              <span>Subscribers</span>
+            </button>
+            <button class="admin-nav__link" data-tab="deliverables">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+              <span>Deliverables</span>
+            </button>
+            <button class="admin-nav__link" data-tab="notifications">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <span>Notifications</span>
+            </button>
+            <button class="admin-nav__link" data-tab="branding">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              <span>Site Branding</span>
+            </button>
+          </nav>
+        </aside>
 
         <section class="admin-main">
-          <section class="admin-overview" aria-label="Overview">
+          <!-- Global Stats Overview (Only visible on Bookings Tab) -->
+          <section class="admin-overview" id="stats-overview-section" aria-label="Overview">
             <section class="admin-stat" aria-label="Bookings overview">
               <div class="admin-stat__top">
                 <div class="admin-stat__label">Bookings</div>
@@ -56,90 +84,607 @@ import AdminSidebar from '../../components/admin/AdminSidebar.astro';
             </section>
           </section>
 
-          <section class="admin-card">
-            <div class="admin-card__header admin-card__header--split">
-              <div>
-                <h3>Bookings</h3>
-                <p class="admin-help">Who booked a meeting and when.</p>
+          <!-- TAB 1: Bookings Panel -->
+          <div class="tab-panel is-active" id="panel-bookings">
+            <section class="admin-card">
+              <div class="admin-card__header admin-card__header--split">
+                <div>
+                  <h3>Bookings Management</h3>
+                  <p class="admin-help">Manage scheduling and confirm meetings with clients.</p>
+                </div>
+                <div class="admin-tools" aria-label="Bookings controls">
+                  <input class="admin-input" id="book-search" type="search" placeholder="Search name, email, plan…" />
+                  <select class="admin-select" id="book-status">
+                    <option value="">All statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
               </div>
-              <div class="admin-tools" aria-label="Bookings controls">
-                <label class="admin-sr-only" for="book-search">Search</label>
-                <input class="admin-input" id="book-search" type="search" placeholder="Search name, email, plan…" />
-                <label class="admin-sr-only" for="book-status">Status</label>
-                <select class="admin-select" id="book-status">
-                  <option value="">All statuses</option>
-                  <option value="new">New</option>
-                  <option value="pending">Pending</option>
-                  <option value="confirmed">Confirmed</option>
-                  <option value="completed">Completed</option>
-                  <option value="cancelled">Cancelled</option>
-                  <option value="canceled">Canceled</option>
-                </select>
+
+              <div class="admin-tablewrap">
+                <table class="admin-table" id="bookings-table">
+                  <thead>
+                    <tr>
+                      <th>Who</th>
+                      <th>Email</th>
+                      <th>Scheduled Date & Time</th>
+                      <th>Plan</th>
+                      <th>Status</th>
+                      <th>Created</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bookings-body">
+                    <tr><td colspan="6" class="admin-help text-center">Loading…</td></tr>
+                  </tbody>
+                </table>
               </div>
-            </div>
 
-            <div class="admin-tablewrap">
-              <table class="admin-table" id="bookings-table">
-                <thead>
-                  <tr>
-                    <th>Who</th>
-                    <th>Email</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Plan</th>
-                    <th>Status</th>
-                    <th>Created</th>
-                  </tr>
-                </thead>
-                <tbody id="bookings-body">
-                  <tr><td colspan="7" class="admin-help">Loading…</td></tr>
-                </tbody>
-              </table>
-            </div>
+              <div class="admin-pager">
+                <button class="btn btn-ghost" id="book-prev" type="button">Prev</button>
+                <div class="admin-pill" id="book-page">Page —</div>
+                <button class="btn btn-ghost" id="book-next" type="button">Next</button>
+              </div>
 
-            <div class="admin-pager">
-              <button class="btn btn-ghost" id="book-prev" type="button">Prev</button>
-              <div class="admin-pill" id="book-page">Page —</div>
-              <button class="btn btn-ghost" id="book-next" type="button">Next</button>
-            </div>
+              <p class="admin-status" id="bookings-status" aria-live="polite"></p>
+            </section>
+          </div>
 
-            <p class="admin-status" id="bookings-status" aria-live="polite"></p>
-          </section>
+          <!-- TAB 2: Leads Panel -->
+          <div class="tab-panel" id="panel-leads">
+            <section class="admin-card">
+              <div class="admin-card__header admin-card__header--split">
+                <div>
+                  <h3>Contact Leads</h3>
+                  <p class="admin-help">Sales pipeline generated from the contact form.</p>
+                </div>
+                <div class="admin-tools">
+                  <input class="admin-input" id="lead-search" type="search" placeholder="Search name, email, company…" />
+                  <select class="admin-select" id="lead-status">
+                    <option value="">All statuses</option>
+                    <option value="new">New</option>
+                    <option value="contacted">Contacted</option>
+                    <option value="booked">Booked</option>
+                    <option value="lost">Lost</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="admin-tablewrap">
+                <table class="admin-table" id="leads-table">
+                  <thead>
+                    <tr>
+                      <th>Prospect</th>
+                      <th>Company</th>
+                      <th>Email</th>
+                      <th>Plan Interest</th>
+                      <th>Message</th>
+                      <th>Status</th>
+                      <th>Created</th>
+                    </tr>
+                  </thead>
+                  <tbody id="leads-body">
+                    <tr><td colspan="7" class="admin-help text-center">Loading…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="admin-pager">
+                <button class="btn btn-ghost" id="lead-prev" type="button">Prev</button>
+                <div class="admin-pill" id="lead-page">Page —</div>
+                <button class="btn btn-ghost" id="lead-next" type="button">Next</button>
+              </div>
+
+              <p class="admin-status" id="leads-status" aria-live="polite"></p>
+            </section>
+          </div>
+
+          <!-- TAB 3: Subscribers Panel -->
+          <div class="tab-panel" id="panel-subscribers">
+            <section class="admin-card">
+              <div class="admin-card__header">
+                <h3>Newsletter Subscribers</h3>
+                <p class="admin-help">Subscribers list for email campaigns.</p>
+              </div>
+
+              <div class="admin-tablewrap">
+                <table class="admin-table" id="subscribers-table">
+                  <thead>
+                    <tr>
+                      <th>Email</th>
+                      <th>Name</th>
+                      <th>Subscribed At</th>
+                      <th>Unsubscribed At</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="subscribers-body">
+                    <tr><td colspan="5" class="admin-help text-center">Loading…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="admin-pager">
+                <button class="btn btn-ghost" id="sub-prev" type="button">Prev</button>
+                <div class="admin-pill" id="sub-page">Page —</div>
+                <button class="btn btn-ghost" id="sub-next" type="button">Next</button>
+              </div>
+
+              <p class="admin-status" id="subscribers-status" aria-live="polite"></p>
+            </section>
+          </div>
+
+          <!-- TAB 4: Deliverables Panel -->
+          <div class="tab-panel" id="panel-deliverables">
+            <div class="deliverables-grid">
+              <!-- Upload Deliverable Form -->
+              <section class="admin-card">
+                <div class="admin-card__header">
+                  <h3>Deliver Client Content</h3>
+                  <p class="admin-help">Add videos, written posts, or quote cards to the client portal.</p>
+                </div>
+                <form id="deliverable-upload-form" class="admin-form">
+                  <div class="field">
+                    <label for="del-client">Select Client</label>
+                    <select id="del-client" name="user_id" required>
+                      <option value="">Select client...</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="del-month">Target Month</label>
+                    <input id="del-month" name="month" type="text" placeholder="2026-07" required />
+                  </div>
+                  <div class="field">
+                    <label for="del-type">Content Type</label>
+                    <select id="del-type" name="type" required>
+                      <option value="video">Short-form Video</option>
+                      <option value="post">Written Post / Caption</option>
+                      <option value="quote">Quote Card</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="del-title">Title / Name</label>
+                    <input id="del-title" name="title" type="text" placeholder="5 Tips for CX Growth" required />
+                  </div>
+                  <div class="field">
+                    <label for="del-url">File Link (Vimeo/Drive/etc)</label>
+                    <input id="del-url" name="file_url" type="url" placeholder="https://vimeo.com/..." required />
+                  </div>
+                  <div class="field">
+                    <label for="del-notes">Notes / Captions</label>
+                    <textarea id="del-notes" name="notes" placeholder="Optional notes for client..."></textarea>
+                  </div>
+                  <button class="btn btn-primary" type="submit" id="del-submit-btn">Upload Deliverable</button>
+                  <p class="admin-status" id="deliverables-upload-status" aria-live="polite"></p>
+                </form>
+              </section>
+
+              <!-- Uploaded Deliverables List -->
+              <section class="admin-card">
+                <div class="admin-card__header">
+                  <h3>Uploaded Deliverables</h3>
+                  <p class="admin-help">Review and delete active client deliverables.</p>
+                </div>
+                <div class="admin-tablewrap">
+                  <table class="admin-table" id="deliverables-table">
+                    <thead>
+                      <tr>
+                        <th>Client</th>
+                        <th>Month</th>
+                        <th>Type</th>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="deliverables-body">
+                      <tr><td colspan="6" class="admin-help text-center">Loading…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="admin-pager">
+                  <button class="btn btn-ghost" id="del-prev" type="button">Prev</button>
+                  <div class="admin-pill" id="del-page">Page —</div>
+                  <button class="btn btn-ghost" id="del-next" type="button">Next</button>
+                </div>
+                <p class="admin-status" id="deliverables-list-status" aria-live="polite"></p>
+              </section>
+            </div>
+          </div>
+
+          <!-- TAB 5: Notifications Panel -->
+          <div class="tab-panel" id="panel-notifications">
+            <section class="admin-card admin-card--settings">
+              <div class="admin-card__header">
+                <h3>Webhook Notifications</h3>
+                <p class="admin-help">Send real-time alerts to Discord or Telegram when a booking is created.</p>
+              </div>
+
+              <form id="webhooks-form" class="admin-form">
+                <div class="admin-row">
+                  <label class="admin-switch">
+                    <input type="checkbox" id="wh-discord-enabled" />
+                    <span>Enable Discord Notifications</span>
+                  </label>
+                  <span class="admin-pill">Discord Webhook</span>
+                </div>
+                <div class="field">
+                  <label for="wh-discord-url">Discord Webhook URL</label>
+                  <input id="wh-discord-url" type="url" placeholder="https://discord.com/api/webhooks/..." />
+                </div>
+
+                <div class="admin-sep" role="presentation"></div>
+
+                <div class="admin-row">
+                  <label class="admin-switch">
+                    <input type="checkbox" id="wh-telegram-enabled" />
+                    <span>Enable Telegram Notifications</span>
+                  </label>
+                  <span class="admin-pill">Telegram Bot API</span>
+                </div>
+                <div class="field">
+                  <label for="wh-telegram-token">Telegram Bot Token</label>
+                  <input id="wh-telegram-token" type="password" placeholder="123456:ABC-DEF..." />
+                </div>
+                <div class="field">
+                  <label for="wh-telegram-chat">Telegram Chat ID</label>
+                  <input id="wh-telegram-chat" type="text" placeholder="-1001234567890" />
+                </div>
+
+                <div class="admin-form__actions">
+                  <button class="btn btn-primary" type="submit">Save Configurations</button>
+                  <p class="admin-status" id="webhooks-status" aria-live="polite"></p>
+                </div>
+              </form>
+            </section>
+          </div>
+
+          <!-- TAB 6: Branding Panel -->
+          <div class="tab-panel" id="panel-branding">
+            <section class="admin-card admin-card--settings">
+              <div class="admin-card__header">
+                <h3>Website Branding & Logo</h3>
+                <p class="admin-help">Change the website logo between text elements and a custom image file.</p>
+              </div>
+
+              <form id="branding-form" class="admin-form" enctype="multipart/form-data">
+                <div class="field">
+                  <label>Logo Display Type</label>
+                  <div class="radio-group">
+                    <label class="radio-label">
+                      <input type="radio" name="logo_type" value="text" checked id="brand-logo-text-radio" />
+                      <span>Text-based Logo</span>
+                    </label>
+                    <label class="radio-label">
+                      <input type="radio" name="logo_type" value="image" id="brand-logo-image-radio" />
+                      <span>Image-based Logo (Upload)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Text Logo Options -->
+                <div id="branding-text-options" class="branding-options-group">
+                  <div class="field">
+                    <label for="brand-logo-mark">Logomark (Initials, e.g. CC)</label>
+                    <input id="brand-logo-mark" name="logo_text_mark" type="text" placeholder="CC" maxlength="10" />
+                  </div>
+                  <div class="field">
+                    <label for="brand-logo-type">Logotype (Main Brand Text, e.g. CLIPCHOPPER)</label>
+                    <input id="brand-logo-type" name="logo_text_type" type="text" placeholder="CLIPCHOPPER" maxlength="50" />
+                  </div>
+                </div>
+
+                <!-- Image Logo Options -->
+                <div id="branding-image-options" class="branding-options-group hidden">
+                  <div class="field">
+                    <label for="brand-logo-image">Upload Logo Image (PNG, SVG, JPG - Max 2MB)</label>
+                    <input id="brand-logo-image" name="logo_image" type="file" accept="image/*" />
+                  </div>
+                  <div class="field">
+                    <label>Current Logo Preview</label>
+                    <div class="logo-preview-box" id="logo-preview-container">
+                      <span class="placeholder-text">No image uploaded</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="admin-form__actions">
+                  <button class="btn btn-primary" type="submit">Apply Logo Changes</button>
+                  <p class="admin-status" id="branding-status" aria-live="polite"></p>
+                </div>
+              </form>
+            </section>
+          </div>
         </section>
       </div>
     </div>
   </main>
 </Layout>
 
+<style is:global>
+  /* Premium Dashboard Styles overrides */
+  .admin-sidebar {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(20, 24, 41, 0.08) !important;
+    border-radius: 16px !important;
+    padding: 24px 16px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02) !important;
+  }
+  
+  .admin-sidebar__label {
+    font-size: 10px !important;
+    letter-spacing: 0.16em !important;
+    margin-bottom: 14px !important;
+    color: var(--gold-dk) !important;
+    opacity: 0.85;
+  }
+
+  .admin-nav__link {
+    cursor: pointer;
+    border: 1px solid transparent !important;
+    outline: none;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start !important; /* Forces left-alignment next to icon */
+    gap: 12px;
+    padding: 12px 16px !important;
+    border-radius: 12px !important;
+    background: rgba(244, 243, 240, 0.4) !important;
+    color: var(--ink-2) !important;
+  }
+  
+  .admin-nav__link:hover {
+    background: rgba(244, 243, 240, 0.95) !important;
+    border-color: rgba(20, 24, 41, 0.08) !important;
+    color: var(--ink) !important;
+    transform: translateX(4px);
+  }
+  
+  .admin-nav__link.is-active {
+    background: rgba(231, 178, 76, 0.12) !important;
+    border-color: rgba(231, 178, 76, 0.3) !important;
+    color: var(--gold-dk) !important;
+    font-weight: 800;
+    box-shadow: 0 4px 12px rgba(231, 178, 76, 0.04);
+  }
+
+  .nav-icon {
+    flex-shrink: 0;
+    opacity: 0.65;
+    transition: opacity 0.2s ease;
+    width: 18px;
+    height: 18px;
+  }
+  
+  .admin-nav__link:hover .nav-icon,
+  .admin-nav__link.is-active .nav-icon {
+    opacity: 1;
+    color: var(--gold-dk);
+  }
+
+  /* Admin Cards */
+  .admin-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(20, 24, 41, 0.08) !important;
+    border-radius: 16px !important;
+    padding: 32px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02) !important;
+    animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Stats overview cards */
+  .admin-stat {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid rgba(20, 24, 41, 0.06) !important;
+    border-radius: 16px !important;
+    padding: 24px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .admin-stat:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(20, 24, 41, 0.06) !important;
+    border-color: rgba(231, 178, 76, 0.25) !important;
+  }
+
+  .tab-panel {
+    display: none;
+  }
+  
+  .tab-panel.is-active {
+    display: block;
+  }
+
+  /* Admin tables */
+  .admin-tablewrap {
+    border: 1px solid rgba(20, 24, 41, 0.08) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
+  }
+
+  .admin-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .admin-table th {
+    background: #141829 !important;
+    color: #f4f3f0 !important;
+    font-weight: 700 !important;
+    font-size: 11px !important;
+    letter-spacing: 0.1em !important;
+    text-transform: uppercase;
+    padding: 16px 20px !important;
+    border-bottom: none !important;
+  }
+
+  .admin-table td {
+    padding: 16px 20px !important;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(20, 24, 41, 0.05) !important;
+    font-size: 13.5px !important;
+  }
+
+  .admin-table tbody tr:last-child td {
+    border-bottom: none !important;
+  }
+
+  /* Form elements */
+  .admin-input, .admin-select, textarea, select {
+    border-radius: 10px !important;
+    border: 1px solid rgba(20, 24, 41, 0.15) !important;
+    padding: 0 16px !important;
+    height: 46px !important;
+    background: white !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease;
+  }
+
+  .admin-input:focus, .admin-select:focus, textarea:focus, select:focus {
+    border-color: var(--gold-dk) !important;
+    box-shadow: 0 0 0 4px rgba(231, 178, 76, 0.12) !important;
+  }
+
+  textarea {
+    padding: 12px 16px !important;
+    min-height: 100px;
+    font-family: inherit;
+    resize: vertical;
+  }
+
+  .status-select {
+    padding: 6px 12px !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    height: 32px !important;
+    font-weight: 700 !important;
+    background: #fff !important;
+    border: 1px solid rgba(20, 24, 41, 0.12) !important;
+  }
+
+  /* Deliverables configuration */
+  .deliverables-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  @media (min-width: 1024px) {
+    .deliverables-grid {
+      grid-template-columns: 420px 1fr;
+      align-items: start;
+    }
+  }
+
+  /* Radios */
+  .radio-group {
+    display: flex;
+    gap: 24px;
+    margin-top: 8px;
+  }
+  
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  
+  .radio-label input {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--gold-dk);
+  }
+
+  /* Previews */
+  .logo-preview-box {
+    width: 100%;
+    min-height: 100px;
+    border: 2px dashed rgba(20, 24, 41, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(244, 243, 240, 0.3);
+  }
+  
+  .logo-preview-box img {
+    max-height: 60px;
+    max-width: 220px;
+    object-fit: contain;
+  }
+
+  .placeholder-text {
+    font-size: 13px;
+    color: var(--faint);
+    font-weight: 600;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .branding-options-group {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .delete-btn {
+    border: none;
+    background: none;
+    color: #E86F50;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .delete-btn:hover {
+    background: rgba(232, 111, 80, 0.1);
+    transform: scale(1.08);
+  }
+
+  .admin-help {
+    margin-top: 4px;
+  }
+</style>
+
 <script>
   const API_BASE = 'http://127.0.0.1:8000';
-
   const TOKEN_KEY = 'cc_admin_token';
   const USER_KEY = 'cc_admin_user';
 
-  const bookingsBody = document.getElementById('bookings-body');
-  const bookingsStatus = document.getElementById('bookings-status');
-  const bookPrev = document.getElementById('book-prev');
-  const bookNext = document.getElementById('book-next');
-  const bookPage = document.getElementById('book-page');
-  const bookSearch = document.getElementById('book-search');
-  const bookStatus = document.getElementById('book-status');
-
-  const logoutBtn = document.getElementById('admin-logout');
-  const refreshBtn = document.getElementById('admin-refresh');
-  const who = document.getElementById('admin-who');
-
-  const statBookingsTotal = document.getElementById('stat-bookings-total');
-  const statBookingsMeta = document.getElementById('stat-bookings-meta');
-  const statBookingsPill = document.getElementById('stat-bookings-pill');
-  const statNextWhen = document.getElementById('stat-next-when');
-  const statNextWho = document.getElementById('stat-next-who');
-  const statNextPill = document.getElementById('stat-next-pill');
-  const statWebhooksPill = document.getElementById('stat-webhooks-pill');
-  const statWebhooksValue = document.getElementById('stat-webhooks-value');
-  const statWebhooksMeta = document.getElementById('stat-webhooks-meta');
-
-  let state = { page: 1, lastPage: 1, total: null, rows: [], webhooks: null };
+  // State managers
+  let state = {
+    bookings: { page: 1, lastPage: 1, rows: [], total: null },
+    leads: { page: 1, lastPage: 1, rows: [], total: null },
+    subs: { page: 1, lastPage: 1, rows: [], total: null },
+    dels: { page: 1, lastPage: 1, rows: [], total: null },
+    webhooks: null,
+    settings: null,
+    clients: []
+  };
 
   function getToken() {
     return localStorage.getItem(TOKEN_KEY) || '';
@@ -150,117 +695,16 @@ import AdminSidebar from '../../components/admin/AdminSidebar.astro';
     localStorage.removeItem(USER_KEY);
   }
 
-  function escapeHtml(value) {
-    return String(value ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  }
-
-  function normalizeStatus(value) {
-    const s = String(value || '').trim().toLowerCase();
-    if (!s) return '';
-    if (s === 'canceled') return 'cancelled';
-    return s;
-  }
-
-  function statusLabel(value) {
-    const s = normalizeStatus(value);
-    if (!s) return '—';
-    return s.charAt(0).toUpperCase() + s.slice(1);
-  }
-
-  function getCallDateTime(b) {
-    const callDate = b.call_date || (b.call_scheduled_at ? new Date(b.call_scheduled_at).toISOString().slice(0, 10) : '');
-    const callTime = b.call_time || '';
-    return { callDate, callTime };
-  }
-
-  function parseCallDateTime(b) {
-    const { callDate, callTime } = getCallDateTime(b);
-    if (!callDate) return null;
-    if (callTime) {
-      const d = new Date(`${callDate}T${callTime}`);
-      return Number.isNaN(d.getTime()) ? null : d;
-    }
-    const d = new Date(callDate);
-    return Number.isNaN(d.getTime()) ? null : d;
-  }
-
-  function applyBookingFilters(rows) {
-    const q = (bookSearch?.value || '').trim().toLowerCase();
-    const status = normalizeStatus(bookStatus?.value || '');
-    return (rows || []).filter((b) => {
-      if (status && normalizeStatus(b.status) !== status) return false;
-      if (!q) return true;
-      const lead = b.lead || {};
-      const { callDate, callTime } = getCallDateTime(b);
-      const hay = [
-        lead.name,
-        lead.email,
-        b.plan,
-        b.status,
-        callDate,
-        callTime,
-      ].map((v) => String(v ?? '').toLowerCase()).join(' | ');
-      return hay.includes(q);
-    });
-  }
-
-  function updateOverview() {
-    const showing = state.rows?.length || 0;
-    const total = typeof state.total === 'number' ? state.total : null;
-
-    if (statBookingsTotal) statBookingsTotal.textContent = total !== null ? String(total) : String(showing);
-    if (statBookingsMeta) statBookingsMeta.textContent = total !== null ? `Total bookings • Showing ${showing}` : `Showing ${showing}`;
-    if (statBookingsPill) statBookingsPill.textContent = `Page ${state.page} / ${state.lastPage}`;
-
-    const now = new Date();
-    const upcoming = (state.rows || [])
-      .map((b) => ({ b, when: parseCallDateTime(b) }))
-      .filter((x) => x.when && x.when.getTime() >= now.getTime())
-      .sort((a, b) => a.when.getTime() - b.when.getTime())[0];
-
-    if (upcoming?.b && upcoming?.when) {
-      const lead = upcoming.b.lead || {};
-      if (statNextWhen) statNextWhen.textContent = upcoming.when.toLocaleString();
-      if (statNextWho) statNextWho.textContent = `${lead.name || '—'} • ${lead.email || '—'}`;
-      if (statNextPill) statNextPill.textContent = 'Upcoming';
-    } else {
-      if (statNextWhen) statNextWhen.textContent = '—';
-      if (statNextWho) statNextWho.textContent = 'No upcoming meetings';
-      if (statNextPill) statNextPill.textContent = '—';
-    }
-
-    const discordOn = !!state.webhooks?.discord_enabled;
-    const telegramOn = !!state.webhooks?.telegram_enabled;
-    const enabledCount = (discordOn ? 1 : 0) + (telegramOn ? 1 : 0);
-    const webhooksKnown = state.webhooks !== null;
-
-    if (statWebhooksPill) statWebhooksPill.textContent = webhooksKnown ? (enabledCount ? `${enabledCount} enabled` : 'Disabled') : '-';
-    if (statWebhooksValue) statWebhooksValue.textContent = webhooksKnown ? (enabledCount ? 'Active' : 'Off') : '-';
-    if (statWebhooksMeta) statWebhooksMeta.textContent = webhooksKnown ? `Discord: ${discordOn ? 'On' : 'Off'} | Telegram: ${telegramOn ? 'On' : 'Off'}` : 'Unable to load settings.';
-  }
-
-  function fmtDate(iso) {
-    if (!iso) return '—';
-    const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return iso;
-    return d.toLocaleString();
-  }
-
-  async function api(path, { method = 'GET', body } = {}) {
-    const headers = { 'Accept': 'application/json' };
+  async function api(path, { method = 'GET', body, isMultipart = false } = {}) {
+    const headers: any = { 'Accept': 'application/json' };
     const token = getToken();
     if (token) headers['Authorization'] = `Bearer ${token}`;
-    if (body !== undefined) headers['Content-Type'] = 'application/json';
+    if (body !== undefined && !isMultipart) headers['Content-Type'] = 'application/json';
 
     const res = await fetch(`${API_BASE}${path}`, {
       method,
       headers,
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      body: body !== undefined ? (isMultipart ? body : JSON.stringify(body)) : undefined,
     });
 
     const data = await res.json().catch(() => ({}));
@@ -276,104 +720,612 @@ import AdminSidebar from '../../components/admin/AdminSidebar.astro';
     if (!token) return false;
     try {
       const me = await api('/api/v1/auth/me');
-      if (who) who.textContent = `Signed in as ${me?.email || 'admin'}`;
+      const whoEl = document.getElementById('admin-who');
+      if (whoEl) whoEl.textContent = `Signed in as ${me?.email || 'admin'}`;
       return me?.role === 'admin';
     } catch {
       return false;
     }
   }
 
-  function renderBookings(rows) {
-    const filtered = applyBookingFilters(rows);
-    if (!rows?.length) {
-      bookingsBody.innerHTML = `<tr><td colspan="7" class="admin-help">No bookings yet.</td></tr>`;
-      return;
-    }
-    if (!filtered?.length) {
-      bookingsBody.innerHTML = `<tr><td colspan="7" class="admin-help">No matches.</td></tr>`;
-      return;
-    }
+  // --- TAB Switcher ---
+  function setupTabs() {
+    const tabButtons = document.querySelectorAll('#admin-tab-nav .admin-nav__link');
+    const panels = document.querySelectorAll('.tab-panel');
+    const statsOverview = document.getElementById('stats-overview-section');
 
-    bookingsBody.innerHTML = filtered.map((b) => {
-      const lead = b.lead || {};
-      const { callDate, callTime } = getCallDateTime(b);
-      const status = normalizeStatus(b.status);
-      const statusClass = status ? `admin-tag admin-tag--${status}` : 'admin-tag';
-      return `
-        <tr>
-          <td>${lead.name ?? '—'}</td>
-          <td>${lead.email ?? '—'}</td>
-          <td>${callDate || '—'}</td>
-          <td>${callTime || '—'}</td>
-          <td>${b.plan ?? '—'}</td>
-          <td><span class="${statusClass}">${b.status ?? '—'}</span></td>
-          <td>${fmtDate(b.created_at)}</td>
-        </tr>
-      `;
-    }).join('');
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.getAttribute('data-tab');
+        
+        tabButtons.forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+
+        panels.forEach(p => p.classList.remove('is-active'));
+        document.getElementById(`panel-${tab}`)?.classList.add('is-active');
+
+        // Stats overview only on Bookings Tab
+        if (statsOverview) {
+          statsOverview.style.display = tab === 'bookings' ? 'grid' : 'none';
+        }
+      });
+    });
   }
 
+  // --- Utility functions ---
+  function showStatus(text, elementId, isError = false) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    el.textContent = text;
+    el.classList.toggle('is-error', isError);
+    setTimeout(() => {
+      el.textContent = '';
+      el.classList.remove('is-error');
+    }, 4000);
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return Number.isNaN(d.getTime()) ? '—' : d.toLocaleString();
+  }
+
+  // --- Data Loaders ---
   async function loadBookings(page = 1) {
-    bookingsStatus.textContent = '';
-    bookingsStatus.classList.remove('is-error');
-    bookingsBody.innerHTML = `<tr><td colspan="7" class="admin-help">Loading…</td></tr>`;
+    const search = (document.getElementById('book-search') as HTMLInputElement)?.value || '';
+    const status = (document.getElementById('book-status') as HTMLSelectElement)?.value || '';
+    const tbody = document.getElementById('bookings-body');
+    const pageIndicator = document.getElementById('book-page');
+    if (!tbody) return;
+
     try {
-      const payload = await api(`/api/v1/admin/bookings?page=${page}`);
-      const rows = payload?.data ?? payload?.data?.data ?? [];
-      state.rows = rows;
-      state.total = typeof payload?.total === 'number' ? payload.total : null;
-      renderBookings(state.rows);
+      const query = new URLSearchParams({ page: String(page), search, status }).toString();
+      const payload = await api(`/api/v1/admin/bookings?${query}`);
+      
+      state.bookings.rows = payload.data || [];
+      state.bookings.page = payload.current_page || 1;
+      state.bookings.lastPage = payload.last_page || 1;
+      state.bookings.total = payload.total || 0;
 
-      const currentPage = payload?.current_page ?? page;
-      const lastPage = payload?.last_page ?? 1;
-      state.page = currentPage;
-      state.lastPage = lastPage;
-      bookPage.textContent = `Page ${currentPage} / ${lastPage}`;
+      if (state.bookings.rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="admin-help text-center">No bookings found.</td></tr>`;
+      } else {
+        tbody.innerHTML = state.bookings.rows.map(b => {
+          const lead = b.lead || {};
+          const scheduledAt = b.call_scheduled_at ? new Date(b.call_scheduled_at).toLocaleString() : '—';
+          return `
+            <tr>
+              <td><strong>${lead.name || '—'}</strong></td>
+              <td>${lead.email || '—'}</td>
+              <td>${scheduledAt} (${b.call_timezone || 'UTC'})</td>
+              <td><span class="admin-pill">${b.plan || '—'}</span></td>
+              <td>
+                <select class="status-select booking-status-select" data-id="${b.id}">
+                  <option value="pending" ${b.status === 'pending' ? 'selected' : ''}>Pending</option>
+                  <option value="confirmed" ${b.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                  <option value="completed" ${b.status === 'completed' ? 'selected' : ''}>Completed</option>
+                  <option value="cancelled" ${b.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                </select>
+              </td>
+              <td>${fmtDate(b.created_at)}</td>
+            </tr>
+          `;
+        }).join('');
 
-      bookPrev.disabled = currentPage <= 1;
-      bookNext.disabled = currentPage >= lastPage;
-      updateOverview();
-    } catch (e) {
-      bookingsBody.innerHTML = `<tr><td colspan="7" class="admin-help">Failed to load bookings.</td></tr>`;
-      bookingsStatus.textContent = e.message || 'Failed to load bookings.';
-      bookingsStatus.classList.add('is-error');
-      state.rows = [];
-      state.total = null;
-      updateOverview();
+        // Bind status changes
+        document.querySelectorAll('.booking-status-select').forEach(select => {
+          select.addEventListener('change', async (e) => {
+            const id = (e.target as HTMLSelectElement).getAttribute('data-id');
+            const newStatus = (e.target as HTMLSelectElement).value;
+            try {
+              await api(`/api/v1/admin/bookings/${id}`, {
+                method: 'PATCH',
+                body: { status: newStatus }
+              });
+              showStatus('Booking status updated.', 'bookings-status');
+              updateStats();
+            } catch (err: any) {
+              showStatus(err.message || 'Failed to update.', 'bookings-status', true);
+            }
+          });
+        });
+      }
+
+      if (pageIndicator) pageIndicator.textContent = `Page ${state.bookings.page} / ${state.bookings.lastPage}`;
+      updateStats();
+    } catch (err: any) {
+      tbody.innerHTML = `<tr><td colspan="6" class="admin-help text-center text-error">Failed to load bookings.</td></tr>`;
+    }
+  }
+
+  async function loadLeads(page = 1) {
+    const search = (document.getElementById('lead-search') as HTMLInputElement)?.value || '';
+    const status = (document.getElementById('lead-status') as HTMLSelectElement)?.value || '';
+    const tbody = document.getElementById('leads-body');
+    const pageIndicator = document.getElementById('lead-page');
+    if (!tbody) return;
+
+    try {
+      const query = new URLSearchParams({ page: String(page), search, status }).toString();
+      const payload = await api(`/api/v1/admin/leads?${query}`);
+      
+      state.leads.rows = payload.data || [];
+      state.leads.page = payload.current_page || 1;
+      state.leads.lastPage = payload.last_page || 1;
+      state.leads.total = payload.total || 0;
+
+      if (state.leads.rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="admin-help text-center">No leads found.</td></tr>`;
+      } else {
+        tbody.innerHTML = state.leads.rows.map(l => {
+          return `
+            <tr>
+              <td><strong>${l.name || '—'}</strong></td>
+              <td>${l.company || '—'}</td>
+              <td>${l.email || '—'}</td>
+              <td><span class="admin-pill">${l.plan || '—'}</span></td>
+              <td class="admin-help" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${l.message || ''}">${l.message || '—'}</td>
+              <td>
+                <select class="status-select lead-status-select" data-id="${l.id}">
+                  <option value="new" ${l.status === 'new' ? 'selected' : ''}>New</option>
+                  <option value="contacted" ${l.status === 'contacted' ? 'selected' : ''}>Contacted</option>
+                  <option value="booked" ${l.status === 'booked' ? 'selected' : ''}>Booked</option>
+                  <option value="lost" ${l.status === 'lost' ? 'selected' : ''}>Lost</option>
+                </select>
+              </td>
+              <td>${fmtDate(l.created_at)}</td>
+            </tr>
+          `;
+        }).join('');
+
+        // Bind status changes
+        document.querySelectorAll('.lead-status-select').forEach(select => {
+          select.addEventListener('change', async (e) => {
+            const id = (e.target as HTMLSelectElement).getAttribute('data-id');
+            const newStatus = (e.target as HTMLSelectElement).value;
+            try {
+              await api(`/api/v1/admin/leads/${id}`, {
+                method: 'PATCH',
+                body: { status: newStatus }
+              });
+              showStatus('Lead status updated.', 'leads-status');
+            } catch (err: any) {
+              showStatus(err.message || 'Failed to update lead.', 'leads-status', true);
+            }
+          });
+        });
+      }
+
+      if (pageIndicator) pageIndicator.textContent = `Page ${state.leads.page} / ${state.leads.lastPage}`;
+    } catch (err: any) {
+      tbody.innerHTML = `<tr><td colspan="7" class="admin-help text-center text-error">Failed to load leads.</td></tr>`;
+    }
+  }
+
+  async function loadSubscribers(page = 1) {
+    const tbody = document.getElementById('subscribers-body');
+    const pageIndicator = document.getElementById('sub-page');
+    if (!tbody) return;
+
+    try {
+      const payload = await api(`/api/v1/admin/subscribers?page=${page}`);
+      
+      state.subs.rows = payload.data || [];
+      state.subs.page = payload.current_page || 1;
+      state.subs.lastPage = payload.last_page || 1;
+      state.subs.total = payload.total || 0;
+
+      if (state.subs.rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="admin-help text-center">No subscribers found.</td></tr>`;
+      } else {
+        tbody.innerHTML = state.subs.rows.map(s => {
+          const status = s.unsubscribed_at ? 'Unsubscribed' : 'Active';
+          const tagClass = s.unsubscribed_at ? 'admin-tag--cancelled' : 'admin-tag--confirmed';
+          return `
+            <tr>
+              <td><strong>${s.email || '—'}</strong></td>
+              <td>${s.name || '—'}</td>
+              <td>${fmtDate(s.subscribed_at)}</td>
+              <td>${s.unsubscribed_at ? fmtDate(s.unsubscribed_at) : '—'}</td>
+              <td><span class="admin-tag ${tagClass}">${status}</span></td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      if (pageIndicator) pageIndicator.textContent = `Page ${state.subs.page} / ${state.subs.lastPage}`;
+    } catch (err: any) {
+      tbody.innerHTML = `<tr><td colspan="5" class="admin-help text-center text-error">Failed to load subscribers.</td></tr>`;
+    }
+  }
+
+  async function loadClients() {
+    const clientSelect = document.getElementById('del-client') as HTMLSelectElement;
+    if (!clientSelect) return;
+    try {
+      const clients = await api('/api/v1/admin/clients');
+      state.clients = clients || [];
+      
+      // Populate select dropdown
+      clientSelect.innerHTML = '<option value="">Select client...</option>' + 
+        state.clients.map(c => `<option value="${c.id}">${c.name} (${c.email})</option>`).join('');
+    } catch (err: any) {
+      console.error('Failed to load clients list.', err);
+    }
+  }
+
+  async function loadDeliverables(page = 1) {
+    const tbody = document.getElementById('deliverables-body');
+    const pageIndicator = document.getElementById('del-page');
+    if (!tbody) return;
+
+    try {
+      const payload = await api(`/api/v1/admin/deliverables?page=${page}`);
+      
+      state.dels.rows = payload.data || [];
+      state.dels.page = payload.current_page || 1;
+      state.dels.lastPage = payload.last_page || 1;
+      state.dels.total = payload.total || 0;
+
+      if (state.dels.rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="admin-help text-center">No deliverables found.</td></tr>`;
+      } else {
+        tbody.innerHTML = state.dels.rows.map(d => {
+          const user = d.user || {};
+          const icon = d.type === 'video' ? '🎬' : (d.type === 'post' ? '✍️' : '🖼️');
+          return `
+            <tr>
+              <td><strong>${user.name || '—'}</strong></td>
+              <td>${d.month || '—'}</td>
+              <td><span class="admin-pill">${icon} ${d.type}</span></td>
+              <td><a href="${d.file_url}" target="_blank" class="back-link" style="font-weight:700">${d.title || 'Link'}</a></td>
+              <td><span class="admin-tag admin-tag--pending">${d.status}</span></td>
+              <td>
+                <button class="delete-btn deliverable-delete-btn" data-id="${d.id}" title="Delete deliverable">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Bind delete action
+        document.querySelectorAll('.deliverable-delete-btn').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            const target = e.currentTarget as HTMLButtonElement;
+            const id = target.getAttribute('data-id');
+            if (confirm('Are you sure you want to delete this deliverable?')) {
+              try {
+                await api(`/api/v1/admin/deliverables/${id}`, { method: 'DELETE' });
+                showStatus('Deliverable deleted.', 'deliverables-list-status');
+                loadDeliverables(state.dels.page);
+              } catch (err: any) {
+                showStatus(err.message || 'Failed to delete.', 'deliverables-list-status', true);
+              }
+            }
+          });
+        });
+      }
+
+      if (pageIndicator) pageIndicator.textContent = `Page ${state.dels.page} / ${state.dels.lastPage}`;
+    } catch (err: any) {
+      tbody.innerHTML = `<tr><td colspan="6" class="admin-help text-center text-error">Failed to load deliverables list.</td></tr>`;
     }
   }
 
   async function loadWebhooks() {
     try {
       const s = await api('/api/v1/admin/webhooks');
-      state.webhooks = {
-        discord_enabled: !!s.discord_enabled,
-        telegram_enabled: !!s.telegram_enabled,
-      };
-      updateOverview();
-    } catch (e) {
-      state.webhooks = null;
-      updateOverview();
+      state.webhooks = s;
+
+      const whDiscordEnabled = document.getElementById('wh-discord-enabled') as HTMLInputElement;
+      const whDiscordUrl = document.getElementById('wh-discord-url') as HTMLInputElement;
+      const whTelegramEnabled = document.getElementById('wh-telegram-enabled') as HTMLInputElement;
+      const whTelegramToken = document.getElementById('wh-telegram-token') as HTMLInputElement;
+      const whTelegramChat = document.getElementById('wh-telegram-chat') as HTMLInputElement;
+
+      if (whDiscordEnabled) whDiscordEnabled.checked = !!s.discord_enabled;
+      if (whDiscordUrl) whDiscordUrl.value = s.discord_webhook_url || '';
+      if (whTelegramEnabled) whTelegramEnabled.checked = !!s.telegram_enabled;
+      if (whTelegramToken) whTelegramToken.value = s.telegram_bot_token || '';
+      if (whTelegramChat) whTelegramChat.value = s.telegram_chat_id || '';
+
+      updateStats();
+    } catch (err) {
+      console.error('Failed to load webhook settings.', err);
     }
   }
 
-  async function loadAll() {
-    await Promise.all([loadWebhooks(), loadBookings(state.page)]);
+  async function loadSiteSettings() {
+    try {
+      const settings = await api('/api/v1/settings');
+      state.settings = settings;
+
+      const brandLogoMark = document.getElementById('brand-logo-mark') as HTMLInputElement;
+      const brandLogoType = document.getElementById('brand-logo-type') as HTMLInputElement;
+      const brandTextRadio = document.getElementById('brand-logo-text-radio') as HTMLInputElement;
+      const brandImageRadio = document.getElementById('brand-logo-image-radio') as HTMLInputElement;
+      const textGroup = document.getElementById('branding-text-options');
+      const imageGroup = document.getElementById('branding-image-options');
+      const previewContainer = document.getElementById('logo-preview-container');
+
+      if (brandLogoMark) brandLogoMark.value = settings.logo_text_mark || 'CC';
+      if (brandLogoType) brandLogoType.value = settings.logo_text_type || 'CLIPCHOPPER';
+      
+      if (settings.logo_type === 'image') {
+        if (brandImageRadio) brandImageRadio.checked = true;
+        textGroup?.classList.add('hidden');
+        imageGroup?.classList.remove('hidden');
+      } else {
+        if (brandTextRadio) brandTextRadio.checked = true;
+        textGroup?.classList.remove('hidden');
+        imageGroup?.classList.add('hidden');
+      }
+
+      if (previewContainer) {
+        if (settings.logo_image_url) {
+          previewContainer.innerHTML = `<img src="${settings.logo_image_url}" alt="Logo Preview" />`;
+        } else {
+          previewContainer.innerHTML = `<span class="placeholder-text">No image uploaded</span>`;
+        }
+      }
+
+      updateLogoInHeader(settings);
+    } catch (err) {
+      console.error('Failed to load branding settings.', err);
+    }
   }
 
-  bookPrev?.addEventListener('click', () => loadBookings(Math.max(1, state.page - 1)));
-  bookNext?.addEventListener('click', () => loadBookings(Math.min(state.lastPage, state.page + 1)));
-  bookSearch?.addEventListener('input', () => renderBookings(state.rows));
-  bookStatus?.addEventListener('change', () => renderBookings(state.rows));
+  function updateLogoInHeader(settings) {
+    const badge = document.getElementById('dash-logomark');
+    const title = document.getElementById('dash-logotype');
+    const brand = document.querySelector('.admin-brand');
 
-  logoutBtn?.addEventListener('click', () => {
-    clearToken();
-    window.location.href = '/admin/login';
-  });
+    if (!brand) return;
 
-  refreshBtn?.addEventListener('click', async () => {
-    await loadAll();
-  });
+    if (settings.logo_type === 'image' && settings.logo_image_url) {
+      brand.innerHTML = `
+        <img src="${settings.logo_image_url}" alt="ClipChopper" style="height: 40px; max-width: 180px; object-fit: contain; border-radius: 6px;" />
+        <div class="admin-titleblock" style="margin-left: 12px">
+          <div class="admin-kicker">Admin Portal</div>
+          <div class="admin-subtitle" id="admin-who">Signed in</div>
+        </div>
+      `;
+      ensureAdminSession();
+    } else {
+      brand.innerHTML = `
+        <div class="admin-badge" id="dash-logomark">${settings.logo_text_mark || 'CC'}</div>
+        <div class="admin-titleblock">
+          <div class="admin-kicker">Admin Portal</div>
+          <div class="admin-title" id="dash-logotype">${settings.logo_text_type || 'CLIPCHOPPER'}</div>
+          <div class="admin-subtitle" id="admin-who">Signed in</div>
+        </div>
+      `;
+      ensureAdminSession();
+    }
+  }
+
+  function updateStats() {
+    const showing = state.bookings.rows?.length || 0;
+    const total = state.bookings.total;
+
+    const statBookingsTotal = document.getElementById('stat-bookings-total');
+    const statBookingsMeta = document.getElementById('stat-bookings-meta');
+    const statBookingsPill = document.getElementById('stat-bookings-pill');
+    const statNextWhen = document.getElementById('stat-next-when');
+    const statNextWho = document.getElementById('stat-next-who');
+    const statNextPill = document.getElementById('stat-next-pill');
+    const statWebhooksPill = document.getElementById('stat-webhooks-pill');
+    const statWebhooksValue = document.getElementById('stat-webhooks-value');
+    const statWebhooksMeta = document.getElementById('stat-webhooks-meta');
+
+    if (statBookingsTotal) statBookingsTotal.textContent = total !== null ? String(total) : String(showing);
+    if (statBookingsMeta) statBookingsMeta.textContent = total !== null ? `Total bookings • Showing ${showing}` : `Showing ${showing}`;
+    if (statBookingsPill) statBookingsPill.textContent = `Page ${state.bookings.page} / ${state.bookings.lastPage}`;
+
+    // Find next upcoming meeting
+    const now = new Date();
+    const upcoming = (state.bookings.rows || [])
+      .map(b => {
+        const dateStr = b.call_date || (b.call_scheduled_at ? new Date(b.call_scheduled_at).toISOString().slice(0, 10) : '');
+        const timeStr = b.call_time || '';
+        let when: Date | null = null;
+        if (dateStr) {
+          when = timeStr ? new Date(`${dateStr}T${timeStr}`) : new Date(dateStr);
+        }
+        return { b, when };
+      })
+      .filter(x => x.when && x.when.getTime() >= now.getTime() && x.b.status === 'confirmed')
+      .sort((a, b) => (a.when as Date).getTime() - (b.when as Date).getTime())[0];
+
+    if (upcoming?.b && upcoming?.when) {
+      const lead = upcoming.b.lead || {};
+      if (statNextWhen) statNextWhen.textContent = upcoming.when.toLocaleString();
+      if (statNextWho) statNextWho.textContent = `${lead.name || '—'} • ${lead.email || '—'}`;
+      if (statNextPill) statNextPill.textContent = 'Confirmed';
+    } else {
+      if (statNextWhen) statNextWhen.textContent = '—';
+      if (statNextWho) statNextWho.textContent = 'No upcoming confirmed meetings';
+      if (statNextPill) statNextPill.textContent = '—';
+    }
+
+    const discordOn = !!state.webhooks?.discord_enabled;
+    const telegramOn = !!state.webhooks?.telegram_enabled;
+    const enabledCount = (discordOn ? 1 : 0) + (telegramOn ? 1 : 0);
+    const webhooksKnown = state.webhooks !== null;
+
+    if (statWebhooksPill) statWebhooksPill.textContent = webhooksKnown ? (enabledCount ? `${enabledCount} enabled` : 'Disabled') : '-';
+    if (statWebhooksValue) statWebhooksValue.textContent = webhooksKnown ? (enabledCount ? 'Active' : 'Off') : '-';
+    if (statWebhooksMeta) statWebhooksMeta.textContent = webhooksKnown ? `Discord: ${discordOn ? 'On' : 'Off'} | Telegram: ${telegramOn ? 'On' : 'Off'}` : 'Unable to load settings.';
+  }
+
+  // --- Form Handlers ---
+  function setupForms() {
+    const webhooksForm = document.getElementById('webhooks-form');
+    const brandingForm = document.getElementById('branding-form');
+    const deliverableForm = document.getElementById('deliverable-upload-form');
+
+    // Webhooks Submit
+    webhooksForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const statusEl = 'webhooks-status';
+      showStatus('Saving...', statusEl);
+      
+      const whDiscordEnabled = (document.getElementById('wh-discord-enabled') as HTMLInputElement).checked;
+      const whDiscordUrl = (document.getElementById('wh-discord-url') as HTMLInputElement).value;
+      const whTelegramEnabled = (document.getElementById('wh-telegram-enabled') as HTMLInputElement).checked;
+      const whTelegramToken = (document.getElementById('wh-telegram-token') as HTMLInputElement).value;
+      const whTelegramChat = (document.getElementById('wh-telegram-chat') as HTMLInputElement).value;
+
+      try {
+        await api('/api/v1/admin/webhooks', {
+          method: 'PUT',
+          body: {
+            discord_enabled: whDiscordEnabled,
+            discord_webhook_url: whDiscordUrl || null,
+            telegram_enabled: whTelegramEnabled,
+            telegram_bot_token: whTelegramToken || null,
+            telegram_chat_id: whTelegramChat || null
+          }
+        });
+        showStatus('Saved webhook configurations.', statusEl);
+        await loadWebhooks();
+      } catch (err: any) {
+        showStatus(err.message || 'Failed to save.', statusEl, true);
+      }
+    });
+
+    // Deliverable Upload Submit
+    deliverableForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const statusEl = 'deliverables-upload-status';
+      showStatus('Uploading deliverable...', statusEl);
+
+      const data = Object.fromEntries(new FormData(deliverableForm as HTMLFormElement));
+      try {
+        await api('/api/v1/admin/deliverables', {
+          method: 'POST',
+          body: data
+        });
+        showStatus('Deliverable delivered successfully!', statusEl);
+        deliverableForm.reset();
+        loadDeliverables(1);
+      } catch (err: any) {
+        showStatus(err.message || 'Failed to deliver content.', statusEl, true);
+      }
+    });
+
+    // Logo Display Type toggler
+    const textRadio = document.getElementById('brand-logo-text-radio');
+    const imageRadio = document.getElementById('brand-logo-image-radio');
+    const textGroup = document.getElementById('branding-text-options');
+    const imageGroup = document.getElementById('branding-image-options');
+
+    textRadio?.addEventListener('change', () => {
+      textGroup?.classList.remove('hidden');
+      imageGroup?.classList.add('hidden');
+    });
+
+    imageRadio?.addEventListener('change', () => {
+      textGroup?.classList.add('hidden');
+      imageGroup?.classList.remove('hidden');
+    });
+
+    // Branding Submit
+    brandingForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const statusEl = 'branding-status';
+      showStatus('Applying changes...', statusEl);
+
+      const formData = new FormData(brandingForm as HTMLFormElement);
+      try {
+        const payload = await api('/api/v1/admin/settings', {
+          method: 'POST',
+          body: formData,
+          isMultipart: true
+        });
+        showStatus(payload.message || 'Settings applied successfully.', statusEl);
+        await loadSiteSettings();
+      } catch (err: any) {
+        showStatus(err.message || 'Failed to apply branding settings.', statusEl, true);
+      }
+    });
+  }
+
+  // --- Pagination & Search Filters setup ---
+  function setupFiltersAndPagination() {
+    // Bookings Filters
+    document.getElementById('book-search')?.addEventListener('input', () => loadBookings(1));
+    document.getElementById('book-status')?.addEventListener('change', () => loadBookings(1));
+    document.getElementById('book-prev')?.addEventListener('click', () => {
+      if (state.bookings.page > 1) loadBookings(state.bookings.page - 1);
+    });
+    document.getElementById('book-next')?.addEventListener('click', () => {
+      if (state.bookings.page < state.bookings.lastPage) loadBookings(state.bookings.page + 1);
+    });
+
+    // Leads Filters
+    document.getElementById('lead-search')?.addEventListener('input', () => loadLeads(1));
+    document.getElementById('lead-status')?.addEventListener('change', () => loadLeads(1));
+    document.getElementById('lead-prev')?.addEventListener('click', () => {
+      if (state.leads.page > 1) loadLeads(state.leads.page - 1);
+    });
+    document.getElementById('lead-next')?.addEventListener('click', () => {
+      if (state.leads.page < state.leads.lastPage) loadLeads(state.leads.page + 1);
+    });
+
+    // Subscribers Pagination
+    document.getElementById('sub-prev')?.addEventListener('click', () => {
+      if (state.subs.page > 1) loadSubscribers(state.subs.page - 1);
+    });
+    document.getElementById('sub-next')?.addEventListener('click', () => {
+      if (state.subs.page < state.subs.lastPage) loadSubscribers(state.subs.page + 1);
+    });
+
+    // Deliverables Pagination
+    document.getElementById('del-prev')?.addEventListener('click', () => {
+      if (state.dels.page > 1) loadDeliverables(state.dels.page - 1);
+    });
+    document.getElementById('del-next')?.addEventListener('click', () => {
+      if (state.dels.page < state.dels.lastPage) loadDeliverables(state.dels.page + 1);
+    });
+
+    // Logout & Refresh Buttons
+    document.getElementById('admin-logout')?.addEventListener('click', () => {
+      clearToken();
+      window.location.href = '/admin/login';
+    });
+    document.getElementById('admin-refresh')?.addEventListener('click', async () => {
+      const activeTab = document.querySelector('#admin-tab-nav .admin-nav__link.is-active')?.getAttribute('data-tab');
+      if (activeTab === 'bookings') await loadBookings(state.bookings.page);
+      if (activeTab === 'leads') await loadLeads(state.leads.page);
+      if (activeTab === 'subscribers') await loadSubscribers(state.subs.page);
+      if (activeTab === 'deliverables') {
+        await loadClients();
+        await loadDeliverables(state.dels.page);
+      }
+      if (activeTab === 'notifications') await loadWebhooks();
+      if (activeTab === 'branding') await loadSiteSettings();
+    });
+  }
+
+  // --- Initialization ---
+  async function loadInitialData() {
+    setupTabs();
+    setupFiltersAndPagination();
+    setupForms();
+
+    // Fire off async loads
+    await Promise.all([
+      loadBookings(1),
+      loadLeads(1),
+      loadSubscribers(1),
+      loadClients(),
+      loadDeliverables(1),
+      loadWebhooks(),
+      loadSiteSettings()
+    ]);
+  }
 
   (async () => {
     const ok = await ensureAdminSession();
@@ -382,6 +1334,6 @@ import AdminSidebar from '../../components/admin/AdminSidebar.astro';
       window.location.href = '/admin/login';
       return;
     }
-    await loadAll();
+    await loadInitialData();
   })();
 </script>
