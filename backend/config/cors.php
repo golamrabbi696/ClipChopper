@@ -22,6 +22,7 @@ return [
     'allowed_origins' => [
         'http://localhost:4321',
         'http://localhost:3000',
+        'http://web.clipchopper.com',
         'https://web.clipchopper.com'
     ],
 

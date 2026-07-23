@@ -141,30 +141,34 @@ header.scrolled { box-shadow: var(--shadow); }
   }, { passive: true });
 
   // Dynamic Logo Loader
-  (async () => {
+  async function applyNavbarLogo() {
     const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-      ? 'http://localhost:8000'
-      : 'https://api.clipchopper.com';
+      ? 'http://127.0.0.1:8000'
+      : '';
 
     try {
-      const res = await fetch(`${API_BASE}/api/v1/settings`);
-      if (res.ok) {
-        const settings = await res.json();
-        const logomark = document.getElementById('site-logomark');
-        const logotype = document.getElementById('site-logotype');
-        const logoLink = document.getElementById('site-logo-link');
-        
-        if (settings.logo_type === 'image' && settings.logo_image_url) {
-          if (logoLink) {
-            logoLink.innerHTML = `<img src="${settings.logo_image_url}" alt="${settings.logo_text_type || 'ClipChopper'}" style="height: 36px; max-width: 180px; object-fit: contain;" />`;
-          }
-        } else {
-          if (logomark) logomark.textContent = settings.logo_text_mark || 'CC';
-          if (logotype) logotype.textContent = settings.logo_text_type || 'CLIPCHOPPER';
+      const res = await fetch(`${API_BASE}/api/v1/settings`, { cache: 'no-store' });
+      if (!res.ok) return;
+      const settings = await res.json();
+      const logomark = document.getElementById('site-logomark');
+      const logotype = document.getElementById('site-logotype');
+      const logoLink = document.getElementById('site-logo-link');
+
+      if (settings.logo_type === 'image' && settings.logo_image_url) {
+        if (logoLink) {
+          logoLink.innerHTML = `<img src="${settings.logo_image_url}" alt="${settings.logo_text_type || 'ClipChopper'}" class="logo-img" style="height: 36px; max-width: 180px; object-fit: contain;" />`;
         }
+      } else {
+        if (logomark) logomark.textContent = settings.logo_text_mark || 'CC';
+        if (logotype) logotype.textContent = settings.logo_text_type || 'CLIPCHOPPER';
       }
     } catch (err) {
       console.error('Failed to load site branding settings', err);
     }
-  })();
+  }
+
+  applyNavbarLogo();
+
+  // Re-apply if admin updates logo from dashboard in same tab
+  window.addEventListener('cc-logo-updated', applyNavbarLogo);
 </script>

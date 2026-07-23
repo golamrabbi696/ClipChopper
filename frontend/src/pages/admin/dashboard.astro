@@ -1796,6 +1796,8 @@ import '../../styles/admin.css';
         });
         showStatus(payload.message || 'Settings applied successfully.', statusEl);
         await loadSiteSettings();
+        // Notify Navbar & Footer to refresh logo immediately
+        window.dispatchEvent(new CustomEvent('cc-logo-updated'));
       } catch (err: any) {
         showStatus(err.message || 'Failed to apply branding settings.', statusEl, true);
       }
