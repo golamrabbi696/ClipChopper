@@ -16,7 +16,6 @@ import '../../styles/admin.css';
           </div>
         </div>
         <div class="admin-actions">
-          <a class="btn btn-ghost" href="/admin/register">Create admin</a>
           <button class="btn btn-ghost" id="admin-refresh" type="button">Refresh</button>
           <button class="btn btn-primary" id="admin-logout" type="button">Logout</button>
         </div>
@@ -46,10 +45,25 @@ import '../../styles/admin.css';
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
               <span>Notifications</span>
             </button>
-            <button class="admin-nav__link" data-tab="branding">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-              <span>Site Branding</span>
-            </button>
+
+            <!-- Settings group -->
+            <div class="admin-nav__group">
+              <button class="admin-nav__link admin-nav__link--has-submenu" id="settings-parent-btn" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <span>Settings</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="submenu-arrow"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+              <div class="admin-nav__submenu" id="settings-submenu">
+                <button class="admin-nav__link admin-nav__link--sub" data-tab="register-admin" type="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>
+                  <span>Create Admin</span>
+                </button>
+                <button class="admin-nav__link admin-nav__link--sub" data-tab="branding" type="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  <span>Site Branding</span>
+                </button>
+              </div>
+            </div>
           </nav>
         </aside>
 
@@ -397,6 +411,42 @@ import '../../styles/admin.css';
               </form>
             </section>
           </div>
+
+          <!-- TAB 7: Create Admin Panel -->
+          <div class="tab-panel" id="panel-register-admin">
+            <section class="admin-card">
+              <div class="admin-card__header">
+                <h3>Create admin account</h3>
+                <p class="admin-help">Create a new administrator account with credentials.</p>
+              </div>
+              <form id="admin-create-form" class="admin-form" style="max-width: 500px; margin-top: 20px;">
+                <div class="field">
+                  <label for="ac-name">Full Name *</label>
+                  <input id="ac-name" name="name" type="text" placeholder="John Doe" required />
+                </div>
+                <div class="field">
+                  <label for="ac-email">Email Address *</label>
+                  <input id="ac-email" name="email" type="email" autocomplete="email" placeholder="john@clipchopper.com" required />
+                </div>
+                <div class="field">
+                  <label for="ac-pass">Password *</label>
+                  <input id="ac-pass" name="password" type="password" autocomplete="new-password" placeholder="••••••••" minlength="8" required />
+                </div>
+                <div class="field">
+                  <label for="ac-pass2">Confirm Password *</label>
+                  <input id="ac-pass2" name="password_confirmation" type="password" autocomplete="new-password" placeholder="••••••••" minlength="8" required />
+                </div>
+                <div class="field" style="margin-bottom: 20px;">
+                  <label class="admin-switch">
+                    <input type="checkbox" id="ac-super" name="is_superadmin" value="1" />
+                    <span>Superadmin privileges</span>
+                  </label>
+                </div>
+                <button class="btn btn-primary" type="submit" id="ac-submit">Create Admin Account</button>
+                <p class="admin-status" id="admin-create-status" aria-live="polite"></p>
+              </form>
+            </section>
+          </div>
         </section>
       </div>
     </div>
@@ -405,6 +455,46 @@ import '../../styles/admin.css';
 
 <style is:global>
   /* Premium Dashboard Styles overrides */
+  #stat-next-when {
+    font-size: 1.25rem !important;
+    letter-spacing: -0.01em !important;
+    font-weight: 850 !important;
+  }
+
+  .admin-nav__group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 4px;
+  }
+  .admin-nav__submenu {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    padding-left: 14px !important;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    border-left: 2px solid rgba(231, 178, 76, 0.15);
+  }
+  .admin-nav__link--sub {
+    font-size: 13px !important;
+    padding: 8px 12px !important;
+    background: transparent !important;
+    border-radius: 8px !important;
+  }
+  .admin-nav__link--sub.is-active {
+    background: rgba(231, 178, 76, 0.08) !important;
+    color: var(--gold-dk) !important;
+  }
+  .submenu-arrow {
+    margin-left: auto;
+    opacity: 0.5;
+    transition: transform 0.2s ease;
+  }
+  .admin-nav__link.is-open .submenu-arrow {
+    transform: rotate(180deg);
+  }
+
   .admin-sidebar {
     background: rgba(255, 255, 255, 0.85) !important;
     backdrop-filter: blur(12px);
@@ -735,13 +825,32 @@ import '../../styles/admin.css';
     const tabButtons = document.querySelectorAll('#admin-tab-nav .admin-nav__link');
     const panels = document.querySelectorAll('.tab-panel');
     const statsOverview = document.getElementById('stats-overview-section');
+    const settingsParentBtn = document.getElementById('settings-parent-btn');
+    const settingsSubmenu = document.getElementById('settings-submenu');
+
+    // Settings Toggle Collapse
+    if (settingsParentBtn && settingsSubmenu) {
+      settingsParentBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = settingsParentBtn.classList.toggle('is-open');
+        settingsSubmenu.style.display = isOpen ? 'flex' : 'none';
+      });
+    }
 
     tabButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const tab = btn.getAttribute('data-tab');
+        if (!tab) return; // Ignore settings parent button clicks for tab switching
         
         tabButtons.forEach(b => b.classList.remove('is-active'));
         btn.classList.add('is-active');
+
+        // Style the settings parent link if a setting sub-tab is selected
+        if (btn.classList.contains('admin-nav__link--sub') && settingsParentBtn) {
+          settingsParentBtn.classList.add('is-active');
+        } else if (settingsParentBtn) {
+          settingsParentBtn.classList.remove('is-active');
+        }
 
         panels.forEach(p => p.classList.remove('is-active'));
         document.getElementById(`panel-${tab}`)?.classList.add('is-active');
@@ -752,6 +861,14 @@ import '../../styles/admin.css';
         }
       });
     });
+
+    // Auto-open settings submenu if initial active tab is under it
+    const activeTabBtn = document.querySelector('#admin-tab-nav .admin-nav__link.is-active');
+    if (activeTabBtn?.classList.contains('admin-nav__link--sub') && settingsParentBtn && settingsSubmenu) {
+      settingsParentBtn.classList.add('is-open');
+      settingsParentBtn.classList.add('is-active');
+      settingsSubmenu.style.display = 'flex';
+    }
   }
 
   // --- Utility functions ---
@@ -1255,6 +1372,37 @@ import '../../styles/admin.css';
         await loadSiteSettings();
       } catch (err: any) {
         showStatus(err.message || 'Failed to apply branding settings.', statusEl, true);
+      }
+    });
+
+    // Admin Create Submit
+    const createForm = document.getElementById('admin-create-form') as HTMLFormElement;
+    createForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const statusEl = 'admin-create-status';
+      showStatus('Creating account...', statusEl);
+      
+      const submitBtn = document.getElementById('ac-submit') as HTMLButtonElement;
+      if (submitBtn) {
+        submitBtn.textContent = 'Creating…';
+        submitBtn.setAttribute('disabled', 'true');
+      }
+
+      const data = Object.fromEntries(new FormData(createForm));
+      try {
+        await api('/api/v1/admin/admins', {
+          method: 'POST',
+          body: data
+        });
+        showStatus('✓ Admin account created successfully!', statusEl);
+        createForm.reset();
+      } catch (err: any) {
+        showStatus(err.message || 'Failed to create admin account.', statusEl, true);
+      } finally {
+        if (submitBtn) {
+          submitBtn.textContent = 'Create Admin Account';
+          submitBtn.removeAttribute('disabled');
+        }
       }
     });
   }
