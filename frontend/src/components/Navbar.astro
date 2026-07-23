@@ -1,16 +1,25 @@
 ---
-import { Image } from 'astro:assets';
-import logo from '../assets/logo/ClipChopper_Logo.png';
+const pathname = Astro.url.pathname;
+const isBrandsPage = pathname === '/brands' || pathname === '/brands/';
+const toggleLink = isBrandsPage ? '/' : '/brands/';
+const toggleText = isBrandsPage ? 'For Personal' : 'For Brands';
+
+// Anchor links dynamic mapping
+const howLink = isBrandsPage ? '#how' : '/#how';
+const pricingLink = isBrandsPage ? '#pricing' : '/#foryou';
+const aboutLink = isBrandsPage ? '#about' : '/#about';
 ---
 <header id="top">
   <div class="wrap navbar">
-    <a class="logo" href="/">
-      <Image src={logo} alt="ClipChopper" class="logo-img" />
+    <a class="logo" href="/" id="site-logo-link">
+      <span class="logomark" id="site-logomark" aria-hidden="true">CC</span>
+      <span class="logotype" id="site-logotype">CLIPCHOPPER</span>
     </a>
     <nav class="navlinks" aria-label="Main navigation">
-      <a href="/#how">How it works</a>
-      <a href="/#foryou">Pricing</a>
-      <a href="/#about">About</a>
+      <a href={toggleLink}>{toggleText}</a>
+      <a href={howLink}>How it works</a>
+      <a href={pricingLink}>Pricing</a>
+      <a href={aboutLink}>About</a>
     </nav>
     <a class="btn btn-primary navcta" href="/contact" id="nav-book-cta">Book a call</a>
     <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
@@ -18,9 +27,10 @@ import logo from '../assets/logo/ClipChopper_Logo.png';
     </button>
   </div>
   <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-    <a href="/#how">How it works</a>
-    <a href="/#foryou">Pricing</a>
-    <a href="/#about">About</a>
+    <a href={toggleLink}>{toggleText}</a>
+    <a href={howLink}>How it works</a>
+    <a href={pricingLink}>Pricing</a>
+    <a href={aboutLink}>About</a>
     <a class="btn btn-primary" href="/contact">Book a call</a>
   </div>
 </header>
@@ -128,4 +138,28 @@ header.scrolled { box-shadow: var(--shadow); }
   window.addEventListener('scroll', () => {
     document.querySelector('header')!.classList.toggle('scrolled', window.scrollY > 8);
   }, { passive: true });
+
+  // Dynamic Logo Loader
+  (async () => {
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/settings');
+      if (res.ok) {
+        const settings = await res.json();
+        const logomark = document.getElementById('site-logomark');
+        const logotype = document.getElementById('site-logotype');
+        const logoLink = document.getElementById('site-logo-link');
+        
+        if (settings.logo_type === 'image' && settings.logo_image_url) {
+          if (logoLink) {
+            logoLink.innerHTML = `<img src="${settings.logo_image_url}" alt="${settings.logo_text_type || 'ClipChopper'}" style="height: 36px; max-width: 180px; object-fit: contain;" />`;
+          }
+        } else {
+          if (logomark) logomark.textContent = settings.logo_text_mark || 'CC';
+          if (logotype) logotype.textContent = settings.logo_text_type || 'CLIPCHOPPER';
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load site branding settings', err);
+    }
+  })();
 </script>

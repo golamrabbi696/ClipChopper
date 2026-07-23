@@ -1,18 +1,26 @@
 ---
-import { Image } from 'astro:assets';
-import logo from '../assets/logo/ClipChopper_Logo.png';
+const pathname = Astro.url.pathname;
+const isBrandsPage = pathname === '/brands' || pathname === '/brands/';
+const toggleLink = isBrandsPage ? '/' : '/brands/';
+const toggleText = isBrandsPage ? 'For Personal' : 'For Brands';
+
+// Anchor links dynamic mapping
+const howLink = isBrandsPage ? '#how' : '/#how';
+const pricingLink = isBrandsPage ? '#pricing' : '/#foryou';
+const aboutLink = isBrandsPage ? '#about' : '/#about';
 ---
 <footer>
   <div class="wrap footer-inner">
-    <div class="footer-brand">
-      <Image src={logo} alt="ClipChopper" class="footer-logo-img" />
+    <div class="footer-brand" id="site-footer-link">
+      <div class="f-logomark" id="footer-logomark" aria-hidden="true">CC</div>
+      <span class="f-logotype" id="footer-logotype">CLIPCHOPPER</span>
     </div>
     <nav class="footer-nav" aria-label="Footer navigation">
-      <a href="/#how">How it works</a>
-      <a href="/#foryou">Pricing</a>
-      <a href="/#about">About</a>
+      <a href={toggleLink}>{toggleText}</a>
+      <a href={howLink}>How it works</a>
+      <a href={pricingLink}>Pricing</a>
+      <a href={aboutLink}>About</a>
       <a href="/contact">Contact</a>
-      <a href="/brands/">For brands</a>
     </nav>
     <div class="footer-copy">
       <span>clipchopper.com</span>
@@ -69,3 +77,29 @@ footer {
   .footer-nav { gap: 12px; }
 }
 </style>
+
+<script>
+  // Dynamic Footer Logo Loader
+  (async () => {
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/settings');
+      if (res.ok) {
+        const settings = await res.json();
+        const logomark = document.getElementById('footer-logomark');
+        const logotype = document.getElementById('footer-logotype');
+        const brandLink = document.getElementById('site-footer-link');
+        
+        if (settings.logo_type === 'image' && settings.logo_image_url) {
+          if (brandLink) {
+            brandLink.innerHTML = `<img src="${settings.logo_image_url}" alt="${settings.logo_text_type || 'ClipChopper'}" style="height: 28px; max-width: 140px; object-fit: contain;" />`;
+          }
+        } else {
+          if (logomark) logomark.textContent = settings.logo_text_mark || 'CC';
+          if (logotype) logotype.textContent = settings.logo_text_type || 'CLIPCHOPPER';
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load footer branding settings', err);
+    }
+  })();
+</script>

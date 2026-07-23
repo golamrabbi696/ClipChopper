@@ -6,11 +6,13 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\SiteSettingController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\LeadController;
 use App\Http\Controllers\Admin\SubscriberController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\WebhookSettingController;
+use App\Http\Controllers\Admin\DeliverableController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,6 +28,7 @@ Route::prefix('v1')->group(function () {
     Route::post('/bookings',              [PublicBookingController::class, 'store']);
     Route::post('/newsletter/subscribe',  [NewsletterController::class,'subscribe']);
     Route::post('/newsletter/unsubscribe',[NewsletterController::class,'unsubscribe']);
+    Route::get('/settings',               [SiteSettingController::class, 'index']);
 
     // Auth
     Route::post('/auth/login',  [AuthController::class, 'login']);
@@ -57,5 +60,13 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/webhooks',           [WebhookSettingController::class, 'show']);
         Route::put('/webhooks',           [WebhookSettingController::class, 'update']);
+
+        Route::post('/settings',          [SiteSettingController::class, 'update']);
+
+        Route::get('/clients',            [DeliverableController::class, 'clients']);
+        Route::get('/deliverables',       [DeliverableController::class, 'index']);
+        Route::post('/deliverables',      [DeliverableController::class, 'store']);
+        Route::delete('/deliverables/{id}', [DeliverableController::class, 'destroy']);
     });
 });
+

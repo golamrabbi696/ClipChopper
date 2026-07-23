@@ -2,7 +2,6 @@
 import Layout from '../layouts/Layout.astro';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
-import BookingCalendar from '../components/BookingCalendar';
 const plan = Astro.url.searchParams.get('plan') ?? '';
 const planLabel = plan === 'monthly' ? 'Subscribe ($399/mo)' : plan === 'one-time' ? 'Try it once ($499)' : '';
 ---
@@ -56,7 +55,33 @@ const planLabel = plan === 'monthly' ? 'Subscribe ($399/mo)' : plan === 'one-tim
           <div class="field">
             <label>Pick a date *</label>
             <div class="calendar-wrap">
-              <BookingCalendar client:only="react" />
+              <div class="cc-calendar">
+                <div class="cc-calendar__header">
+                  <button type="button" class="cc-calendar__nav-btn" id="cal-prev">&larr;</button>
+                  <div class="cc-calendar__title" id="cal-title">Month Year</div>
+                  <button type="button" class="cc-calendar__nav-btn" id="cal-next">&rarr;</button>
+                </div>
+                <div class="cc-calendar__weekdays">
+                  <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+                </div>
+                <div class="cc-calendar__days" id="cal-days">
+                  <!-- Days populated by JS -->
+                </div>
+              </div>
+              
+              <div class="cc-booking-calendar__time">
+                <label for="cf-time">Preferred time *</label>
+                <select id="cf-time" name="call_time" required>
+                  <option value="" disabled selected>— Select a time —</option>
+                  <!-- Times populated by JS -->
+                </select>
+                <small class="cc-booking-calendar__hint" id="cal-tz-hint"></small>
+              </div>
+              
+              <div class="cc-booking-calendar__selected" id="cal-selected-text">Select a date above.</div>
+              
+              <input type="hidden" name="call_date" id="cf-date-input" value="" />
+              <input type="hidden" name="timezone" id="cf-tz-input" value="" />
             </div>
           </div>
           <div class="field checkbox-field">
@@ -74,7 +99,7 @@ const planLabel = plan === 'monthly' ? 'Subscribe ($399/mo)' : plan === 'one-tim
   <Footer />
 </Layout>
 
-<style>
+<style is:global>
 .contact-page { padding: clamp(48px,8vw,96px) 0; }
 .contact-inner {
   display: grid;
@@ -120,40 +145,101 @@ const planLabel = plan === 'monthly' ? 'Subscribe ($399/mo)' : plan === 'one-tim
 .calendar-wrap {
   border: 1.5px solid var(--border-2);
   border-radius: var(--r-sm);
-  padding: 12px;
+  padding: 16px;
   background: var(--bg);
 }
-.calendar-wrap :global(.astryx-calendar) {
+.cc-calendar {
+  width: 100%;
+  background: transparent;
+}
+.cc-calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.cc-calendar__title {
+  font-weight: 700;
+  font-size: 15px;
   color: var(--ink);
 }
-.calendar-wrap :global(.astryx-calendar-day) {
-  color: var(--ink) !important;
-  border-radius: 10px;
+.cc-calendar__nav-btn {
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  color: var(--ink);
+  font-weight: bold;
+  font-size: 14px;
+  transition: background 0.15s;
 }
-.calendar-wrap :global(.astryx-calendar-day:hover:not([data-disabled='disabled'])) {
-  background: rgba(231, 178, 76, 0.18);
+.cc-calendar__nav-btn:hover {
+  background: var(--border-2);
 }
-.calendar-wrap :global(.astryx-calendar-day[data-disabled='disabled']) {
-  color: var(--faint) !important;
-  cursor: not-allowed;
+.cc-calendar__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--faint);
+  text-transform: uppercase;
+  margin-bottom: 8px;
 }
-.calendar-wrap :global(.astryx-calendar-day[data-selected='selected']) {
+.cc-calendar__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cc-calendar__day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+}
+.cc-calendar__day:hover:not(:disabled) {
+  background: rgba(231, 178, 76, 0.15);
+}
+.cc-calendar__day--today {
+  outline: 2px solid rgba(231, 178, 76, 0.45);
+  outline-offset: 1px;
+}
+.cc-calendar__day--selected {
   background: var(--gold) !important;
   color: var(--navy) !important;
 }
-.calendar-wrap :global(.astryx-calendar-day[data-today='today']) {
-  outline: 2px solid rgba(201, 148, 47, 0.45);
-  outline-offset: 2px;
+.cc-calendar__day:disabled {
+  color: var(--faint) !important;
+  cursor: not-allowed;
+  font-weight: 400;
 }
-.calendar-wrap :global(.astryx-calendar-day[data-selected='selected'][data-today='today']) {
-  outline-color: rgba(20, 24, 41, 0.35);
+.cc-calendar__day--padding {
+  visibility: hidden;
 }
-.calendar-wrap :global(.astryx-calendar-day:focus-visible) {
-  outline: 2px solid rgba(20, 24, 41, 0.55);
-  outline-offset: 2px;
+.cc-booking-calendar__time {
+  margin-top: 20px;
 }
-.calendar-wrap :global(.cc-booking-calendar__time select) {
+.cc-booking-calendar__time label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.cc-booking-calendar__time select {
   width: 100%;
   padding: 12px 16px;
   border: 1.5px solid var(--border-2);
@@ -161,13 +247,13 @@ const planLabel = plan === 'monthly' ? 'Subscribe ($399/mo)' : plan === 'one-tim
   background: var(--card);
   color: var(--ink);
 }
-.calendar-wrap :global(.cc-booking-calendar__hint) {
+.cc-booking-calendar__hint {
   display: block;
   margin-top: 8px;
   font-size: 12px;
   color: var(--muted);
 }
-.calendar-wrap :global(.cc-booking-calendar__selected) {
+.cc-booking-calendar__selected {
   margin-top: 10px;
   font-size: 13px;
   font-weight: 600;
@@ -180,6 +266,142 @@ const planLabel = plan === 'monthly' ? 'Subscribe ($399/mo)' : plan === 'one-tim
 </style>
 
 <script>
+  // Vanilla Calendar Initialization
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const tzHint = document.getElementById('cal-tz-hint');
+  if (tzHint) tzHint.textContent = `Your timezone: ${tz}`;
+  
+  const tzInput = document.getElementById('cf-tz-input') as HTMLInputElement;
+  if (tzInput) tzInput.value = tz;
+
+  const timeSelect = document.getElementById('cf-time') as HTMLSelectElement;
+  if (timeSelect) {
+    const times = [];
+    let startMinutes = 9 * 60; // 09:00
+    const endMinutes = 18 * 60; // 18:00
+    while (startMinutes <= endMinutes) {
+      const hh = String(Math.floor(startMinutes / 60)).padStart(2, '0');
+      const mm = String(startMinutes % 60).padStart(2, '0');
+      times.push(`${hh}:${mm}`);
+      startMinutes += 30;
+    }
+    times.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t;
+      timeSelect.appendChild(opt);
+    });
+  }
+
+  const dateInput = document.getElementById('cf-date-input') as HTMLInputElement;
+  const selectedText = document.getElementById('cal-selected-text');
+  const calTitle = document.getElementById('cal-title');
+  const calDays = document.getElementById('cal-days');
+  const btnPrev = document.getElementById('cal-prev');
+  const btnNext = document.getElementById('cal-next');
+
+  const now = new Date();
+  let currentYear = now.getFullYear();
+  let currentMonth = now.getMonth();
+  let selectedDate = '';
+
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  function todayIsoDate(): string {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  const todayStr = todayIsoDate();
+
+  function renderCalendar() {
+    if (!calTitle || !calDays) return;
+    
+    calTitle.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+    calDays.innerHTML = '';
+
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const startOffset = firstDay.getDay();
+    const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    // Previous month padding
+    for (let i = 0; i < startOffset; i++) {
+      const pad = document.createElement('div');
+      pad.className = 'cc-calendar__day cc-calendar__day--padding';
+      calDays.appendChild(pad);
+    }
+
+    // Days
+    for (let d = 1; d <= totalDays; d++) {
+      const yyyy = currentYear;
+      const mm = String(currentMonth + 1).padStart(2, '0');
+      const dd = String(d).padStart(2, '0');
+      const dateStr = `${yyyy}-${mm}-${dd}`;
+
+      const btnDay = document.createElement('button');
+      btnDay.type = 'button';
+      btnDay.className = 'cc-calendar__day';
+      btnDay.textContent = String(d);
+
+      if (dateStr === todayStr) {
+        btnDay.classList.add('cc-calendar__day--today');
+      }
+      if (dateStr === selectedDate) {
+        btnDay.classList.add('cc-calendar__day--selected');
+      }
+      if (dateStr < todayStr) {
+        btnDay.disabled = true;
+      }
+
+      btnDay.addEventListener('click', () => {
+        selectedDate = dateStr;
+        if (dateInput) dateInput.value = dateStr;
+        if (selectedText) selectedText.textContent = `Selected date: ${dateStr}`;
+        renderCalendar();
+      });
+
+      calDays.appendChild(btnDay);
+    }
+  }
+
+  btnPrev?.addEventListener('click', () => {
+    if (currentMonth === 0) {
+      currentMonth = 11;
+      currentYear--;
+    } else {
+      currentMonth--;
+    }
+    renderCalendar();
+  });
+
+  btnNext?.addEventListener('click', () => {
+    if (currentMonth === 11) {
+      currentMonth = 0;
+      currentYear++;
+    } else {
+      currentMonth++;
+    }
+    renderCalendar();
+  });
+
+  window.addEventListener('cc:booking:reset', () => {
+    selectedDate = '';
+    if (dateInput) dateInput.value = '';
+    if (selectedText) selectedText.textContent = 'Select a date above.';
+    if (timeSelect) timeSelect.value = '';
+    currentYear = now.getFullYear();
+    currentMonth = now.getMonth();
+    renderCalendar();
+  });
+
+  renderCalendar();
+
   const form = document.getElementById('contact-form') as HTMLFormElement;
   const status = document.getElementById('cf-status')!;
   const btn = document.getElementById('cf-submit') as HTMLButtonElement;
