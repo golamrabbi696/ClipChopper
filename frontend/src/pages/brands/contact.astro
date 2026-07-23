@@ -1,0 +1,462 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+const plan = Astro.url.searchParams.get('plan') ?? '';
+---
+<Layout title="Book a Brand Content Call — ClipChopper" description="Book your brand's podcast-style content call with ClipChopper. Talk for an hour, get a month of content.">
+  <Navbar />
+  <main class="contact-page">
+    <div class="wrap contact-inner">
+      <div class="contact-text">
+        <div class="label" style="color: #E86F50;">For Brands</div>
+        <h1>Book a call.</h1>
+        <p class="support">
+          No prep, no script. Just show up and talk about your product or space.
+          We'll turn it into a month of content for LinkedIn, YouTube, and X.
+        </p>
+        <ul class="contact-promises">
+          <li>✓ Response within 2 business hours</li>
+          <li>✓ Team onboarding scheduled within 48 hours</li>
+          <li>✓ Cancel monthly subscriptions anytime</li>
+        </ul>
+      </div>
+      <div class="card contact-form-wrap">
+        <form id="contact-form" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="cf-name">Full name *</label>
+              <input type="text" id="cf-name" name="name" placeholder="Jane Smith" required />
+            </div>
+            <div class="field">
+              <label for="cf-email">Email *</label>
+              <input type="email" id="cf-email" name="email" placeholder="jane@company.com" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="cf-company">Company / role</label>
+            <input type="text" id="cf-company" name="company" placeholder="Acme Inc. · Founder" />
+          </div>
+          <div class="field">
+            <label for="cf-plan">Interested in</label>
+            <select id="cf-plan" name="plan">
+              <option value="">— Select a plan —</option>
+              <option value="brands-one-time" selected={plan === 'brands-one-time'}>Try it once ($3,500)</option>
+              <option value="brands-monthly" selected={plan === 'brands-monthly' || !plan || plan === 'brands'}>Subscribe ($2,999/mo)</option>
+              <option value="brands-custom" selected={plan === 'brands-custom'}>For brands / teams (Custom)</option>
+              <option value="unsure">Not sure yet</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cf-message">Tell us what you're working on *</label>
+            <textarea id="cf-message" name="message" rows="4" placeholder="What does your team do? Who is your target buyer?" required></textarea>
+          </div>
+          <div class="field">
+            <label>Pick a date *</label>
+            <div class="calendar-wrap">
+              <div class="cc-calendar">
+                <div class="cc-calendar__header">
+                  <button type="button" class="cc-calendar__nav-btn" id="cal-prev">&larr;</button>
+                  <div class="cc-calendar__title" id="cal-title">Month Year</div>
+                  <button type="button" class="cc-calendar__nav-btn" id="cal-next">&rarr;</button>
+                </div>
+                <div class="cc-calendar__weekdays">
+                  <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+                </div>
+                <div class="cc-calendar__days" id="cal-days">
+                  <!-- Days populated by JS -->
+                </div>
+              </div>
+              
+              <div class="cc-booking-calendar__time">
+                <label for="cf-time">Preferred time *</label>
+                <select id="cf-time" name="call_time" required>
+                  <option value="" disabled selected>— Select a time —</option>
+                  <!-- Times populated by JS -->
+                </select>
+                <small class="cc-booking-calendar__hint" id="cal-tz-hint"></small>
+              </div>
+              
+              <div class="cc-booking-calendar__selected" id="cal-selected-text">Select a date above.</div>
+              
+              <input type="hidden" name="call_date" id="cf-date-input" value="" />
+              <input type="hidden" name="timezone" id="cf-tz-input" value="" />
+            </div>
+          </div>
+          <div class="field checkbox-field">
+            <label class="checkbox-label">
+              <input type="checkbox" id="cf-newsletter" name="newsletter" value="1" />
+              <span>Add me to the ClipChopper newsletter</span>
+            </label>
+          </div>
+          <button class="btn btn-coral submit-btn" type="submit" id="cf-submit">Send my details →</button>
+          <p class="form-status" id="cf-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style is:global>
+.contact-page { padding: clamp(48px,8vw,96px) 0; }
+.contact-inner {
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: clamp(36px,6vw,72px);
+  align-items: start;
+}
+.contact-text .label { display: block; }
+.contact-text h1 { margin-top: 8px; }
+.contact-text .support { max-width: 44ch; }
+.contact-promises {
+  margin-top: 28px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.contact-promises li {
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.contact-form-wrap { padding: 36px; }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.field { margin-bottom: 16px; }
+.checkbox-field { margin-bottom: 8px; }
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.checkbox-label input { width: 16px; height: 16px; cursor: pointer; accent-color: #E86F50; }
+.submit-btn { width: 100%; margin-top: 4px; }
+.form-status { margin-top: 14px; font-size: 14px; font-weight: 600; color: #E86F50; min-height: 20px; }
+.calendar-wrap {
+  border: 1.5px solid var(--border-2);
+  border-radius: var(--r-sm);
+  padding: 16px;
+  background: var(--bg);
+}
+.cc-calendar {
+  width: 100%;
+  background: transparent;
+}
+.cc-calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.cc-calendar__title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+}
+.cc-calendar__nav-btn {
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ink);
+  font-weight: bold;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+.cc-calendar__nav-btn:hover {
+  background: var(--border-2);
+}
+.cc-calendar__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--faint);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.cc-calendar__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cc-calendar__day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+}
+.cc-calendar__day:hover:not(:disabled) {
+  background: rgba(232, 111, 80, 0.15) !important;
+}
+.cc-calendar__day--today {
+  outline: 2px solid rgba(232, 111, 80, 0.45) !important;
+  outline-offset: 1px;
+}
+.cc-calendar__day--selected {
+  background: #E86F50 !important;
+  color: var(--white) !important;
+}
+.cc-calendar__day:disabled {
+  color: var(--faint) !important;
+  cursor: not-allowed;
+  font-weight: 400;
+}
+.cc-calendar__day--padding {
+  visibility: hidden;
+}
+.cc-booking-calendar__time {
+  margin-top: 20px;
+}
+.cc-booking-calendar__time label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.cc-booking-calendar__time select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border-2);
+  border-radius: var(--r-sm);
+  background: var(--card);
+  color: var(--ink);
+}
+.cc-booking-calendar__hint {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.cc-booking-calendar__selected {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.btn-coral {
+  background: #E86F50;
+  color: var(--white);
+  border: 1.5px solid #E86F50;
+}
+.btn-coral:hover {
+  background: #d45f42;
+  border-color: #d45f42;
+}
+.btn-coral:active {
+  background: #bf5237;
+}
+
+@media (max-width: 860px) {
+  .contact-inner { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<script>
+  // Vanilla Calendar Initialization
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const tzHint = document.getElementById('cal-tz-hint');
+  if (tzHint) tzHint.textContent = `Your timezone: ${tz}`;
+  
+  const tzInput = document.getElementById('cf-tz-input') as HTMLInputElement;
+  if (tzInput) tzInput.value = tz;
+
+  const timeSelect = document.getElementById('cf-time') as HTMLSelectElement;
+  if (timeSelect) {
+    const times = [];
+    let startMinutes = 9 * 60; // 09:00
+    const endMinutes = 18 * 60; // 18:00
+    while (startMinutes <= endMinutes) {
+      const hh = String(Math.floor(startMinutes / 60)).padStart(2, '0');
+      const mm = String(startMinutes % 60).padStart(2, '0');
+      times.push(`${hh}:${mm}`);
+      startMinutes += 30;
+    }
+    times.forEach(t => {
+      const opt = document.createElement('option');
+      opt.value = t;
+      opt.textContent = t;
+      timeSelect.appendChild(opt);
+    });
+  }
+
+  const dateInput = document.getElementById('cf-date-input') as HTMLInputElement;
+  const selectedText = document.getElementById('cal-selected-text');
+  const calTitle = document.getElementById('cal-title');
+  const calDays = document.getElementById('cal-days');
+  const btnPrev = document.getElementById('cal-prev');
+  const btnNext = document.getElementById('cal-next');
+
+  const now = new Date();
+  let currentYear = now.getFullYear();
+  let currentMonth = now.getMonth();
+  let selectedDate = '';
+
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  function todayIsoDate(): string {
+    const d = new Date();
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  const todayStr = todayIsoDate();
+
+  function renderCalendar() {
+    if (!calTitle || !calDays) return;
+    
+    calTitle.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+    calDays.innerHTML = '';
+
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const startOffset = firstDay.getDay();
+    const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+    // Previous month padding
+    for (let i = 0; i < startOffset; i++) {
+      const pad = document.createElement('div');
+      pad.className = 'cc-calendar__day cc-calendar__day--padding';
+      calDays.appendChild(pad);
+    }
+
+    // Days
+    for (let d = 1; d <= totalDays; d++) {
+      const yyyy = currentYear;
+      const mm = String(currentMonth + 1).padStart(2, '0');
+      const dd = String(d).padStart(2, '0');
+      const dateStr = `${yyyy}-${mm}-${dd}`;
+
+      const btnDay = document.createElement('button');
+      btnDay.type = 'button';
+      btnDay.className = 'cc-calendar__day';
+      btnDay.textContent = String(d);
+
+      if (dateStr === todayStr) {
+        btnDay.classList.add('cc-calendar__day--today');
+      }
+      if (dateStr === selectedDate) {
+        btnDay.classList.add('cc-calendar__day--selected');
+      }
+      if (dateStr < todayStr) {
+        btnDay.disabled = true;
+      }
+
+      btnDay.addEventListener('click', () => {
+        selectedDate = dateStr;
+        if (dateInput) dateInput.value = dateStr;
+        if (selectedText) selectedText.textContent = `Selected date: ${dateStr}`;
+        renderCalendar();
+      });
+
+      calDays.appendChild(btnDay);
+    }
+  }
+
+  btnPrev?.addEventListener('click', () => {
+    if (currentMonth === 0) {
+      currentMonth = 11;
+      currentYear--;
+    } else {
+      currentMonth--;
+    }
+    renderCalendar();
+  });
+
+  btnNext?.addEventListener('click', () => {
+    if (currentMonth === 11) {
+      currentMonth = 0;
+      currentYear++;
+    } else {
+      currentMonth++;
+    }
+    renderCalendar();
+  });
+
+  window.addEventListener('cc:booking:reset', () => {
+    selectedDate = '';
+    if (dateInput) dateInput.value = '';
+    if (selectedText) selectedText.textContent = 'Select a date above.';
+    if (timeSelect) timeSelect.value = '';
+    currentYear = now.getFullYear();
+    currentMonth = now.getMonth();
+    renderCalendar();
+  });
+
+  renderCalendar();
+
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const status = document.getElementById('cf-status')!;
+  const btn = document.getElementById('cf-submit') as HTMLButtonElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.textContent = 'Sending…';
+    btn.setAttribute('disabled', 'true');
+    status.textContent = '';
+    try {
+      const data = Object.fromEntries(new FormData(form));
+      if (!data.call_date) {
+        status.textContent = 'Please pick a date for your call.';
+        status.style.color = '#E86F50';
+        return;
+      }
+      if (!data.call_time) {
+        status.textContent = 'Please pick a time for your call.';
+        status.style.color = '#E86F50';
+        return;
+      }
+      const res = await fetch('https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (res.ok) {
+        status.style.color = '#E86F50';
+        status.textContent = '✓ Booking request received! We\'ll confirm your call shortly.';
+        form.reset();
+        window.dispatchEvent(new CustomEvent('cc:booking:reset'));
+      } else {
+        const err = await res.json().catch(() => ({}));
+        status.textContent = err.message || 'Something went wrong. Please try again.';
+        status.style.color = '#E86F50';
+      }
+    } catch {
+      status.textContent = 'Could not connect. Please email us directly.';
+      status.style.color = '#E86F50';
+    } finally {
+      btn.textContent = 'Send my details →';
+      btn.removeAttribute('disabled');
+    }
+  });
+</script>

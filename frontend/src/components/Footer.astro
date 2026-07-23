@@ -1,13 +1,14 @@
 ---
 const pathname = Astro.url.pathname;
-const isBrandsPage = pathname === '/brands' || pathname === '/brands/';
+const isBrandsPage = pathname.startsWith('/brands');
 const toggleLink = isBrandsPage ? '/' : '/brands/';
 const toggleText = isBrandsPage ? 'For Personal' : 'For Brands';
 
 // Anchor links dynamic mapping
-const howLink = isBrandsPage ? '#how' : '/#how';
-const pricingLink = isBrandsPage ? '#pricing' : '/#foryou';
-const aboutLink = isBrandsPage ? '#about' : '/#about';
+const howLink = isBrandsPage ? '/brands#how' : '/#how';
+const pricingLink = isBrandsPage ? '/brands#pricing' : '/#foryou';
+const aboutLink = isBrandsPage ? '/brands#about' : '/#about';
+const contactLink = isBrandsPage ? '/brands/contact' : '/contact';
 ---
 <footer>
   <div class="wrap footer-inner">
@@ -20,7 +21,7 @@ const aboutLink = isBrandsPage ? '#about' : '/#about';
       <a href={howLink}>How it works</a>
       <a href={pricingLink}>Pricing</a>
       <a href={aboutLink}>About</a>
-      <a href="/contact">Contact</a>
+      <a href={contactLink}>Contact</a>
     </nav>
     <div class="footer-copy">
       <span>clipchopper.com</span>

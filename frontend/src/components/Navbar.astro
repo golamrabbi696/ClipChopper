@@ -1,13 +1,14 @@
 ---
 const pathname = Astro.url.pathname;
-const isBrandsPage = pathname === '/brands' || pathname === '/brands/';
+const isBrandsPage = pathname.startsWith('/brands');
 const toggleLink = isBrandsPage ? '/' : '/brands/';
 const toggleText = isBrandsPage ? 'For Personal' : 'For Brands';
 
 // Anchor links dynamic mapping
-const howLink = isBrandsPage ? '#how' : '/#how';
-const pricingLink = isBrandsPage ? '#pricing' : '/#foryou';
-const aboutLink = isBrandsPage ? '#about' : '/#about';
+const howLink = isBrandsPage ? '/brands#how' : '/#how';
+const pricingLink = isBrandsPage ? '/brands#pricing' : '/#foryou';
+const aboutLink = isBrandsPage ? '/brands#about' : '/#about';
+const contactLink = isBrandsPage ? '/brands/contact' : '/contact';
 ---
 <header id="top">
   <div class="wrap navbar">
@@ -21,7 +22,7 @@ const aboutLink = isBrandsPage ? '#about' : '/#about';
       <a href={pricingLink}>Pricing</a>
       <a href={aboutLink}>About</a>
     </nav>
-    <a class="btn btn-primary navcta" href="/contact" id="nav-book-cta">Book a call</a>
+    <a class="btn btn-primary navcta" href={contactLink} id="nav-book-cta">Book a call</a>
     <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
@@ -31,7 +32,7 @@ const aboutLink = isBrandsPage ? '#about' : '/#about';
     <a href={howLink}>How it works</a>
     <a href={pricingLink}>Pricing</a>
     <a href={aboutLink}>About</a>
-    <a class="btn btn-primary" href="/contact">Book a call</a>
+    <a class="btn btn-primary" href={contactLink}>Book a call</a>
   </div>
 </header>
 
