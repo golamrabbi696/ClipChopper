@@ -1,0 +1,140 @@
+---
+---
+<section id="foryou">
+  <div class="wrap">
+    <div class="label reveal">Pricing</div>
+    <h2 class="reveal d1">Simple, honest pricing.</h2>
+    <p class="support reveal d2">One call. We do the rest. Choose how often.</p>
+
+    <div class="pricing-grid">
+      <!-- One-time -->
+      <div class="card tier reveal d2">
+        <div class="tier-kind">One-time</div>
+        <div class="tier-name">Try it once</div>
+        <div class="tier-price">$499</div>
+        <ul class="tier-features">
+          <li>One call becomes 8 short-form videos</li>
+          <li>Social captions for every post</li>
+          <li>20 quote cards with captions & hashtags</li>
+          <li>One month of content, ready to post</li>
+        </ul>
+        <a class="btn btn-ghost tier-btn" href="/contact?plan=one-time" id="cta-onetime">Get started</a>
+      </div>
+
+      <!-- Subscribe -->
+      <div class="card tier tier-featured reveal d3">
+        <div class="tier-badge">Most popular · Save 20%</div>
+        <div class="tier-kind">Monthly subscription</div>
+        <div class="tier-name">Subscribe</div>
+        <div class="tier-price">$399<span class="tier-per">/mo</span></div>
+        <ul class="tier-features">
+          <li>Same full month, every month</li>
+          <li>One call a month — we bring the topics</li>
+          <li>Monthly report: views, leads, AI visibility</li>
+          <li>Cancel anytime, no contracts</li>
+        </ul>
+        <a class="btn btn-gold tier-btn" href="/contact?plan=monthly" id="cta-monthly">Start monthly →</a>
+        <p class="tier-note">First call within 48 hours of booking</p>
+      </div>
+    </div>
+
+    <p class="pricing-footnote reveal d5">
+      Running a brand's content? <a href="/brands/">ClipChopper for marketing teams →</a>
+    </p>
+  </div>
+</section>
+
+<style>
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 40px;
+  max-width: 760px;
+}
+.tier { padding: 32px 28px; display: flex; flex-direction: column; position: relative; }
+.tier-featured {
+  border-color: var(--gold);
+  background: linear-gradient(160deg, #FFFCF5 0%, #FFFFFF 60%);
+  box-shadow: 0 4px 24px rgba(231,178,76,.18);
+}
+.tier-badge {
+  position: absolute;
+  top: -13px;
+  left: 24px;
+  background: var(--gold);
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+.tier-kind {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 6px;
+}
+.tier-name {
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--ink);
+}
+.tier-price {
+  font-weight: 800;
+  font-size: 2.6rem;
+  letter-spacing: -.03em;
+  color: var(--gold-dk);
+  margin: 14px 0 0;
+  line-height: 1;
+}
+.tier-per { font-weight: 500; font-size: 16px; color: var(--faint); }
+.tier-features {
+  list-style: none;
+  margin: 18px 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  flex: 1;
+}
+.tier-features li {
+  position: relative;
+  padding: 6px 0 6px 22px;
+  font-size: .93rem;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+.tier-features li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 13px;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--gold);
+}
+.tier-btn { width: 100%; margin-top: auto; }
+.tier-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--faint);
+  margin-top: 12px;
+}
+.pricing-footnote {
+  margin-top: 28px;
+  font-size: .95rem;
+  color: var(--muted);
+}
+.pricing-footnote a {
+  color: var(--gold-dk);
+  font-weight: 700;
+}
+.pricing-footnote a:hover { text-decoration: underline; }
+@media (max-width: 640px) {
+  .pricing-grid { grid-template-columns: 1fr; }
+}
+</style>

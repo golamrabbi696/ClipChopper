@@ -1,0 +1,158 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+<Layout title="Client Dashboard — ClipChopper" description="Your ClipChopper content dashboard.">
+  <Navbar />
+  <main class="dashboard-page">
+    <div class="wrap">
+      <div class="dash-header">
+        <div>
+          <div class="label">Your dashboard</div>
+          <h1 id="dash-greeting">Loading…</h1>
+        </div>
+        <button class="btn btn-ghost logout-btn" id="logout-btn">Log out</button>
+      </div>
+
+      <div class="dash-stats">
+        <div class="card stat-box">
+          <div class="stat-num" id="stat-videos">—</div>
+          <div class="stat-lbl">Videos this month</div>
+        </div>
+        <div class="card stat-box">
+          <div class="stat-num" id="stat-posts">—</div>
+          <div class="stat-lbl">Written posts</div>
+        </div>
+        <div class="card stat-box">
+          <div class="stat-num" id="stat-quotes">—</div>
+          <div class="stat-lbl">Quote cards</div>
+        </div>
+      </div>
+
+      <div class="dash-section">
+        <h2>Your deliverables</h2>
+        <div class="deliverables-grid" id="deliverables-grid">
+          <div class="loading-state">Loading your content…</div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+.dashboard-page { padding: clamp(40px,6vw,80px) 0; min-height: calc(100vh - 64px - 80px); }
+.dash-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+.dash-header h1 { font-size: clamp(1.8rem,4vw,2.6rem); margin-top: 8px; }
+.dash-stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.stat-box { padding: 28px 24px; }
+.stat-num {
+  font-weight: 800;
+  font-size: 2.8rem;
+  letter-spacing: -.03em;
+  color: var(--gold-dk);
+}
+.stat-lbl {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.dash-section h2 { margin-bottom: 24px; }
+.deliverables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.deliverable-card { padding: 22px 20px; }
+.del-type {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gold-dk);
+  margin-bottom: 8px;
+}
+.del-title { font-weight: 700; margin-bottom: 6px; }
+.del-status {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+.del-status.approved { background: rgba(34,197,94,.1); color: #16a34a; }
+.del-status.pending  { background: rgba(231,178,76,.15); color: var(--gold-dk); }
+.loading-state { color: var(--muted); padding: 20px 0; }
+.empty-state { color: var(--muted); padding: 40px 0; text-align: center; grid-column: 1/-1; }
+@media (max-width: 640px) {
+  .dash-stats { grid-template-columns: 1fr; }
+}
+</style>
+
+<script>
+  // Auth guard
+  const token = localStorage.getItem('cc_token');
+  const userRaw = localStorage.getItem('cc_user');
+  if (!token) { window.location.href = '/login'; }
+
+  const user = userRaw ? JSON.parse(userRaw) : null;
+  const greeting = document.getElementById('dash-greeting')!;
+  if (user) greeting.textContent = `Welcome back, ${user.name?.split(' ')[0] ?? 'there'}.`;
+
+  // Logout
+  document.getElementById('logout-btn')?.addEventListener('click', () => {
+    localStorage.removeItem('cc_token');
+    localStorage.removeItem('cc_user');
+    window.location.href = '/login';
+  });
+
+  // Fetch deliverables
+  async function loadDeliverables() {
+    try {
+      const res = await fetch('http://localhost:8000/api/v1/dashboard/deliverables', {
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
+      });
+      if (res.status === 401) { window.location.href = '/login'; return; }
+      const data = await res.json();
+      const items: any[] = data.data ?? [];
+      const grid = document.getElementById('deliverables-grid')!;
+
+      // Stats
+      document.getElementById('stat-videos')!.textContent = String(items.filter((i: any) => i.type === 'video').length);
+      document.getElementById('stat-posts')!.textContent  = String(items.filter((i: any) => i.type === 'post').length);
+      document.getElementById('stat-quotes')!.textContent = String(items.filter((i: any) => i.type === 'quote').length);
+
+      if (items.length === 0) {
+        grid.innerHTML = '<div class="empty-state">No deliverables yet — your first batch is on its way!</div>';
+        return;
+      }
+      grid.innerHTML = items.map((item: any) => `
+        <div class="card deliverable-card">
+          <div class="del-type">${item.type}</div>
+          <div class="del-title">${item.title}</div>
+          <p style="font-size:.88rem;color:var(--muted)">${item.month ?? ''}</p>
+          <span class="del-status ${item.status === 'approved' ? 'approved' : 'pending'}">${item.status}</span>
+        </div>
+      `).join('');
+    } catch {
+      document.getElementById('deliverables-grid')!.innerHTML =
+        '<div class="empty-state">Could not load deliverables. Please refresh.</div>';
+    }
+  }
+  loadDeliverables();
+</script>

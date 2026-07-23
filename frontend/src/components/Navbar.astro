@@ -1,0 +1,145 @@
+---
+---
+<header id="top">
+  <div class="wrap navbar">
+    <a class="logo" href="/">
+      <span class="logomark" aria-hidden="true">CC</span>
+      <span class="logotype">CLIPCHOPPER</span>
+    </a>
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="/#how">How it works</a>
+      <a href="/#foryou">Pricing</a>
+      <a href="/#about">About</a>
+    </nav>
+    <a class="btn btn-primary navcta" href="/contact" id="nav-book-cta">Book a call</a>
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+    <a href="/#how">How it works</a>
+    <a href="/#foryou">Pricing</a>
+    <a href="/#about">About</a>
+    <a class="btn btn-primary" href="/contact">Book a call</a>
+  </div>
+</header>
+
+<style>
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250,250,248,.90);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  transition: box-shadow .3s var(--ease);
+}
+header.scrolled { box-shadow: var(--shadow); }
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  gap: 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.logomark {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--navy);
+  color: var(--gold);
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: .03em;
+}
+.logotype {
+  font-weight: 800;
+  font-size: 13.5px;
+  letter-spacing: .18em;
+  color: var(--ink);
+}
+
+.navlinks {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin: 0 auto;
+}
+.navlinks a {
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--muted);
+  transition: color .18s var(--ease);
+}
+.navlinks a:hover { color: var(--ink); }
+
+.navcta { min-height: 40px; padding: 0 20px; font-size: 14px; }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  padding: 4px;
+}
+.hamburger span {
+  display: block;
+  height: 2px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform .25s var(--ease), opacity .25s var(--ease);
+}
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px var(--pad) 20px;
+  border-top: 1px solid var(--border);
+  background: rgba(250,250,248,.97);
+}
+.mobile-menu a {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ink-2);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.mobile-menu .btn { margin-top: 10px; width: 100%; }
+
+@media (max-width: 768px) {
+  .navlinks { display: none; }
+  .navcta { display: none; }
+  .hamburger { display: flex; }
+  .mobile-menu.open { display: flex; }
+}
+</style>
+
+<script>
+  const btn = document.getElementById('hamburger-btn')!;
+  const menu = document.getElementById('mobile-menu')!;
+  btn.addEventListener('click', () => {
+    const open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+    menu.setAttribute('aria-hidden', String(!open));
+  });
+  window.addEventListener('scroll', () => {
+    document.querySelector('header')!.classList.toggle('scrolled', window.scrollY > 8);
+  }, { passive: true });
+</script>

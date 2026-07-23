@@ -1,0 +1,121 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/admin.css';
+---
+
+<Layout title="Admin Login — ClipChopper" description="Admin login">
+  <main class="admin-shell">
+    <div class="wrap admin-center admin-login">
+      <header class="admin-topbar">
+        <div class="admin-brand">
+          <div class="admin-badge">CC</div>
+          <div class="admin-titleblock">
+            <span class="admin-kicker">Admin</span>
+            <div class="admin-title">Sign in</div>
+            <div class="admin-subtitle">Use your admin email and password.</div>
+          </div>
+        </div>
+        <div class="admin-actions">
+          <a class="btn btn-ghost" href="/">Back to site</a>
+        </div>
+      </header>
+
+      <section class="admin-main">
+        <section class="admin-card admin-card--login">
+          <div class="admin-card__header">
+            <h3>Login</h3>
+            <p class="admin-help">This area is protected. Only admins can access the dashboard.</p>
+          </div>
+
+          <form id="admin-login-form" class="admin-form">
+            <div class="field">
+              <label for="al-email">Email</label>
+              <input id="al-email" name="email" type="email" autocomplete="username" required />
+            </div>
+            <div class="field">
+              <label for="al-pass">Password</label>
+              <input id="al-pass" name="password" type="password" autocomplete="current-password" required />
+            </div>
+            <div class="admin-form__actions">
+              <button class="btn btn-gold" type="submit">Sign in</button>
+            </div>
+            <p class="admin-status" id="admin-auth-status" aria-live="polite"></p>
+            <div class="admin-sep"></div>
+            <p class="admin-footerhint">Tip: if you just seeded the DB, use the demo admin credentials you created.</p>
+          </form>
+        </section>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const API_BASE = 'http://127.0.0.1:8000';
+  const TOKEN_KEY = 'cc_admin_token';
+  const USER_KEY = 'cc_admin_user';
+
+  function getToken() {
+    return localStorage.getItem(TOKEN_KEY) || '';
+  }
+
+  function setToken(token, user) {
+    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem(USER_KEY, JSON.stringify(user || {}));
+  }
+
+  async function api(path, { method = 'GET', body } = {}) {
+    const headers = { 'Accept': 'application/json' };
+    const token = getToken();
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (body !== undefined) headers['Content-Type'] = 'application/json';
+
+    const res = await fetch(`${API_BASE}${path}`, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const msg = data?.message || `Request failed (${res.status})`;
+      throw new Error(msg);
+    }
+    return data;
+  }
+
+  async function ensureAdminSession() {
+    const token = getToken();
+    if (!token) return false;
+    try {
+      const me = await api('/api/v1/auth/me');
+      return me?.role === 'admin';
+    } catch {
+      return false;
+    }
+  }
+
+  const status = document.getElementById('admin-auth-status');
+  const loginForm = document.getElementById('admin-login-form');
+
+  loginForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    status.textContent = '';
+    status.classList.remove('is-error');
+
+    const data = Object.fromEntries(new FormData(loginForm));
+    try {
+      const payload = await api('/api/v1/auth/login', { method: 'POST', body: data });
+      if (payload?.user?.role !== 'admin') throw new Error('Forbidden. Admin access only.');
+      setToken(payload.token, payload.user);
+      window.location.href = '/admin/dashboard';
+    } catch (err) {
+      status.textContent = err.message || 'Login failed.';
+      status.classList.add('is-error');
+    }
+  });
+
+  (async () => {
+    const ok = await ensureAdminSession();
+    if (ok) window.location.href = '/admin/dashboard';
+  })();
+</script>

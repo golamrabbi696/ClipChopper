@@ -1,0 +1,387 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/admin.css';
+import AdminSidebar from '../../components/admin/AdminSidebar.astro';
+---
+
+<Layout title="Admin Dashboard - ClipChopper" description="Admin dashboard">
+  <main class="admin-shell">
+    <div class="wrap">
+      <header class="admin-topbar">
+        <div class="admin-brand">
+          <div class="admin-badge">CC</div>
+          <div class="admin-titleblock">
+            <div class="admin-kicker">Admin</div>
+            <div class="admin-title">Dashboard</div>
+            <div class="admin-subtitle" id="admin-who">Signed in</div>
+          </div>
+        </div>
+        <div class="admin-actions">
+          <a class="btn btn-ghost" href="/admin/register">Create admin</a>
+          <button class="btn btn-ghost" id="admin-refresh" type="button">Refresh</button>
+          <button class="btn btn-primary" id="admin-logout" type="button">Logout</button>
+        </div>
+      </header>
+
+      <div class="admin-app">
+        <AdminSidebar active="dashboard" />
+
+        <section class="admin-main">
+          <section class="admin-overview" aria-label="Overview">
+            <section class="admin-stat" aria-label="Bookings overview">
+              <div class="admin-stat__top">
+                <div class="admin-stat__label">Bookings</div>
+                <span class="admin-pill" id="stat-bookings-pill">—</span>
+              </div>
+              <div class="admin-stat__value" id="stat-bookings-total">—</div>
+              <div class="admin-stat__meta" id="stat-bookings-meta">Loading…</div>
+            </section>
+
+            <section class="admin-stat" aria-label="Next meeting overview">
+              <div class="admin-stat__top">
+                <div class="admin-stat__label">Next meeting</div>
+                <span class="admin-pill" id="stat-next-pill">Upcoming</span>
+              </div>
+              <div class="admin-stat__value admin-stat__value--wrap" id="stat-next-when">—</div>
+              <div class="admin-stat__meta" id="stat-next-who">—</div>
+            </section>
+
+            <section class="admin-stat" aria-label="Notifications overview">
+              <div class="admin-stat__top">
+                <div class="admin-stat__label">Notifications</div>
+                <span class="admin-pill" id="stat-webhooks-pill">—</span>
+              </div>
+              <div class="admin-stat__value" id="stat-webhooks-value">—</div>
+              <div class="admin-stat__meta" id="stat-webhooks-meta">—</div>
+            </section>
+          </section>
+
+          <section class="admin-card">
+            <div class="admin-card__header admin-card__header--split">
+              <div>
+                <h3>Bookings</h3>
+                <p class="admin-help">Who booked a meeting and when.</p>
+              </div>
+              <div class="admin-tools" aria-label="Bookings controls">
+                <label class="admin-sr-only" for="book-search">Search</label>
+                <input class="admin-input" id="book-search" type="search" placeholder="Search name, email, plan…" />
+                <label class="admin-sr-only" for="book-status">Status</label>
+                <select class="admin-select" id="book-status">
+                  <option value="">All statuses</option>
+                  <option value="new">New</option>
+                  <option value="pending">Pending</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                  <option value="canceled">Canceled</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="admin-tablewrap">
+              <table class="admin-table" id="bookings-table">
+                <thead>
+                  <tr>
+                    <th>Who</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Plan</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                  </tr>
+                </thead>
+                <tbody id="bookings-body">
+                  <tr><td colspan="7" class="admin-help">Loading…</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="admin-pager">
+              <button class="btn btn-ghost" id="book-prev" type="button">Prev</button>
+              <div class="admin-pill" id="book-page">Page —</div>
+              <button class="btn btn-ghost" id="book-next" type="button">Next</button>
+            </div>
+
+            <p class="admin-status" id="bookings-status" aria-live="polite"></p>
+          </section>
+        </section>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const API_BASE = 'http://127.0.0.1:8000';
+
+  const TOKEN_KEY = 'cc_admin_token';
+  const USER_KEY = 'cc_admin_user';
+
+  const bookingsBody = document.getElementById('bookings-body');
+  const bookingsStatus = document.getElementById('bookings-status');
+  const bookPrev = document.getElementById('book-prev');
+  const bookNext = document.getElementById('book-next');
+  const bookPage = document.getElementById('book-page');
+  const bookSearch = document.getElementById('book-search');
+  const bookStatus = document.getElementById('book-status');
+
+  const logoutBtn = document.getElementById('admin-logout');
+  const refreshBtn = document.getElementById('admin-refresh');
+  const who = document.getElementById('admin-who');
+
+  const statBookingsTotal = document.getElementById('stat-bookings-total');
+  const statBookingsMeta = document.getElementById('stat-bookings-meta');
+  const statBookingsPill = document.getElementById('stat-bookings-pill');
+  const statNextWhen = document.getElementById('stat-next-when');
+  const statNextWho = document.getElementById('stat-next-who');
+  const statNextPill = document.getElementById('stat-next-pill');
+  const statWebhooksPill = document.getElementById('stat-webhooks-pill');
+  const statWebhooksValue = document.getElementById('stat-webhooks-value');
+  const statWebhooksMeta = document.getElementById('stat-webhooks-meta');
+
+  let state = { page: 1, lastPage: 1, total: null, rows: [], webhooks: null };
+
+  function getToken() {
+    return localStorage.getItem(TOKEN_KEY) || '';
+  }
+
+  function clearToken() {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+  }
+
+  function escapeHtml(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function normalizeStatus(value) {
+    const s = String(value || '').trim().toLowerCase();
+    if (!s) return '';
+    if (s === 'canceled') return 'cancelled';
+    return s;
+  }
+
+  function statusLabel(value) {
+    const s = normalizeStatus(value);
+    if (!s) return '—';
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  function getCallDateTime(b) {
+    const callDate = b.call_date || (b.call_scheduled_at ? new Date(b.call_scheduled_at).toISOString().slice(0, 10) : '');
+    const callTime = b.call_time || '';
+    return { callDate, callTime };
+  }
+
+  function parseCallDateTime(b) {
+    const { callDate, callTime } = getCallDateTime(b);
+    if (!callDate) return null;
+    if (callTime) {
+      const d = new Date(`${callDate}T${callTime}`);
+      return Number.isNaN(d.getTime()) ? null : d;
+    }
+    const d = new Date(callDate);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+
+  function applyBookingFilters(rows) {
+    const q = (bookSearch?.value || '').trim().toLowerCase();
+    const status = normalizeStatus(bookStatus?.value || '');
+    return (rows || []).filter((b) => {
+      if (status && normalizeStatus(b.status) !== status) return false;
+      if (!q) return true;
+      const lead = b.lead || {};
+      const { callDate, callTime } = getCallDateTime(b);
+      const hay = [
+        lead.name,
+        lead.email,
+        b.plan,
+        b.status,
+        callDate,
+        callTime,
+      ].map((v) => String(v ?? '').toLowerCase()).join(' | ');
+      return hay.includes(q);
+    });
+  }
+
+  function updateOverview() {
+    const showing = state.rows?.length || 0;
+    const total = typeof state.total === 'number' ? state.total : null;
+
+    if (statBookingsTotal) statBookingsTotal.textContent = total !== null ? String(total) : String(showing);
+    if (statBookingsMeta) statBookingsMeta.textContent = total !== null ? `Total bookings • Showing ${showing}` : `Showing ${showing}`;
+    if (statBookingsPill) statBookingsPill.textContent = `Page ${state.page} / ${state.lastPage}`;
+
+    const now = new Date();
+    const upcoming = (state.rows || [])
+      .map((b) => ({ b, when: parseCallDateTime(b) }))
+      .filter((x) => x.when && x.when.getTime() >= now.getTime())
+      .sort((a, b) => a.when.getTime() - b.when.getTime())[0];
+
+    if (upcoming?.b && upcoming?.when) {
+      const lead = upcoming.b.lead || {};
+      if (statNextWhen) statNextWhen.textContent = upcoming.when.toLocaleString();
+      if (statNextWho) statNextWho.textContent = `${lead.name || '—'} • ${lead.email || '—'}`;
+      if (statNextPill) statNextPill.textContent = 'Upcoming';
+    } else {
+      if (statNextWhen) statNextWhen.textContent = '—';
+      if (statNextWho) statNextWho.textContent = 'No upcoming meetings';
+      if (statNextPill) statNextPill.textContent = '—';
+    }
+
+    const discordOn = !!state.webhooks?.discord_enabled;
+    const telegramOn = !!state.webhooks?.telegram_enabled;
+    const enabledCount = (discordOn ? 1 : 0) + (telegramOn ? 1 : 0);
+    const webhooksKnown = state.webhooks !== null;
+
+    if (statWebhooksPill) statWebhooksPill.textContent = webhooksKnown ? (enabledCount ? `${enabledCount} enabled` : 'Disabled') : '-';
+    if (statWebhooksValue) statWebhooksValue.textContent = webhooksKnown ? (enabledCount ? 'Active' : 'Off') : '-';
+    if (statWebhooksMeta) statWebhooksMeta.textContent = webhooksKnown ? `Discord: ${discordOn ? 'On' : 'Off'} | Telegram: ${telegramOn ? 'On' : 'Off'}` : 'Unable to load settings.';
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return iso;
+    return d.toLocaleString();
+  }
+
+  async function api(path, { method = 'GET', body } = {}) {
+    const headers = { 'Accept': 'application/json' };
+    const token = getToken();
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (body !== undefined) headers['Content-Type'] = 'application/json';
+
+    const res = await fetch(`${API_BASE}${path}`, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const msg = data?.message || `Request failed (${res.status})`;
+      throw new Error(msg);
+    }
+    return data;
+  }
+
+  async function ensureAdminSession() {
+    const token = getToken();
+    if (!token) return false;
+    try {
+      const me = await api('/api/v1/auth/me');
+      if (who) who.textContent = `Signed in as ${me?.email || 'admin'}`;
+      return me?.role === 'admin';
+    } catch {
+      return false;
+    }
+  }
+
+  function renderBookings(rows) {
+    const filtered = applyBookingFilters(rows);
+    if (!rows?.length) {
+      bookingsBody.innerHTML = `<tr><td colspan="7" class="admin-help">No bookings yet.</td></tr>`;
+      return;
+    }
+    if (!filtered?.length) {
+      bookingsBody.innerHTML = `<tr><td colspan="7" class="admin-help">No matches.</td></tr>`;
+      return;
+    }
+
+    bookingsBody.innerHTML = filtered.map((b) => {
+      const lead = b.lead || {};
+      const { callDate, callTime } = getCallDateTime(b);
+      const status = normalizeStatus(b.status);
+      const statusClass = status ? `admin-tag admin-tag--${status}` : 'admin-tag';
+      return `
+        <tr>
+          <td>${lead.name ?? '—'}</td>
+          <td>${lead.email ?? '—'}</td>
+          <td>${callDate || '—'}</td>
+          <td>${callTime || '—'}</td>
+          <td>${b.plan ?? '—'}</td>
+          <td><span class="${statusClass}">${b.status ?? '—'}</span></td>
+          <td>${fmtDate(b.created_at)}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  async function loadBookings(page = 1) {
+    bookingsStatus.textContent = '';
+    bookingsStatus.classList.remove('is-error');
+    bookingsBody.innerHTML = `<tr><td colspan="7" class="admin-help">Loading…</td></tr>`;
+    try {
+      const payload = await api(`/api/v1/admin/bookings?page=${page}`);
+      const rows = payload?.data ?? payload?.data?.data ?? [];
+      state.rows = rows;
+      state.total = typeof payload?.total === 'number' ? payload.total : null;
+      renderBookings(state.rows);
+
+      const currentPage = payload?.current_page ?? page;
+      const lastPage = payload?.last_page ?? 1;
+      state.page = currentPage;
+      state.lastPage = lastPage;
+      bookPage.textContent = `Page ${currentPage} / ${lastPage}`;
+
+      bookPrev.disabled = currentPage <= 1;
+      bookNext.disabled = currentPage >= lastPage;
+      updateOverview();
+    } catch (e) {
+      bookingsBody.innerHTML = `<tr><td colspan="7" class="admin-help">Failed to load bookings.</td></tr>`;
+      bookingsStatus.textContent = e.message || 'Failed to load bookings.';
+      bookingsStatus.classList.add('is-error');
+      state.rows = [];
+      state.total = null;
+      updateOverview();
+    }
+  }
+
+  async function loadWebhooks() {
+    try {
+      const s = await api('/api/v1/admin/webhooks');
+      state.webhooks = {
+        discord_enabled: !!s.discord_enabled,
+        telegram_enabled: !!s.telegram_enabled,
+      };
+      updateOverview();
+    } catch (e) {
+      state.webhooks = null;
+      updateOverview();
+    }
+  }
+
+  async function loadAll() {
+    await Promise.all([loadWebhooks(), loadBookings(state.page)]);
+  }
+
+  bookPrev?.addEventListener('click', () => loadBookings(Math.max(1, state.page - 1)));
+  bookNext?.addEventListener('click', () => loadBookings(Math.min(state.lastPage, state.page + 1)));
+  bookSearch?.addEventListener('input', () => renderBookings(state.rows));
+  bookStatus?.addEventListener('change', () => renderBookings(state.rows));
+
+  logoutBtn?.addEventListener('click', () => {
+    clearToken();
+    window.location.href = '/admin/login';
+  });
+
+  refreshBtn?.addEventListener('click', async () => {
+    await loadAll();
+  });
+
+  (async () => {
+    const ok = await ensureAdminSession();
+    if (!ok) {
+      clearToken();
+      window.location.href = '/admin/login';
+      return;
+    }
+    await loadAll();
+  })();
+</script>

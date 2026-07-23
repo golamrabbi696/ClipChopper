@@ -1,0 +1,113 @@
+---
+---
+<section class="book-cta" id="book">
+  <div class="wrap book-inner">
+    <div class="book-text">
+      <h2 class="reveal" style="color:var(--cream)">Let's make you impossible to miss.</h2>
+      <p class="support reveal d1" style="color:#B7BCD4">
+        It starts with one call. You talk. We hand you a month of content ready to post.
+        More influence. Less time. Still you.
+      </p>
+      <div class="book-actions reveal d2">
+        <a class="btn btn-gold" href="/contact" id="book-main-cta">Book a call →</a>
+        <a class="btn" style="color:#B7BCD4;border:1.5px solid rgba(244,240,231,.25)" href="/#foryou">See pricing</a>
+      </div>
+    </div>
+    <div class="book-form card reveal d3">
+      <div class="form-label">Or drop us a quick note</div>
+      <form id="quick-contact-form" action="http://localhost:8000/api/v1/contact" method="POST" novalidate>
+        <div class="field">
+          <label for="qc-name">Your name</label>
+          <input type="text" id="qc-name" name="name" placeholder="Jane Smith" required />
+        </div>
+        <div class="field">
+          <label for="qc-email">Email address</label>
+          <input type="email" id="qc-email" name="email" placeholder="jane@company.com" required />
+        </div>
+        <div class="field">
+          <label for="qc-msg">What are you working on?</label>
+          <textarea id="qc-msg" name="message" placeholder="Tell us a bit about yourself…" rows="3"></textarea>
+        </div>
+        <button class="btn btn-gold submit-btn" type="submit" id="qc-submit">Send message →</button>
+        <p class="form-success" id="qc-success" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+.book-cta {
+  background: var(--navy);
+  position: relative;
+  overflow: hidden;
+}
+.book-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 20% 110%, rgba(231,178,76,.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.book-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(36px, 6vw, 72px);
+  align-items: center;
+}
+.book-text .support { max-width: 42ch; }
+.book-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.book-form { padding: 32px; }
+.form-label {
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 20px;
+}
+.book-form .field { margin-bottom: 16px; }
+.submit-btn { width: 100%; margin-top: 6px; }
+.form-success {
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold-dk);
+  min-height: 20px;
+}
+@media (max-width: 860px) {
+  .book-inner { grid-template-columns: 1fr; }
+}
+</style>
+
+<script>
+  const form = document.getElementById('quick-contact-form') as HTMLFormElement;
+  const success = document.getElementById('qc-success')!;
+  const submitBtn = document.getElementById('qc-submit') as HTMLButtonElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.textContent = 'Sending…';
+    submitBtn.setAttribute('disabled', 'true');
+    try {
+      const data = Object.fromEntries(new FormData(form));
+      const res = await fetch('http://localhost:8000/api/v1/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (res.ok) {
+        success.textContent = '✓ Message sent! We\'ll be in touch soon.';
+        form.reset();
+      } else {
+        success.textContent = 'Something went wrong. Please try again.';
+        success.style.color = '#E86F50';
+      }
+    } catch {
+      success.textContent = 'Could not connect. Please email us directly.';
+      success.style.color = '#E86F50';
+    } finally {
+      submitBtn.textContent = 'Send message →';
+      submitBtn.removeAttribute('disabled');
+    }
+  });
+</script>

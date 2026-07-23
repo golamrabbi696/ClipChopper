@@ -1,0 +1,85 @@
+---
+const pillars = [
+  {
+    mark: true,
+    title: 'Your real voice',
+    body: 'A real editor learns how you actually talk before anything gets cut: your phrasing, your pace, the things you\'d never say. Nothing goes out under your name until you say yes.',
+  },
+  {
+    mark: false,
+    title: 'Original content',
+    body: 'Every piece is cut from your own words on your own call. Nothing templated, nothing recycled, nothing pulled from thin air.',
+  },
+  {
+    mark: false,
+    title: 'Genuine influence',
+    body: 'The audience you build is really yours: your accounts, your name, people who showed up for what you actually said.',
+  },
+];
+---
+<section>
+  <div class="wrap">
+    <div class="label reveal">What you keep</div>
+    <h2 class="reveal d1">Protect your authenticity.</h2>
+    <p class="support reveal d2">
+      Your real voice. Original content. Genuine influence. Growing your reach shouldn't cost you the thing that makes it worth reaching.
+    </p>
+    <div class="pillar-grid">
+      {pillars.map((p, i) => (
+        <div class={`card pillar ${p.mark ? 'pillar-mark' : ''} reveal d${i + 2}`}>
+          <div class="pillar-icon" aria-hidden="true">{p.mark ? '✦' : i === 1 ? '◈' : '◉'}</div>
+          <h3>{p.title}</h3>
+          <p>{p.body}</p>
+        </div>
+      ))}
+    </div>
+    <p class="tools-note reveal d5">
+      Modern tools handle the tedious parts backstage, so your money goes to the craft, not the busywork.
+    </p>
+  </div>
+</section>
+
+<section class="topics-section">
+  <div class="wrap topics-inner">
+    <div class="label reveal">The topics</div>
+    <h2 class="reveal d1">We bring the topics. You bring the take.</h2>
+    <p class="support reveal d2">
+      Some months you'll arrive with ideas. Most months you won't need to. We watch what your field is talking about,
+      build your interview around the conversations worth joining, and ask the questions only you can answer.
+      The feed is full of recycled AI posts. Yours is a real take on a live conversation.
+    </p>
+  </div>
+</section>
+
+<style>
+.pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 36px;
+}
+.pillar { padding: 28px 24px; }
+.pillar-mark { border-color: var(--gold); }
+.pillar-mark h3 { color: var(--gold-dk); }
+.pillar-icon {
+  font-size: 22px;
+  color: var(--gold);
+  margin-bottom: 14px;
+  line-height: 1;
+}
+.pillar h3 { margin-bottom: 8px; }
+.pillar p { font-size: .93rem; line-height: 1.65; }
+.tools-note {
+  margin-top: 28px;
+  color: var(--muted);
+  font-size: .95rem;
+  max-width: 60ch;
+}
+.topics-section { padding-top: 0; }
+.topics-inner { text-align: center; }
+.topics-inner .support { margin: 16px auto 0; }
+
+@media (max-width: 760px) {
+  .pillar-grid { grid-template-columns: 1fr; }
+}
+</style>

@@ -1,0 +1,39 @@
+---
+import '../styles/global.css';
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = 'ClipChopper: Talk for an hour. Show up for a month.',
+  description = 'One call becomes a month of content: 8 short videos, 8 written posts, and 20 quote cards in your branding. Made by a real editor, approved by you.'
+} = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content="ClipChopper: Build. Grow. Be Seen." />
+  <meta property="og:description" content="Talk for an hour. Get a month of content that sounds like you, ready to post." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+  <slot />
+  <script>
+    // Reveal-on-scroll
+    (function () {
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('in'); }),
+        { threshold: 0.12 }
+      );
+      document.querySelectorAll<HTMLElement>('.reveal:not(.in)').forEach((el) => io.observe(el));
+    })();
+  </script>
+</body>
+</html>

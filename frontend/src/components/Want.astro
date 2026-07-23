@@ -1,0 +1,85 @@
+---
+---
+<section class="want" id="want">
+  <div class="wrap want-inner">
+    <h2 class="reveal">The right people should already know your name.</h2>
+    <p class="support reveal d1">
+      You're good at what you do. Growing who knows it comes down to one thing: showing up
+      where they are, week after week. The name you build is yours. It travels, whatever changes at work.
+    </p>
+  </div>
+</section>
+
+<section class="cost-section" style="padding-top:0">
+  <div class="wrap">
+    <h2 class="reveal">Being seen shouldn't cost you your time or your budget.</h2>
+    <div class="cost-grid">
+      <div class="cost-card card reveal d1">
+        <div class="cost-who">Doing it yourself</div>
+        <div class="cost-big">10 hours</div>
+        <div class="cost-unit">a week you don't have</div>
+      </div>
+      <div class="vs-badge reveal d2">vs</div>
+      <div class="cost-card card reveal d3">
+        <div class="cost-who">Hiring an agency</div>
+        <div class="cost-big">$3,000–$25,000</div>
+        <div class="cost-unit">a month, with a stranger in charge of your voice</div>
+      </div>
+    </div>
+    <p class="better-way reveal d4">There's a better way. ↓</p>
+  </div>
+</section>
+
+<style>
+.want { text-align: center; }
+.want .support { margin-left: auto; margin-right: auto; }
+
+.cost-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0 20px;
+  align-items: center;
+  margin-top: 36px;
+  max-width: 680px;
+}
+.cost-card { padding: 32px 28px; }
+.cost-who {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 10px;
+}
+.cost-big {
+  font-weight: 800;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  letter-spacing: -.025em;
+  line-height: 1.05;
+  color: var(--ink);
+}
+.cost-unit { font-size: 14px; color: var(--muted); margin-top: 8px; }
+.vs-badge {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.better-way {
+  margin-top: 28px;
+  font-weight: 700;
+  font-size: clamp(1.1rem, 3vw, 1.3rem);
+  color: var(--gold-dk);
+}
+@media (max-width: 600px) {
+  .cost-grid { grid-template-columns: 1fr; gap: 12px; }
+  .vs-badge { margin: 0 auto; }
+}
+</style>

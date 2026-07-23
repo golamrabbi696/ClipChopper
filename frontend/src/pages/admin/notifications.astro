@@ -1,0 +1,195 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/admin.css';
+import AdminSidebar from '../../components/admin/AdminSidebar.astro';
+---
+
+<Layout title="Notification Settings — ClipChopper" description="Admin notification settings">
+  <main class="admin-shell">
+    <div class="wrap">
+      <header class="admin-topbar">
+        <div class="admin-brand">
+          <div class="admin-badge">CC</div>
+          <div class="admin-titleblock">
+            <div class="admin-kicker">Admin</div>
+            <div class="admin-title">Notification settings</div>
+            <div class="admin-subtitle" id="admin-who">Signed in</div>
+          </div>
+        </div>
+        <div class="admin-actions">
+          <a class="btn btn-ghost" href="/admin/register">Create admin</a>
+          <button class="btn btn-ghost" id="admin-refresh" type="button">Refresh</button>
+          <button class="btn btn-primary" id="admin-logout" type="button">Logout</button>
+        </div>
+      </header>
+
+      <div class="admin-app">
+        <AdminSidebar active="notifications" />
+
+        <section class="admin-main">
+          <section class="admin-card admin-card--settings">
+            <div class="admin-card__header">
+              <h3>Webhook notifications</h3>
+              <p class="admin-help">Send a message to Discord or Telegram when someone books a meeting.</p>
+            </div>
+
+            <form id="webhooks-form" class="admin-form">
+              <div class="admin-row">
+                <label class="admin-switch">
+                  <input type="checkbox" id="wh-discord-enabled" />
+                  <span>Discord</span>
+                </label>
+                <span class="admin-pill">Webhook</span>
+              </div>
+              <div class="field">
+                <label for="wh-discord-url">Discord webhook URL</label>
+                <input id="wh-discord-url" type="url" placeholder="https://discord.com/api/webhooks/..." />
+              </div>
+
+              <div class="admin-sep" role="presentation"></div>
+
+              <div class="admin-row">
+                <label class="admin-switch">
+                  <input type="checkbox" id="wh-telegram-enabled" />
+                  <span>Telegram</span>
+                </label>
+                <span class="admin-pill">Bot</span>
+              </div>
+              <div class="field">
+                <label for="wh-telegram-token">Telegram bot token</label>
+                <input id="wh-telegram-token" type="password" placeholder="123456:ABC-DEF..." />
+              </div>
+              <div class="field">
+                <label for="wh-telegram-chat">Telegram chat ID</label>
+                <input id="wh-telegram-chat" type="text" placeholder="-1001234567890" />
+              </div>
+
+              <div class="admin-form__actions">
+                <button class="btn btn-primary" type="submit">Save</button>
+                <p class="admin-status" id="webhooks-status" aria-live="polite"></p>
+              </div>
+            </form>
+          </section>
+        </section>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const API_BASE = 'http://127.0.0.1:8000';
+
+  const TOKEN_KEY = 'cc_admin_token';
+  const USER_KEY = 'cc_admin_user';
+
+  const webhooksForm = document.getElementById('webhooks-form');
+  const webhooksStatus = document.getElementById('webhooks-status');
+  const whDiscordEnabled = document.getElementById('wh-discord-enabled');
+  const whDiscordUrl = document.getElementById('wh-discord-url');
+  const whTelegramEnabled = document.getElementById('wh-telegram-enabled');
+  const whTelegramToken = document.getElementById('wh-telegram-token');
+  const whTelegramChat = document.getElementById('wh-telegram-chat');
+
+  const logoutBtn = document.getElementById('admin-logout');
+  const refreshBtn = document.getElementById('admin-refresh');
+  const who = document.getElementById('admin-who');
+
+  function getToken() {
+    return localStorage.getItem(TOKEN_KEY) || '';
+  }
+
+  function clearToken() {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+  }
+
+  async function api(path, { method = 'GET', body } = {}) {
+    const headers = { 'Accept': 'application/json' };
+    const token = getToken();
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (body !== undefined) headers['Content-Type'] = 'application/json';
+
+    const res = await fetch(`${API_BASE}${path}`, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const msg = data?.message || `Request failed (${res.status})`;
+      throw new Error(msg);
+    }
+    return data;
+  }
+
+  async function ensureAdminSession() {
+    const token = getToken();
+    if (!token) return false;
+    try {
+      const me = await api('/api/v1/auth/me');
+      if (who) who.textContent = `Signed in as ${me?.email || 'admin'}`;
+      return me?.role === 'admin';
+    } catch {
+      return false;
+    }
+  }
+
+  async function loadWebhooks() {
+    webhooksStatus.textContent = '';
+    webhooksStatus.classList.remove('is-error');
+    try {
+      const s = await api('/api/v1/admin/webhooks');
+      whDiscordEnabled.checked = !!s.discord_enabled;
+      whDiscordUrl.value = s.discord_webhook_url || '';
+      whTelegramEnabled.checked = !!s.telegram_enabled;
+      whTelegramToken.value = s.telegram_bot_token || '';
+      whTelegramChat.value = s.telegram_chat_id || '';
+    } catch (e) {
+      webhooksStatus.textContent = e.message || 'Failed to load webhook settings.';
+      webhooksStatus.classList.add('is-error');
+    }
+  }
+
+  webhooksForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    webhooksStatus.textContent = '';
+    webhooksStatus.classList.remove('is-error');
+    try {
+      await api('/api/v1/admin/webhooks', {
+        method: 'PUT',
+        body: {
+          discord_enabled: whDiscordEnabled.checked,
+          discord_webhook_url: whDiscordUrl.value || null,
+          telegram_enabled: whTelegramEnabled.checked,
+          telegram_bot_token: whTelegramToken.value || null,
+          telegram_chat_id: whTelegramChat.value || null,
+        },
+      });
+      webhooksStatus.textContent = 'Saved.';
+    } catch (e2) {
+      webhooksStatus.textContent = e2.message || 'Failed to save.';
+      webhooksStatus.classList.add('is-error');
+    }
+  });
+
+  logoutBtn?.addEventListener('click', () => {
+    clearToken();
+    window.location.href = '/admin/login';
+  });
+
+  refreshBtn?.addEventListener('click', async () => {
+    await loadWebhooks();
+  });
+
+  (async () => {
+    const ok = await ensureAdminSession();
+    if (!ok) {
+      clearToken();
+      window.location.href = '/admin/login';
+      return;
+    }
+    await loadWebhooks();
+  })();
+</script>
+

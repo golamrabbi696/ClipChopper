@@ -1,0 +1,107 @@
+---
+const deliverables = [
+  { bold: '8 short videos', rest: ', two a week, cut from your call' },
+  { bold: '8 written posts', rest: ', the words to run with each video' },
+  { bold: '20 quote cards', rest: ', your best lines, in your branding' },
+  { bold: 'Ready to publish', rest: ', approved and laid out on a calendar' },
+  { bold: 'A monthly report', rest: ', what landed and what to do next' },
+];
+const platforms = ['LinkedIn', 'Instagram', 'YouTube', 'TikTok', 'X'];
+---
+<section class="navy-band">
+  <div class="wrap">
+    <div class="label reveal" style="color:var(--gold)">What one hour becomes</div>
+    <h2 class="reveal d1" style="color:var(--cream)">A full month of content, every month.</h2>
+    <div class="get-grid">
+      <ul class="get-list reveal d2">
+        {deliverables.map(d => (
+          <li><strong>{d.bold}</strong>{d.rest}</li>
+        ))}
+      </ul>
+      <div class="get-aside reveal d3">
+        <div class="aside-big">36 pieces of content from <span style="color:var(--gold)">one conversation.</span></div>
+        <p>Enough to show up almost every day, without touching an editing timeline.</p>
+        <div class="platform-chips">
+          {platforms.map(p => <span>{p}</span>)}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.navy-band {
+  background: var(--navy);
+  color: var(--cream);
+}
+.get-grid {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: clamp(28px, 5vw, 60px);
+  margin-top: 36px;
+  align-items: start;
+}
+.get-list { list-style: none; }
+.get-list li {
+  position: relative;
+  padding: 14px 0 14px 38px;
+  border-bottom: 1px solid rgba(244,240,231,.12);
+  font-size: clamp(.95rem, 2.4vw, 1.05rem);
+  color: #B7BCD4;
+  line-height: 1.55;
+}
+.get-list li:last-child { border-bottom: none; }
+.get-list li strong { color: var(--cream); font-weight: 700; }
+.get-list li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 20px;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 2px solid var(--gold);
+  background: rgba(231,178,76,.12);
+}
+.get-aside {
+  border-left: 3px solid var(--gold);
+  padding: 6px 0 6px 24px;
+  position: sticky;
+  top: 80px;
+}
+.aside-big {
+  font-weight: 800;
+  font-size: clamp(1.35rem, 3.5vw, 1.75rem);
+  letter-spacing: -.02em;
+  line-height: 1.2;
+  color: var(--cream);
+}
+.get-aside p {
+  color: #B7BCD4;
+  margin-top: 12px;
+  font-size: .95rem;
+}
+.platform-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.platform-chips span {
+  border: 1.5px solid rgba(244,240,231,.25);
+  border-radius: 20px;
+  padding: 7px 16px;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--cream);
+  transition: border-color .18s, background .18s;
+}
+.platform-chips span:hover {
+  border-color: var(--gold);
+  background: rgba(231,178,76,.1);
+}
+@media (max-width: 768px) {
+  .get-grid { grid-template-columns: 1fr; }
+  .get-aside { position: static; border-left: none; border-top: 1px solid rgba(244,240,231,.2); padding: 20px 0 0; }
+}
+</style>

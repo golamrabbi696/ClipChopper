@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Admin — ClipChopper" description="Admin redirect">
+  <main class="admin">
+    <div class="wrap" style="padding: 64px 0;">
+      <div class="label">Admin</div>
+      <h1 style="font-size: 2rem; line-height: 1.1;">Redirecting…</h1>
+      <p class="support">If nothing happens, go to <a href="/admin/login" style="text-decoration: underline;">/admin/login</a>.</p>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const TOKEN_KEY = 'cc_admin_token';
+  const token = localStorage.getItem(TOKEN_KEY);
+  window.location.href = token ? '/admin/dashboard' : '/admin/login';
+</script>

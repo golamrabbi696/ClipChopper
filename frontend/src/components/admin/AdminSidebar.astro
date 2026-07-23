@@ -1,0 +1,26 @@
+---
+const { active = 'dashboard' } = Astro.props;
+const isDashboard = active === 'dashboard';
+const isNotifications = active === 'notifications';
+---
+
+<aside class="admin-sidebar" aria-label="Admin navigation">
+  <div class="admin-sidebar__label">Navigation</div>
+  <nav class="admin-nav">
+    <a
+      class:list={['admin-nav__link', isDashboard && 'is-active']}
+      href="/admin/dashboard"
+      aria-current={isDashboard ? 'page' : undefined}
+    >
+      Dashboard
+    </a>
+    <a
+      class:list={['admin-nav__link', isNotifications && 'is-active']}
+      href="/admin/notifications"
+      aria-current={isNotifications ? 'page' : undefined}
+    >
+      Notification settings
+    </a>
+  </nav>
+</aside>
+

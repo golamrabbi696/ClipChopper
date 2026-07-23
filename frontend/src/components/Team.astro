@@ -1,0 +1,153 @@
+---
+const metrics = [
+  { h: 'Reach & engagement', p: 'Views, follows, and the posts pulling real attention, tracked across every platform.' },
+  { h: 'Leads & conversations', p: 'The inbound, replies, and calls your content starts, tied back to what you posted.' },
+  { h: 'AI answer visibility', p: 'Whether your name shows up when a buyer asks ChatGPT or Google\'s AI about your field.' },
+];
+---
+<section id="about" style="padding-top:0">
+  <div class="wrap">
+    <div class="label reveal">Who's behind your content</div>
+    <h2 class="reveal d1">You get a team, not a tool.</h2>
+    <p class="support reveal d2">You show up for one hour a month. Here's who shows up for you.</p>
+
+    <div class="team-grid">
+      <div class="card team-profile reveal d2">
+        <div class="profile-banner"></div>
+        <div class="profile-body">
+          <div class="profile-avatar">DW</div>
+          <div class="profile-name">Dennis Wakabayashi</div>
+          <div class="profile-cred">Global Voice of CX · #1 CX Hall of Fame</div>
+          <p class="profile-bio">
+            Dennis has advised FedEx, McDonald's, AT&T, and Intuit on customer experience, co-authored Long Live CX,
+            and hosts CX in the Wild. Your content clears the bar he sets for global brands.
+          </p>
+          <a class="profile-link" href="https://denniswakabayashi.com" target="_blank" rel="noopener">denniswakabayashi.com ↗</a>
+        </div>
+      </div>
+
+      <div class="card team-stat reveal d3">
+        <div class="stat-number">45</div>
+        <div class="stat-label">humans behind your account</div>
+        <p>
+          An editor who learns your voice. Writers who draft in it. Designers who build your cards,
+          strategists who plan your month, and reviewers who check every piece before you see it.
+          Your subscription buys the bench, not a freelancer.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="label reveal">Every month</div>
+    <h2 class="reveal d1">You'll see what's working.</h2>
+    <div class="metrics-grid">
+      {metrics.map((m, i) => (
+        <div class={`card metric-card reveal d${i + 2}`}>
+          <div class="metric-icon" aria-hidden="true">📊</div>
+          <h3>{m.h}</h3>
+          <p>{m.p}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+.team-grid {
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 20px;
+  margin-top: 36px;
+  align-items: stretch;
+}
+.profile-banner {
+  height: 80px;
+  background: linear-gradient(120deg, var(--navy), #2A3053 60%, var(--gold));
+  border-radius: var(--r) var(--r) 0 0;
+}
+.profile-body {
+  padding: 0 24px 28px;
+  position: relative;
+}
+.profile-avatar {
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  border: 4px solid var(--white);
+  background: var(--navy);
+  color: var(--gold);
+  font-weight: 800;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -38px;
+}
+.profile-name {
+  font-weight: 800;
+  font-size: clamp(1.2rem, 3.5vw, 1.55rem);
+  letter-spacing: -.02em;
+  margin-top: 12px;
+}
+.profile-cred {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gold-dk);
+  margin-top: 4px;
+}
+.profile-bio {
+  color: var(--muted);
+  font-size: .95rem;
+  margin-top: 14px;
+  line-height: 1.65;
+}
+.profile-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-weight: 700;
+  font-size: .9rem;
+  color: var(--gold-dk);
+}
+.profile-link:hover { text-decoration: underline; }
+
+.team-stat {
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.stat-number {
+  font-weight: 800;
+  font-size: clamp(3.5rem, 8vw, 5rem);
+  letter-spacing: -.04em;
+  line-height: 1;
+  color: var(--gold-dk);
+}
+.stat-label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-top: 6px;
+  margin-bottom: 16px;
+}
+.team-stat p { font-size: .95rem; line-height: 1.65; }
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 36px;
+}
+.metric-card { padding: 28px 24px; }
+.metric-icon { font-size: 24px; margin-bottom: 12px; }
+.metric-card h3 { color: var(--gold-dk); margin-bottom: 8px; }
+.metric-card p { font-size: .92rem; }
+
+@media (max-width: 860px) {
+  .team-grid { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: 1fr; }
+}
+</style>

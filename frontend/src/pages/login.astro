@@ -1,0 +1,122 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+---
+<Layout title="Client Login — ClipChopper" description="Log in to your ClipChopper client dashboard.">
+  <Navbar />
+  <main class="auth-page">
+    <div class="auth-card card">
+      <div class="auth-logo">
+        <span class="auth-logomark" aria-hidden="true">CC</span>
+        <span class="auth-logotype">CLIPCHOPPER</span>
+      </div>
+      <h1 class="auth-heading">Welcome back.</h1>
+      <p class="auth-sub">Sign in to your client dashboard.</p>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="login-email">Email address</label>
+          <input type="email" id="login-email" name="email" placeholder="you@example.com" required autocomplete="email" />
+        </div>
+        <div class="field">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
+        <button class="btn btn-primary login-btn" type="submit" id="login-submit">Sign in →</button>
+        <p class="form-status" id="login-status" aria-live="polite"></p>
+      </form>
+
+      <p class="auth-footer">
+        Not a client yet? <a href="/contact">Book a call →</a>
+      </p>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+.auth-page {
+  min-height: calc(100vh - 64px - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px var(--pad);
+}
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 44px 40px;
+}
+.auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.auth-logomark {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--navy);
+  color: var(--gold);
+  font-weight: 800;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.auth-logotype {
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: .18em;
+}
+.auth-heading { font-size: 2rem; }
+.auth-sub { color: var(--muted); margin-top: 6px; margin-bottom: 28px; font-size: .95rem; }
+.field { margin-bottom: 16px; }
+.login-btn { width: 100%; margin-top: 6px; }
+.form-status { margin-top: 12px; font-size: 14px; font-weight: 600; min-height: 20px; }
+.auth-footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+.auth-footer a { color: var(--gold-dk); font-weight: 700; }
+.auth-footer a:hover { text-decoration: underline; }
+</style>
+
+<script>
+  const form = document.getElementById('login-form') as HTMLFormElement;
+  const status = document.getElementById('login-status')!;
+  const btn = document.getElementById('login-submit') as HTMLButtonElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.textContent = 'Signing in…';
+    btn.setAttribute('disabled', 'true');
+    status.textContent = '';
+    try {
+      const data = Object.fromEntries(new FormData(form));
+      const res = await fetch('http://localhost:8000/api/v1/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (res.ok && json.token) {
+        localStorage.setItem('cc_token', json.token);
+        localStorage.setItem('cc_user', JSON.stringify(json.user));
+        window.location.href = '/dashboard';
+      } else {
+        status.textContent = json.message || 'Invalid credentials.';
+        status.style.color = '#E86F50';
+      }
+    } catch {
+      status.textContent = 'Could not connect to server.';
+      status.style.color = '#E86F50';
+    } finally {
+      btn.textContent = 'Sign in →';
+      btn.removeAttribute('disabled');
+    }
+  });
+</script>

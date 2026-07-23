@@ -1,0 +1,227 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
+import BookingCalendar from '../components/BookingCalendar';
+const plan = Astro.url.searchParams.get('plan') ?? '';
+const planLabel = plan === 'monthly' ? 'Subscribe ($399/mo)' : plan === 'one-time' ? 'Try it once ($499)' : '';
+---
+<Layout title="Book a Call — ClipChopper" description="Book your podcast-style content call with ClipChopper. Talk for an hour, get a month of content.">
+  <Navbar />
+  <main class="contact-page">
+    <div class="wrap contact-inner">
+      <div class="contact-text">
+        <div class="label">Get in touch</div>
+        <h1>Book a call.</h1>
+        <p class="support">
+          No prep, no script. Just show up and talk the way you normally do.
+          We'll turn it into a month of content you'll actually want to post.
+        </p>
+        <ul class="contact-promises">
+          <li>✓ Response within 2 business hours</li>
+          <li>✓ Your first call scheduled within 48 hours</li>
+          <li>✓ No obligation to continue</li>
+        </ul>
+      </div>
+      <div class="card contact-form-wrap">
+        <form id="contact-form" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="cf-name">Full name *</label>
+              <input type="text" id="cf-name" name="name" placeholder="Jane Smith" required />
+            </div>
+            <div class="field">
+              <label for="cf-email">Email *</label>
+              <input type="email" id="cf-email" name="email" placeholder="jane@company.com" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="cf-company">Company / role</label>
+            <input type="text" id="cf-company" name="company" placeholder="Acme Inc. · Founder" />
+          </div>
+          <div class="field">
+            <label for="cf-plan">Interested in</label>
+            <select id="cf-plan" name="plan">
+              <option value="">— Select a plan —</option>
+              <option value="one-time" selected={plan === 'one-time'}>Try it once ($499)</option>
+              <option value="monthly" selected={plan === 'monthly'}>Subscribe ($399/mo)</option>
+              <option value="brands">For brands / teams</option>
+              <option value="unsure">Not sure yet</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cf-message">Tell us what you're working on *</label>
+            <textarea id="cf-message" name="message" rows="4" placeholder="What do you do? Who are you trying to reach?" required></textarea>
+          </div>
+          <div class="field">
+            <label>Pick a date *</label>
+            <div class="calendar-wrap">
+              <BookingCalendar client:only="react" />
+            </div>
+          </div>
+          <div class="field checkbox-field">
+            <label class="checkbox-label">
+              <input type="checkbox" id="cf-newsletter" name="newsletter" value="1" />
+              <span>Add me to the ClipChopper newsletter</span>
+            </label>
+          </div>
+          <button class="btn btn-gold submit-btn" type="submit" id="cf-submit">Send my details →</button>
+          <p class="form-status" id="cf-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+.contact-page { padding: clamp(48px,8vw,96px) 0; }
+.contact-inner {
+  display: grid;
+  grid-template-columns: .9fr 1.1fr;
+  gap: clamp(36px,6vw,72px);
+  align-items: start;
+}
+.contact-text .label { display: block; }
+.contact-text h1 { margin-top: 8px; }
+.contact-text .support { max-width: 44ch; }
+.contact-promises {
+  margin-top: 28px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.contact-promises li {
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.contact-form-wrap { padding: 36px; }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.field { margin-bottom: 16px; }
+.checkbox-field { margin-bottom: 8px; }
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.checkbox-label input { width: 16px; height: 16px; cursor: pointer; accent-color: var(--gold-dk); }
+.submit-btn { width: 100%; margin-top: 4px; }
+.form-status { margin-top: 14px; font-size: 14px; font-weight: 600; color: var(--gold-dk); min-height: 20px; }
+.calendar-wrap {
+  border: 1.5px solid var(--border-2);
+  border-radius: var(--r-sm);
+  padding: 12px;
+  background: var(--bg);
+}
+.calendar-wrap :global(.astryx-calendar) {
+  color: var(--ink);
+}
+.calendar-wrap :global(.astryx-calendar-day) {
+  color: var(--ink) !important;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.calendar-wrap :global(.astryx-calendar-day:hover:not([data-disabled='disabled'])) {
+  background: rgba(231, 178, 76, 0.18);
+}
+.calendar-wrap :global(.astryx-calendar-day[data-disabled='disabled']) {
+  color: var(--faint) !important;
+  cursor: not-allowed;
+}
+.calendar-wrap :global(.astryx-calendar-day[data-selected='selected']) {
+  background: var(--gold) !important;
+  color: var(--navy) !important;
+}
+.calendar-wrap :global(.astryx-calendar-day[data-today='today']) {
+  outline: 2px solid rgba(201, 148, 47, 0.45);
+  outline-offset: 2px;
+}
+.calendar-wrap :global(.astryx-calendar-day[data-selected='selected'][data-today='today']) {
+  outline-color: rgba(20, 24, 41, 0.35);
+}
+.calendar-wrap :global(.astryx-calendar-day:focus-visible) {
+  outline: 2px solid rgba(20, 24, 41, 0.55);
+  outline-offset: 2px;
+}
+.calendar-wrap :global(.cc-booking-calendar__time select) {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border-2);
+  border-radius: var(--r-sm);
+  background: var(--card);
+  color: var(--ink);
+}
+.calendar-wrap :global(.cc-booking-calendar__hint) {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.calendar-wrap :global(.cc-booking-calendar__selected) {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+@media (max-width: 860px) {
+  .contact-inner { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const status = document.getElementById('cf-status')!;
+  const btn = document.getElementById('cf-submit') as HTMLButtonElement;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    btn.textContent = 'Sending…';
+    btn.setAttribute('disabled', 'true');
+    status.textContent = '';
+    try {
+      const data = Object.fromEntries(new FormData(form));
+      if (!data.call_date) {
+        status.textContent = 'Please pick a date for your call.';
+        status.style.color = '#E86F50';
+        return;
+      }
+      if (!data.call_time) {
+        status.textContent = 'Please pick a time for your call.';
+        status.style.color = '#E86F50';
+        return;
+      }
+      const res = await fetch('http://localhost:8000/api/v1/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (res.ok) {
+        status.style.color = 'var(--gold-dk)';
+        status.textContent = '✓ Booking request received! We\'ll confirm your call shortly.';
+        form.reset();
+        window.dispatchEvent(new CustomEvent('cc:booking:reset'));
+      } else {
+        const err = await res.json().catch(() => ({}));
+        status.textContent = err.message || 'Something went wrong. Please try again.';
+        status.style.color = '#E86F50';
+      }
+    } catch {
+      status.textContent = 'Could not connect. Please email us directly.';
+      status.style.color = '#E86F50';
+    } finally {
+      btn.textContent = 'Send my details →';
+      btn.removeAttribute('disabled');
+    }
+  });
+</script>

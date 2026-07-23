@@ -1,0 +1,139 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/admin.css';
+---
+
+<Layout title="Create Admin — ClipChopper" description="Create an admin user">
+  <main class="admin-shell">
+    <div class="wrap admin-center">
+      <header class="admin-topbar">
+        <div class="admin-brand">
+          <div class="admin-badge">CC</div>
+          <div class="admin-titleblock">
+            <div class="admin-kicker">Admin</div>
+            <div class="admin-title">Create admin</div>
+            <div class="admin-subtitle">Add a new admin account</div>
+          </div>
+        </div>
+        <div class="admin-actions">
+          <a class="btn btn-ghost" href="/admin/dashboard">Back</a>
+        </div>
+      </header>
+
+      <section class="admin-main">
+        <section class="admin-card">
+          <div class="admin-card__header">
+            <h3>Admin details</h3>
+            <p class="admin-help">Passwords must be at least 8 characters.</p>
+          </div>
+
+          <form id="admin-create-form" class="admin-form">
+          <div class="field">
+            <label for="ac-name">Name</label>
+            <input id="ac-name" name="name" type="text" required />
+          </div>
+          <div class="field">
+            <label for="ac-email">Email</label>
+            <input id="ac-email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="ac-pass">Password</label>
+            <input id="ac-pass" name="password" type="password" autocomplete="new-password" minlength="8" required />
+          </div>
+          <div class="field">
+            <label for="ac-pass2">Confirm password</label>
+            <input id="ac-pass2" name="password_confirmation" type="password" autocomplete="new-password" minlength="8" required />
+          </div>
+          <label class="admin-switch">
+            <input type="checkbox" id="ac-super" name="is_superadmin" value="1" />
+            <span>Superadmin</span>
+          </label>
+
+          <button class="btn btn-primary" type="submit">Create admin</button>
+          <p class="admin-status" id="admin-create-status" aria-live="polite"></p>
+          </form>
+        </section>
+      </section>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  const API_BASE = 'http://127.0.0.1:8000';
+  const TOKEN_KEY = 'cc_admin_token';
+
+  function getToken() {
+    return localStorage.getItem(TOKEN_KEY) || '';
+  }
+
+  function clearToken() {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem('cc_admin_user');
+  }
+
+  async function api(path, { method = 'GET', body } = {}) {
+    const headers = { 'Accept': 'application/json' };
+    const token = getToken();
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (body !== undefined) headers['Content-Type'] = 'application/json';
+
+    const res = await fetch(`${API_BASE}${path}`, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const msg = data?.message || `Request failed (${res.status})`;
+      throw new Error(msg);
+    }
+    return data;
+  }
+
+  async function ensureAdminSession() {
+    const token = getToken();
+    if (!token) return false;
+    try {
+      const me = await api('/api/v1/auth/me');
+      return me?.role === 'admin';
+    } catch {
+      return false;
+    }
+  }
+
+  const form = document.getElementById('admin-create-form');
+  const status = document.getElementById('admin-create-status');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    status.textContent = '';
+    status.classList.remove('is-error');
+
+    const data = Object.fromEntries(new FormData(form));
+    const payload = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+      password_confirmation: data.password_confirmation,
+      is_superadmin: !!data.is_superadmin,
+    };
+
+    try {
+      await api('/api/v1/admin/admins', { method: 'POST', body: payload });
+      status.textContent = 'Admin created.';
+      form.reset();
+    } catch (err) {
+      status.textContent = err.message || 'Failed to create admin.';
+      status.classList.add('is-error');
+    }
+  });
+
+  (async () => {
+    const ok = await ensureAdminSession();
+    if (!ok) {
+      clearToken();
+      window.location.href = '/admin/login';
+    }
+  })();
+</script>

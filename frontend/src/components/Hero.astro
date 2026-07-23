@@ -1,0 +1,229 @@
+---
+---
+<section class="hero" id="top">
+  <div class="wrap hero-inner">
+    <div class="hero-text">
+      <div class="label reveal">Content that sounds like you</div>
+      <h1 class="reveal d1">Build. Grow.<br /><span class="gold-text">Be Seen.</span></h1>
+      <p class="hero-sub reveal d2">
+        Talk for an hour on a podcast-style call. We turn it into a month of content
+        that sounds like you, ready to post where your people already scroll.
+      </p>
+      <div class="ctas reveal d3">
+        <a class="btn btn-gold" href="/contact" id="hero-book-btn">Book a call →</a>
+        <a class="btn btn-ghost" href="/#foryou" id="hero-pricing-btn">See pricing</a>
+      </div>
+      <div class="social-proof reveal d4">
+        <div class="avatars" aria-hidden="true">
+          <span class="sp-avatar" style="background:#2A3053;">DW</span>
+          <span class="sp-avatar" style="background:#3B4575;">JM</span>
+          <span class="sp-avatar" style="background:#1E2440;">SK</span>
+        </div>
+        <p class="sp-text">Joined by <strong>45 humans</strong> who show up for you every month</p>
+      </div>
+    </div>
+
+    <div class="hero-feed reveal d2" aria-label="Examples of posts we create">
+      <div class="feed-label">Your month in the feed</div>
+
+      <article class="card feed-post">
+        <div class="post-head">
+          <span class="post-avatar">YOU</span>
+          <div class="post-meta">
+            <strong>You</strong>
+            <span>Founder · 2d</span>
+          </div>
+        </div>
+        <p class="post-text">Most advice in our industry is backwards. Here's what a decade of doing the work actually taught me.</p>
+        <div class="post-media video-thumb" aria-label="Short video clip">
+          <span class="play-btn" aria-hidden="true"></span>
+          <span class="video-caption">"…and that's the part nobody tells you."</span>
+        </div>
+        <div class="post-foot">
+          <span class="reactions"><span class="react">👍</span><span class="react">💡</span> Your buyers</span>
+          <span>Comments · Reposts</span>
+        </div>
+      </article>
+
+      <article class="card feed-post">
+        <div class="post-head">
+          <span class="post-avatar">YOU</span>
+          <div class="post-meta">
+            <strong>You</strong>
+            <span>Founder · 5d</span>
+          </div>
+        </div>
+        <div class="post-media quote-card">
+          <p class="quote-text">"Talk about the problem you solve, not the product you sell."</p>
+          <span class="quote-attr">YOUR NAME · in your branding</span>
+        </div>
+        <div class="post-foot">
+          <span class="reactions"><span class="react">👍</span><span class="react">❤️</span> The right people</span>
+          <span>Saved · Shared</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+.hero {
+  padding-top: clamp(48px, 7vw, 88px);
+  padding-bottom: clamp(48px, 7vw, 88px);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 60% -10%, rgba(231,178,76,.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap: clamp(36px, 6vw, 72px);
+  align-items: center;
+}
+.gold-text { color: var(--gold-dk); }
+.hero-sub {
+  font-size: clamp(1rem, 2.4vw, 1.15rem);
+  color: var(--muted);
+  max-width: 46ch;
+  margin-top: 18px;
+  line-height: 1.7;
+}
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+.social-proof {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+.avatars { display: flex; }
+.sp-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--white);
+  color: var(--gold);
+  font-weight: 800;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -8px;
+}
+.avatars .sp-avatar:first-child { margin-left: 0; }
+.sp-text { font-size: 13.5px; color: var(--muted); }
+.sp-text strong { color: var(--ink); }
+
+/* Feed */
+.hero-feed { display: flex; flex-direction: column; gap: 16px; }
+.feed-label {
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 4px;
+}
+.feed-post { padding: 18px; }
+.post-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.post-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--gold);
+  font-weight: 800;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.post-meta strong { display: block; font-size: 14px; }
+.post-meta span { font-size: 12px; color: var(--faint); }
+.post-text { font-size: 14px; color: var(--ink); line-height: 1.55; }
+.post-media { margin-top: 10px; border-radius: 10px; overflow: hidden; }
+.video-thumb {
+  background: linear-gradient(140deg, #1D2238, var(--navy));
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.play-btn {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: #E86F50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.play-btn::after {
+  content: '';
+  border-left: 14px solid #fff;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  margin-left: 3px;
+}
+.video-caption {
+  position: absolute;
+  left: 12px; right: 12px; bottom: 10px;
+  background: rgba(20,24,41,.78);
+  color: var(--cream);
+  font-weight: 600;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.quote-card {
+  background: linear-gradient(150deg, var(--gold), #F0C96A);
+  aspect-ratio: 16/10;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.quote-text {
+  font-weight: 800;
+  font-size: clamp(.95rem, 2.2vw, 1.15rem);
+  color: var(--navy);
+  line-height: 1.3;
+}
+.quote-attr { margin-top: 10px; font-weight: 700; font-size: 11px; color: rgba(20,24,41,.7); }
+.post-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--faint);
+}
+.reactions { display: flex; align-items: center; gap: 4px; }
+.react {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+@media (max-width: 860px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-feed { max-width: 480px; }
+}
+</style>

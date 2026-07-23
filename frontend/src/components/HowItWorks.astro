@@ -1,0 +1,90 @@
+---
+const steps = [
+  { n: 1, title: 'Book a call', body: 'Pick a time. No prep, no script, no camera crew.' },
+  { n: 2, title: 'Talk for an hour', body: 'A podcast-style interview. We bring the questions. You answer the way you already do.' },
+  { n: 3, title: 'We build the month', body: 'We cut the best moments, write the posts, and design the cards — all in your voice.' },
+  { n: 4, title: 'You approve', body: 'You see everything first. Nothing publishes until you say yes.' },
+  { n: 5, title: 'You post it', body: 'Everything arrives ready to publish, laid out on a calendar. Post it yourself or hand it to your team.' },
+];
+---
+<section id="how">
+  <div class="wrap">
+    <div class="label reveal">How it works</div>
+    <h2 class="reveal d1">One call. We do everything up to publish.</h2>
+    <p class="support reveal d2">
+      The call is the shoot. We interview you podcast-style, on camera, from wherever you are,
+      and cut that hour into clips with the same polish as the biggest names on LinkedIn, TikTok, and YouTube.
+    </p>
+
+    <div class="steps-timeline">
+      {steps.map((s, i) => (
+        <div class={`step-item reveal d${Math.min(i + 1, 5)}`}>
+          <div class="step-connector" aria-hidden="true">
+            <div class="step-dot">{s.n}</div>
+            {i < steps.length - 1 && <div class="step-line"></div>}
+          </div>
+          <div class="card step-card">
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+.steps-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 40px;
+  max-width: 680px;
+}
+.step-item {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 0 20px;
+  margin-bottom: 0;
+}
+.step-connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.step-dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--navy);
+  font-weight: 800;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(231,178,76,.35);
+  position: relative;
+  z-index: 1;
+}
+.step-line {
+  width: 2px;
+  flex: 1;
+  min-height: 24px;
+  background: linear-gradient(to bottom, var(--gold), var(--border));
+  margin: 0 auto;
+}
+.step-card {
+  padding: 22px 24px;
+  margin-bottom: 20px;
+}
+.step-card h3 { margin-bottom: 6px; }
+.step-card p { font-size: .93rem; }
+
+@media (max-width: 600px) {
+  .step-item { grid-template-columns: 44px 1fr; gap: 0 14px; }
+  .step-dot { width: 34px; height: 34px; font-size: 13px; }
+}
+</style>
