@@ -1563,20 +1563,38 @@ import '../../styles/admin.css';
       window.location.href = '/admin/login';
     });
     document.getElementById('admin-refresh')?.addEventListener('click', async () => {
-      const activeTab = document.querySelector('#admin-tab-nav .admin-nav__link.is-active')?.getAttribute('data-tab');
-      if (activeTab === 'bookings') await loadBookings(state.bookings.page);
-      if (activeTab === 'leads') await loadLeads(state.leads.page);
-      if (activeTab === 'subscribers') await loadSubscribers(state.subs.page);
-      if (activeTab === 'deliverables') {
-        await loadClients();
-        await loadDeliverables(state.dels.page);
+      const refreshBtn = document.getElementById('admin-refresh') as HTMLButtonElement;
+      if (refreshBtn) {
+        refreshBtn.textContent = 'Refreshing...';
+        refreshBtn.setAttribute('disabled', 'true');
       }
-      if (activeTab === 'notifications') await loadWebhooks();
-      if (activeTab === 'branding') await loadSiteSettings();
-      if (activeTab === 'preferences') {
-        const prefTimezoneSelect = document.getElementById('pref-timezone') as HTMLSelectElement;
-        if (prefTimezoneSelect) {
-          prefTimezoneSelect.value = localStorage.getItem('cc_admin_timezone') || 'America/New_York';
+      try {
+        const activeTab = document.querySelector('#admin-tab-nav .admin-nav__link.is-active')?.getAttribute('data-tab');
+        
+        // Always refresh bookings to update the Next Meeting widget and Bookings count card
+        await loadBookings(state.bookings.page);
+        
+        // Refresh specific active tab data if not already bookings
+        if (activeTab === 'leads') await loadLeads(state.leads.page);
+        if (activeTab === 'subscribers') await loadSubscribers(state.subs.page);
+        if (activeTab === 'deliverables') {
+          await loadClients();
+          await loadDeliverables(state.dels.page);
+        }
+        if (activeTab === 'notifications') await loadWebhooks();
+        if (activeTab === 'branding') await loadSiteSettings();
+        if (activeTab === 'preferences') {
+          const prefTimezoneSelect = document.getElementById('pref-timezone') as HTMLSelectElement;
+          if (prefTimezoneSelect) {
+            prefTimezoneSelect.value = localStorage.getItem('cc_admin_timezone') || 'America/New_York';
+          }
+        }
+      } catch (err) {
+        console.error('Refresh failed:', err);
+      } finally {
+        if (refreshBtn) {
+          refreshBtn.textContent = 'Refresh';
+          refreshBtn.removeAttribute('disabled');
         }
       }
     });
