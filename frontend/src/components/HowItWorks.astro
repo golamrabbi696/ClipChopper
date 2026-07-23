@@ -9,9 +9,9 @@ const steps = [
 ---
 <section id="how">
   <div class="wrap">
-    <div class="label reveal">How it works</div>
-    <h2 class="reveal d1">One call. We do everything up to publish.</h2>
-    <p class="support reveal d2">
+    <div class="label reveal" data-cms-key="homepage_how_label">How it works</div>
+    <h2 class="reveal d1" data-cms-key="homepage_how_title">One call. We do everything up to publish.</h2>
+    <p class="support reveal d2" data-cms-key="homepage_how_sub">
       The call is the shoot. We interview you podcast-style, on camera, from wherever you are,
       and cut that hour into clips with the same polish as the biggest names on LinkedIn, TikTok, and YouTube.
     </p>
@@ -24,8 +24,8 @@ const steps = [
             {i < steps.length - 1 && <div class="step-line"></div>}
           </div>
           <div class="card step-card">
-            <h3>{s.title}</h3>
-            <p>{s.body}</p>
+            <h3 data-cms-key={`homepage_how_step${s.n}_title`}>{s.title}</h3>
+            <p data-cms-key={`homepage_how_step${s.n}_body`}>{s.body}</p>
           </div>
         </div>
       ))}

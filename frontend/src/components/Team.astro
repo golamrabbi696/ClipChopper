@@ -7,18 +7,18 @@ const metrics = [
 ---
 <section id="about" style="padding-top:0">
   <div class="wrap">
-    <div class="label reveal">Who's behind your content</div>
-    <h2 class="reveal d1">You get a team, not a tool.</h2>
-    <p class="support reveal d2">You show up for one hour a month. Here's who shows up for you.</p>
+    <div class="label reveal" data-cms-key="homepage_team_label">Who's behind your content</div>
+    <h2 class="reveal d1" data-cms-key="homepage_team_title">You get a team, not a tool.</h2>
+    <p class="support reveal d2" data-cms-key="homepage_team_sub">You show up for one hour a month. Here's who shows up for you.</p>
 
     <div class="team-grid">
       <div class="card team-profile reveal d2">
         <div class="profile-banner"></div>
         <div class="profile-body">
           <div class="profile-avatar">DW</div>
-          <div class="profile-name">Dennis Wakabayashi</div>
-          <div class="profile-cred">Global Voice of CX · #1 CX Hall of Fame</div>
-          <p class="profile-bio">
+          <div class="profile-name" data-cms-key="homepage_team_name">Dennis Wakabayashi</div>
+          <div class="profile-cred" data-cms-key="homepage_team_cred">Global Voice of CX · #1 CX Hall of Fame</div>
+          <p class="profile-bio" data-cms-key="homepage_team_bio">
             Dennis has advised FedEx, McDonald's, AT&T, and Intuit on customer experience, co-authored Long Live CX,
             and hosts CX in the Wild. Your content clears the bar he sets for global brands.
           </p>
@@ -27,9 +27,9 @@ const metrics = [
       </div>
 
       <div class="card team-stat reveal d3">
-        <div class="stat-number">45</div>
-        <div class="stat-label">humans behind your account</div>
-        <p>
+        <div class="stat-number" data-cms-key="homepage_team_stat_num">45</div>
+        <div class="stat-label" data-cms-key="homepage_team_stat_label">humans behind your account</div>
+        <p data-cms-key="homepage_team_stat_desc">
           An editor who learns your voice. Writers who draft in it. Designers who build your cards,
           strategists who plan your month, and reviewers who check every piece before you see it.
           Your subscription buys the bench, not a freelancer.
@@ -41,14 +41,14 @@ const metrics = [
 
 <section style="padding-top:0">
   <div class="wrap">
-    <div class="label reveal">Every month</div>
-    <h2 class="reveal d1">You'll see what's working.</h2>
+    <div class="label reveal" data-cms-key="homepage_metrics_label">Every month</div>
+    <h2 class="reveal d1" data-cms-key="homepage_metrics_title">You'll see what's working.</h2>
     <div class="metrics-grid">
       {metrics.map((m, i) => (
         <div class={`card metric-card reveal d${i + 2}`}>
           <div class="metric-icon" aria-hidden="true">📊</div>
-          <h3>{m.h}</h3>
-          <p>{m.p}</p>
+          <h3 data-cms-key={`homepage_metric${i+1}_title`}>{m.h}</h3>
+          <p data-cms-key={`homepage_metric${i+1}_body`}>{m.p}</p>
         </div>
       ))}
     </div>

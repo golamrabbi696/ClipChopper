@@ -19,31 +19,31 @@ const pillars = [
 ---
 <section>
   <div class="wrap">
-    <div class="label reveal">What you keep</div>
-    <h2 class="reveal d1">Protect your authenticity.</h2>
-    <p class="support reveal d2">
+    <div class="label reveal" data-cms-key="homepage_auth_label">What you keep</div>
+    <h2 class="reveal d1" data-cms-key="homepage_auth_title">Protect your authenticity.</h2>
+    <p class="support reveal d2" data-cms-key="homepage_auth_sub">
       Your real voice. Original content. Genuine influence. Growing your reach shouldn't cost you the thing that makes it worth reaching.
     </p>
     <div class="pillar-grid">
       {pillars.map((p, i) => (
         <div class={`card pillar ${p.mark ? 'pillar-mark' : ''} reveal d${i + 2}`}>
           <div class="pillar-icon" aria-hidden="true">{p.mark ? '✦' : i === 1 ? '◈' : '◉'}</div>
-          <h3>{p.title}</h3>
-          <p>{p.body}</p>
+          <h3 data-cms-key={`homepage_auth_pillar${i+1}_title`}>{p.title}</h3>
+          <p data-cms-key={`homepage_auth_pillar${i+1}_body`}>{p.body}</p>
         </div>
       ))}
     </div>
-    <p class="tools-note reveal d5">
+    <p class="tools-note reveal d5" data-cms-key="homepage_auth_tools_note">
       Modern tools handle the tedious parts backstage, so your money goes to the craft, not the busywork.
     </p>
   </div>
 </section>
 
-<section class="topics-section">
+<section class="topics-section" style="padding-top:0">
   <div class="wrap topics-inner">
-    <div class="label reveal">The topics</div>
-    <h2 class="reveal d1">We bring the topics. You bring the take.</h2>
-    <p class="support reveal d2">
+    <div class="label reveal" data-cms-key="homepage_topics_label">The topics</div>
+    <h2 class="reveal d1" data-cms-key="homepage_topics_title">We bring the topics. You bring the take.</h2>
+    <p class="support reveal d2" data-cms-key="homepage_topics_sub">
       Some months you'll arrive with ideas. Most months you won't need to. We watch what your field is talking about,
       build your interview around the conversations worth joining, and ask the questions only you can answer.
       The feed is full of recycled AI posts. Yours is a real take on a live conversation.

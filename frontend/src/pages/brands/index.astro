@@ -11,14 +11,14 @@ import Footer from '../../components/Footer.astro';
     <section class="hero" id="top">
       <div class="wrap hero-inner">
         <div class="hero-text">
-          <div class="label reveal">Always on. Always on brand.</div>
-          <h1 class="reveal d1">Always on.<br /><span class="coral-text">Always on brand.</span></h1>
-          <p class="hero-sub reveal d2">
+          <div class="label reveal" data-cms-key="brands_hero_label">Always on. Always on brand.</div>
+          <h1 class="reveal d1" data-cms-key="brands_hero_title">Always on.<br /><span class="coral-text">Always on brand.</span></h1>
+          <p class="hero-sub reveal d2" data-cms-key="brands_hero_sub">
             One asset in. <b>72 pieces</b> out. Your webinars, demos, and exec talks become a feed that never goes quiet: cut, written, designed, and checked by a person before anything ships.
           </p>
           <div class="ctas reveal d3">
-            <a class="btn btn-coral" href="#book">Book a call</a>
-            <a class="btn btn-ghost" href="#pricing">See pricing</a>
+            <a class="btn btn-coral" href="#book" data-cms-key="brands_hero_btn_book">Book a call</a>
+            <a class="btn btn-ghost" href="#pricing" data-cms-key="brands_hero_btn_pricing">See pricing</a>
           </div>
           <div class="social-proof reveal d4">
             <div class="avatars" aria-hidden="true">
@@ -80,8 +80,8 @@ import Footer from '../../components/Footer.astro';
       </div>
 
       <div class="wrap want-inner">
-        <h2 class="reveal">Your buyers scroll every day.</h2>
-        <p class="support reveal d1">
+        <h2 class="reveal" data-cms-key="brands_want_title">Your buyers scroll every day.</h2>
+        <p class="support reveal d1" data-cms-key="brands_want_sub">
           Your brand shows up when there's a launch. In between, the feed belongs to whoever keeps posting.
         </p>
       </div>
@@ -90,30 +90,30 @@ import Footer from '../../components/Footer.astro';
     <!-- THE COST -->
     <section class="cost-section" style="padding-top:0">
       <div class="wrap">
-        <h2 class="reveal">Staying visible shouldn't need a new budget line.</h2>
+        <h2 class="reveal" data-cms-key="brands_cost_title">Staying visible shouldn't need a new budget line.</h2>
         <div class="cost-grid">
           <div class="cost-card card reveal d1">
-            <div class="cost-who">Hiring an agency</div>
-            <div class="cost-big">$3,000–$25,000</div>
-            <div class="cost-unit">a month, before you've shipped a single post</div>
+            <div class="cost-who" data-cms-key="brands_cost_agency_who">Hiring an agency</div>
+            <div class="cost-big" data-cms-key="brands_cost_agency_big">$3,000–$25,000</div>
+            <div class="cost-unit" data-cms-key="brands_cost_agency_unit">a month, before you've shipped a single post</div>
           </div>
           <div class="vs-badge reveal d2">vs</div>
           <div class="cost-card card reveal d3">
-            <div class="cost-who">Building in-house</div>
-            <div class="cost-big">3 hires</div>
-            <div class="cost-unit">an editor, a designer, and a writer, before benefits</div>
+            <div class="cost-who" data-cms-key="brands_cost_inhouse_who">Building in-house</div>
+            <div class="cost-big" data-cms-key="brands_cost_inhouse_big">3 hires</div>
+            <div class="cost-unit" data-cms-key="brands_cost_inhouse_unit">an editor, a designer, and a writer, before benefits</div>
           </div>
         </div>
-        <p class="better-way reveal d4">There’s a better way: the webinars, demos, and talks you already have. ↓</p>
+        <p class="better-way reveal d4" data-cms-key="brands_cost_better_way">There’s a better way: the webinars, demos, and talks you already have. ↓</p>
       </div>
     </section>
 
     <!-- HOW IT WORKS -->
     <section id="how" style="padding-top:0">
       <div class="wrap">
-        <div class="label reveal">How it works</div>
-        <h2 class="reveal d1">One asset. We do everything up to publish.</h2>
-        <p class="support reveal d2">
+        <div class="label reveal" data-cms-key="brands_how_label">How it works</div>
+        <h2 class="reveal d1" data-cms-key="brands_how_title">One asset. We do everything up to publish.</h2>
+        <p class="support reveal d2" data-cms-key="brands_how_sub">
           No shoots, no scripts, no production budget. The footage already exists, and the finish matches the biggest names on TikTok, LinkedIn, and YouTube.
         </p>
 
@@ -124,8 +124,8 @@ import Footer from '../../components/Footer.astro';
               <div class="step-line"></div>
             </div>
             <div class="card step-card">
-              <h3>Pick an asset</h3>
-              <p>A webinar, a demo, an exec talk. Or book a podcast-style interview with your founder.</p>
+              <h3 data-cms-key="brands_how_step1_title">Pick an asset</h3>
+              <p data-cms-key="brands_how_step1_body">A webinar, a demo, an exec talk. Or book a podcast-style interview with your founder.</p>
             </div>
           </div>
           <div class="step-item reveal d2">
@@ -134,8 +134,8 @@ import Footer from '../../components/Footer.astro';
               <div class="step-line"></div>
             </div>
             <div class="card step-card">
-              <h3>We cut the month</h3>
-              <p>Best moments into clips, posts written, cards designed, all in your brand voice.</p>
+              <h3 data-cms-key="brands_how_step2_title">We cut the month</h3>
+              <p data-cms-key="brands_how_step2_body">Best moments into clips, posts written, cards designed, all in your brand voice.</p>
             </div>
           </div>
           <div class="step-item reveal d3">
@@ -144,8 +144,8 @@ import Footer from '../../components/Footer.astro';
               <div class="step-line"></div>
             </div>
             <div class="card step-card">
-              <h3>Checked by a person</h3>
-              <p>Every piece passes a human brand-safety review: claims, tone, guidelines.</p>
+              <h3 data-cms-key="brands_how_step3_title">Checked by a person</h3>
+              <p data-cms-key="brands_how_step3_body">Every piece passes a human brand-safety review: claims, tone, guidelines.</p>
             </div>
           </div>
           <div class="step-item reveal d4">
@@ -154,8 +154,8 @@ import Footer from '../../components/Footer.astro';
               <div class="step-line"></div>
             </div>
             <div class="card step-card">
-              <h3>Your team approves</h3>
-              <p>Nothing ships until you sign off.</p>
+              <h3 data-cms-key="brands_how_step4_title">Your team approves</h3>
+              <p data-cms-key="brands_how_step4_body">Nothing ships until you sign off.</p>
             </div>
           </div>
           <div class="step-item reveal d5">
@@ -163,8 +163,8 @@ import Footer from '../../components/Footer.astro';
               <div class="step-dot">5</div>
             </div>
             <div class="card step-card">
-              <h3>You post it</h3>
-              <p>Everything arrives on a calendar, formatted for every channel. Your team publishes.</p>
+              <h3 data-cms-key="brands_how_step5_title">You post it</h3>
+              <p data-cms-key="brands_how_step5_body">Everything arrives on a calendar, formatted for every channel. Your team publishes.</p>
             </div>
           </div>
         </div>
@@ -174,19 +174,19 @@ import Footer from '../../components/Footer.astro';
     <!-- WHAT YOU GET -->
     <section class="navy-band">
       <div class="wrap">
-        <div class="label reveal" style="color:var(--coral)">What one asset becomes</div>
-        <h2 class="reveal d1" style="color:var(--cream)">A full month of content, every month.</h2>
+        <div class="label reveal" style="color:var(--coral)" data-cms-key="brands_get_label">What one asset becomes</div>
+        <h2 class="reveal d1" style="color:var(--cream)" data-cms-key="brands_get_title">A full month of content, every month.</h2>
         <div class="get-grid">
           <ul class="get-list reveal d2">
-            <li><strong>16 short videos</strong>, cut from one webinar, demo, or talk</li>
-            <li><strong>16 written posts</strong>, the words to run with each video</li>
-            <li><strong>40 quote cards</strong>, your sharpest lines, in your brand kit</li>
-            <li><strong>Ready to publish</strong>, approved and laid out on a calendar</li>
-            <li><strong>Monthly measurement</strong>, what moved and what to run next</li>
+            <li data-cms-key="brands_get_bullet1"><strong>16 short videos</strong>, cut from one webinar, demo, or talk</li>
+            <li data-cms-key="brands_get_bullet2"><strong>16 written posts</strong>, the words to run with each video</li>
+            <li data-cms-key="brands_get_bullet3"><strong>40 quote cards</strong>, your sharpest lines, in your brand kit</li>
+            <li data-cms-key="brands_get_bullet4"><strong>Ready to publish</strong>, approved and laid out on a calendar</li>
+            <li data-cms-key="brands_get_bullet5"><strong>Monthly measurement</strong>, what moved and what to run next</li>
           </ul>
           <div class="get-aside reveal d3">
-            <div class="aside-big">72 pieces of content from <span style="color:var(--coral)">one asset.</span></div>
-            <p>Enough to show up every day of the month, on every channel your buyers scroll.</p>
+            <div class="aside-big" data-cms-key="brands_get_aside_big">72 pieces of content from <span style="color:var(--coral)">one asset.</span></div>
+            <p data-cms-key="brands_get_aside_sub">Enough to show up every day of the month, on every channel your buyers scroll.</p>
             <div class="platform-chips">
               <span>LinkedIn</span><span>Instagram</span><span>YouTube</span><span>TikTok</span><span>X</span>
             </div>
@@ -198,9 +198,9 @@ import Footer from '../../components/Footer.astro';
     <!-- BRAND SAFETY -->
     <section>
       <div class="wrap">
-        <div class="label reveal">What stays yours</div>
-        <h2 class="reveal d1">Protect the brand.</h2>
-        <p class="support reveal d2">
+        <div class="label reveal" data-cms-key="brands_safety_label">What stays yours</div>
+        <h2 class="reveal d1" data-cms-key="brands_safety_title">Protect the brand.</h2>
+        <p class="support reveal d2" data-cms-key="brands_safety_sub">
           On voice. On message. Approved by your team. Filling the feed shouldn't mean gambling the logo on it.
         </p>
         <div class="pillar-grid">

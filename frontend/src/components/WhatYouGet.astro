@@ -10,17 +10,17 @@ const platforms = ['LinkedIn', 'Instagram', 'YouTube', 'TikTok', 'X'];
 ---
 <section class="navy-band">
   <div class="wrap">
-    <div class="label reveal" style="color:var(--gold)">What one hour becomes</div>
-    <h2 class="reveal d1" style="color:var(--cream)">A full month of content, every month.</h2>
+    <div class="label reveal" style="color:var(--gold)" data-cms-key="homepage_get_label">What one hour becomes</div>
+    <h2 class="reveal d1" style="color:var(--cream)" data-cms-key="homepage_get_title">A full month of content, every month.</h2>
     <div class="get-grid">
       <ul class="get-list reveal d2">
-        {deliverables.map(d => (
-          <li><strong>{d.bold}</strong>{d.rest}</li>
+        {deliverables.map((d, i) => (
+          <li data-cms-key={`homepage_get_bullet${i+1}`}><strong>{d.bold}</strong>{d.rest}</li>
         ))}
       </ul>
       <div class="get-aside reveal d3">
-        <div class="aside-big">36 pieces of content from <span style="color:var(--gold)">one conversation.</span></div>
-        <p>Enough to show up almost every day, without touching an editing timeline.</p>
+        <div class="aside-big" data-cms-key="homepage_get_aside_big">36 pieces of content from <span style="color:var(--gold)">one conversation.</span></div>
+        <p data-cms-key="homepage_get_aside_sub">Enough to show up almost every day, without touching an editing timeline.</p>
         <div class="platform-chips">
           {platforms.map(p => <span>{p}</span>)}
         </div>

@@ -26,6 +26,31 @@ const {
 <body>
   <slot />
   <script>
+    // Hydrate CMS content
+    (async function hydrateCMS() {
+      try {
+        const apiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+          ? 'http://127.0.0.1:8000'
+          : 'https://api.clipchopper.com';
+        const res = await fetch(`${apiBase}/api/v1/cms`);
+        if (res.ok) {
+          const data = await res.json();
+          document.querySelectorAll('[data-cms-key]').forEach((el) => {
+            const key = el.getAttribute('data-cms-key');
+            if (key && data[key] !== undefined && data[key] !== null && data[key] !== '') {
+              if (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA') {
+                el.innerHTML = data[key].replace(/\n/g, '<br />');
+              } else {
+                (el as HTMLInputElement).value = data[key];
+              }
+            }
+          });
+        }
+      } catch (err) {
+        console.error('CMS hydration failed:', err);
+      }
+    })();
+
     // Reveal-on-scroll
     (function () {
       const io = new IntersectionObserver(

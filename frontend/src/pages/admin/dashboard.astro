@@ -58,14 +58,18 @@ import '../../styles/admin.css';
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>
                   <span>Create Admin</span>
                 </button>
-                <button class="admin-nav__link admin-nav__link--sub" data-tab="branding" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                  <span>Site Branding</span>
-                </button>
-                <button class="admin-nav__link admin-nav__link--sub" data-tab="preferences" type="button">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><circle cx="12" cy="12" r="3"></circle><path d="M12 22V12m0 0V2M12 12h10M12 12H2"></path></svg>
-                  <span>Preferences</span>
-                </button>
+                 <button class="admin-nav__link admin-nav__link--sub" data-tab="branding" type="button">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                   <span>Site Branding</span>
+                 </button>
+                 <button class="admin-nav__link admin-nav__link--sub" data-tab="cms" type="button">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                   <span>Website Content</span>
+                 </button>
+                 <button class="admin-nav__link admin-nav__link--sub" data-tab="preferences" type="button">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><circle cx="12" cy="12" r="3"></circle><path d="M12 22V12m0 0V2M12 12h10M12 12H2"></path></svg>
+                   <span>Preferences</span>
+                 </button>
               </div>
             </div>
           </nav>
@@ -471,6 +475,276 @@ import '../../styles/admin.css';
                 <p class="admin-status" id="preferences-status" aria-live="polite"></p>
               </form>
             </section>
+          </div>
+
+          <!-- TAB 9: Website Content Panel (CMS) -->
+          <div class="tab-panel" id="panel-cms">
+            <div class="cms-tabs" style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+              <button type="button" class="btn btn-primary cms-tab-btn active" data-cms-tab="homepage">Homepage</button>
+              <button type="button" class="btn btn-outline cms-tab-btn" data-cms-tab="brands">Brands Page</button>
+            </div>
+
+            <form id="cms-form" class="admin-form">
+              <!-- Homepage Sub-panel -->
+              <div class="cms-sub-panel active" id="cms-sub-homepage">
+                <!-- Hero Section -->
+                <section class="admin-card" style="margin-bottom: 20px;">
+                  <div class="admin-card__header">
+                    <h4>Hero Section</h4>
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_hero_label">Label</label>
+                    <input type="text" id="cms-homepage_hero_label" name="homepage_hero_label" placeholder="Content that sounds like you" />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_hero_title">Title</label>
+                    <textarea id="cms-homepage_hero_title" name="homepage_hero_title" rows="2" placeholder="Build. Grow.&#10;Be Seen."></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_hero_sub">Subtitle</label>
+                    <textarea id="cms-homepage_hero_sub" name="homepage_hero_sub" rows="3" placeholder="Talk for an hour on a podcast-style call..."></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_hero_btn_book">Book CTA Button</label>
+                    <input type="text" id="cms-homepage_hero_btn_book" name="homepage_hero_btn_book" placeholder="Book a call →" />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_hero_btn_pricing">Pricing CTA Button</label>
+                    <input type="text" id="cms-homepage_hero_btn_pricing" name="homepage_hero_btn_pricing" placeholder="See pricing" />
+                  </div>
+                </section>
+
+                <!-- Want & Cost -->
+                <section class="admin-card" style="margin-bottom: 20px;">
+                  <div class="admin-card__header">
+                    <h4>Want & Cost Section</h4>
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_want_title">Want Section Title</label>
+                    <input type="text" id="cms-homepage_want_title" name="homepage_want_title" placeholder="The right people should already know your name." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_want_sub">Want Section Subtitle</label>
+                    <textarea id="cms-homepage_want_sub" name="homepage_want_sub" rows="2" placeholder="You're good at what you do..."></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_cost_title">Cost Section Title</label>
+                    <input type="text" id="cms-homepage_cost_title" name="homepage_cost_title" placeholder="Being seen shouldn't cost you your time or your budget." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_cost_diy_big">DIY Metric Value</label>
+                    <input type="text" id="cms-homepage_cost_diy_big" name="homepage_cost_diy_big" placeholder="10 hours" />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_cost_diy_unit">DIY Metric Label</label>
+                    <input type="text" id="cms-homepage_cost_diy_unit" name="homepage_cost_diy_unit" placeholder="a week you don't have" />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_cost_agency_big">Agency Metric Value</label>
+                    <input type="text" id="cms-homepage_cost_agency_big" name="homepage_cost_agency_big" placeholder="$3,000–$25,000" />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_cost_agency_unit">Agency Metric Label</label>
+                    <input type="text" id="cms-homepage_cost_agency_unit" name="homepage_cost_agency_unit" placeholder="a month, with a stranger..." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_cost_better_way">Better Way text</label>
+                    <input type="text" id="cms-homepage_cost_better_way" name="homepage_cost_better_way" placeholder="There's a better way. ↓" />
+                  </div>
+                </section>
+
+                <!-- How & Get -->
+                <section class="admin-card" style="margin-bottom: 20px;">
+                  <div class="admin-card__header">
+                    <h4>How & Get Sections</h4>
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_how_title">How It Works Title</label>
+                    <input type="text" id="cms-homepage_how_title" name="homepage_how_title" placeholder="One call. We do everything up to publish." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_how_sub">How It Works Subtitle</label>
+                    <textarea id="cms-homepage_how_sub" name="homepage_how_sub" rows="2" placeholder="The call is the shoot..."></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_get_title">What You Get Title</label>
+                    <input type="text" id="cms-homepage_get_title" name="homepage_get_title" placeholder="A full month of content, every month." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_get_aside_big">What You Get Aside Title</label>
+                    <input type="text" id="cms-homepage_get_aside_big" name="homepage_get_aside_big" placeholder="36 pieces of content from one conversation." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_get_aside_sub">What You Get Aside Subtitle</label>
+                    <input type="text" id="cms-homepage_get_aside_sub" name="homepage_get_aside_sub" placeholder="Enough to show up almost every day..." />
+                  </div>
+                </section>
+
+                <!-- Authenticity & Team -->
+                <section class="admin-card" style="margin-bottom: 20px;">
+                  <div class="admin-card__header">
+                    <h4>Authenticity & Team</h4>
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_auth_title">Authenticity Title</label>
+                    <input type="text" id="cms-homepage_auth_title" name="homepage_auth_title" placeholder="Protect your authenticity." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_auth_sub">Authenticity Subtitle</label>
+                    <textarea id="cms-homepage_auth_sub" name="homepage_auth_sub" rows="2" placeholder="Your real voice..."></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_team_title">Team Title</label>
+                    <input type="text" id="cms-homepage_team_title" name="homepage_team_title" placeholder="You get a team, not a tool." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_team_bio"> Dennis Bio</label>
+                    <textarea id="cms-homepage_team_bio" name="homepage_team_bio" rows="3" placeholder="Dennis has advised FedEx..."></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_team_stat_desc">Humans Stat text</label>
+                    <textarea id="cms-homepage_team_stat_desc" name="homepage_team_stat_desc" rows="3" placeholder="An editor who learns your voice..."></textarea>
+                  </div>
+                </section>
+
+                <!-- Pricing & Book CTA -->
+                <section class="admin-card" style="margin-bottom: 20px;">
+                  <div class="admin-card__header">
+                    <h4>Pricing & Book CTA</h4>
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_pricing_title">Pricing Title</label>
+                    <input type="text" id="cms-homepage_pricing_title" name="homepage_pricing_title" placeholder="Simple, honest pricing." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_price_onetime_val">Try it once price</label>
+                    <input type="text" id="cms-homepage_price_onetime_val" name="homepage_price_onetime_val" placeholder="$499" />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_price_monthly_val">Subscribe price</label>
+                    <input type="text" id="cms-homepage_price_monthly_val" name="homepage_price_monthly_val" placeholder="$399" />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_book_title">Book CTA Title</label>
+                    <input type="text" id="cms-homepage_book_title" name="homepage_book_title" placeholder="Let's make you impossible to miss." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-homepage_book_sub">Book CTA Subtitle</label>
+                    <textarea id="cms-homepage_book_sub" name="homepage_book_sub" rows="2" placeholder="It starts with one call..."></textarea>
+                  </div>
+                </section>
+              </div>
+
+              <!-- Brands Page Sub-panel -->
+              <div class="cms-sub-panel" id="cms-sub-brands" style="display: none;">
+                <!-- Hero Section -->
+                <section class="admin-card" style="margin-bottom: 20px;">
+                  <div class="admin-card__header">
+                    <h4>Hero Section</h4>
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_hero_label">Label</label>
+                    <input type="text" id="cms-brands_hero_label" name="brands_hero_label" placeholder="Always on. Always on brand." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_hero_title">Title</label>
+                    <textarea id="cms-brands_hero_title" name="brands_hero_title" rows="2" placeholder="Always on.&#10;Always on brand."></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_hero_sub">Subtitle</label>
+                    <textarea id="cms-brands_hero_sub" name="brands_hero_sub" rows="3" placeholder="One asset in. 72 pieces out..."></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_hero_btn_book">Book CTA Button</label>
+                    <input type="text" id="cms-brands_hero_btn_book" name="brands_hero_btn_book" placeholder="Book a call" />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_hero_btn_pricing">Pricing CTA Button</label>
+                    <input type="text" id="cms-brands_hero_btn_pricing" name="brands_hero_btn_pricing" placeholder="See pricing" />
+                  </div>
+                </section>
+
+                <!-- Want & Cost -->
+                <section class="admin-card" style="margin-bottom: 20px;">
+                  <div class="admin-card__header">
+                    <h4>Want & Cost Section</h4>
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_want_title">Want Section Title</label>
+                    <input type="text" id="cms-brands_want_title" name="brands_want_title" placeholder="Your buyers scroll every day." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_want_sub">Want Section Subtitle</label>
+                    <textarea id="cms-brands_want_sub" name="brands_want_sub" rows="2" placeholder="Your brand shows up when there's a launch..."></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_cost_title">Cost Section Title</label>
+                    <input type="text" id="cms-brands_cost_title" name="brands_cost_title" placeholder="Staying visible shouldn't need a new budget line." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_cost_agency_big">Agency Metric Value</label>
+                    <input type="text" id="cms-brands_cost_agency_big" name="brands_cost_agency_big" placeholder="$3,000–$25,000" />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_cost_agency_unit">Agency Metric Label</label>
+                    <input type="text" id="cms-brands_cost_agency_unit" name="brands_cost_agency_unit" placeholder="a month, before you've shipped a single post" />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_cost_inhouse_big">In-House Metric Value</label>
+                    <input type="text" id="cms-brands_cost_inhouse_big" name="brands_cost_inhouse_big" placeholder="3 hires" />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_cost_inhouse_unit">In-House Metric Label</label>
+                    <input type="text" id="cms-brands_cost_inhouse_unit" name="brands_cost_inhouse_unit" placeholder="an editor, a designer, and a writer..." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_cost_better_way">Better Way text</label>
+                    <input type="text" id="cms-brands_cost_better_way" name="brands_cost_better_way" placeholder="There’s a better way: the webinars..." />
+                  </div>
+                </section>
+
+                <!-- How & Get & Safety -->
+                <section class="admin-card" style="margin-bottom: 20px;">
+                  <div class="admin-card__header">
+                    <h4>Other Sections</h4>
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_how_title">How It Works Title</label>
+                    <input type="text" id="cms-brands_how_title" name="brands_how_title" placeholder="One asset. We do everything up to publish." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_how_sub">How It Works Subtitle</label>
+                    <textarea id="cms-brands_how_sub" name="brands_how_sub" rows="2" placeholder="No shoots, no scripts, no production budget..."></textarea>
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_get_title">What You Get Title</label>
+                    <input type="text" id="cms-brands_get_title" name="brands_get_title" placeholder="A full month of content, every month." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_get_aside_big">What You Get Aside Title</label>
+                    <input type="text" id="cms-brands_get_aside_big" name="brands_get_aside_big" placeholder="72 pieces of content from one asset." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_get_aside_sub">What You Get Aside Subtitle</label>
+                    <input type="text" id="cms-brands_get_aside_sub" name="brands_get_aside_sub" placeholder="Enough to show up every day of the month..." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_safety_title">Brand Safety Title</label>
+                    <input type="text" id="cms-brands_safety_title" name="brands_safety_title" placeholder="Protect the brand." />
+                  </div>
+                  <div class="field">
+                    <label for="cms-brands_safety_sub">Brand Safety Subtitle</label>
+                    <textarea id="cms-brands_safety_sub" name="brands_safety_sub" rows="2" placeholder="On voice. On message. Approved by your team..."></textarea>
+                  </div>
+                </section>
+              </div>
+
+              <!-- Submit and Status -->
+              <div style="margin-top: 20px;">
+                <button class="btn btn-primary" type="submit" id="cms-submit">Save Website Content</button>
+                <p class="admin-status" id="cms-status" aria-live="polite"></p>
+              </div>
+            </form>
           </div>
         </section>
       </div>
@@ -1307,6 +1581,20 @@ import '../../styles/admin.css';
     }
   }
 
+  async function loadCmsSettings() {
+    try {
+      const res = await api('/api/v1/cms');
+      Object.keys(res).forEach(key => {
+        const el = document.getElementById(`cms-${key}`) as HTMLInputElement | HTMLTextAreaElement;
+        if (el) {
+          el.value = res[key] || '';
+        }
+      });
+    } catch (err) {
+      console.error('Failed to load CMS settings.', err);
+    }
+  }
+
   function updateStats() {
     const showing = state.bookings.rows?.length || 0;
     const total = state.bookings.total;
@@ -1517,6 +1805,60 @@ import '../../styles/admin.css';
         loadBookings(state.bookings.page);
       }
     });
+
+    // CMS Sub-tab Toggling
+    document.querySelectorAll('.cms-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.cms-tab-btn').forEach(b => {
+          b.classList.remove('btn-primary');
+          b.classList.add('btn-outline');
+        });
+        btn.classList.remove('btn-outline');
+        btn.classList.add('btn-primary');
+        
+        const target = btn.getAttribute('data-cms-tab');
+        document.querySelectorAll('.cms-sub-panel').forEach(p => {
+          (p as HTMLElement).style.display = 'none';
+        });
+        const activeSubPanel = document.getElementById(`cms-sub-${target}`);
+        if (activeSubPanel) activeSubPanel.style.display = 'block';
+      });
+    });
+
+    // CMS Form Submit
+    const cmsForm = document.getElementById('cms-form') as HTMLFormElement;
+    cmsForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const statusEl = 'cms-status';
+      showStatus('Saving website content...', statusEl);
+      
+      const submitBtn = document.getElementById('cms-submit') as HTMLButtonElement;
+      if (submitBtn) {
+        submitBtn.textContent = 'Saving…';
+        submitBtn.setAttribute('disabled', 'true');
+      }
+
+      const data: Record<string, string> = {};
+      cmsForm.querySelectorAll('input[name], textarea[name]').forEach(el => {
+        const input = el as HTMLInputElement | HTMLTextAreaElement;
+        data[input.name] = input.value;
+      });
+
+      try {
+        await api('/api/v1/admin/cms', {
+          method: 'POST',
+          body: data
+        });
+        showStatus('✓ Website content updated successfully!', statusEl);
+      } catch (err: any) {
+        showStatus(err.message || 'Failed to update website content.', statusEl, true);
+      } finally {
+        if (submitBtn) {
+          submitBtn.textContent = 'Save Website Content';
+          submitBtn.removeAttribute('disabled');
+        }
+      }
+    });
   }
 
   // --- Pagination & Search Filters setup ---
@@ -1583,6 +1925,7 @@ import '../../styles/admin.css';
         }
         if (activeTab === 'notifications') await loadWebhooks();
         if (activeTab === 'branding') await loadSiteSettings();
+        if (activeTab === 'cms') await loadCmsSettings();
         if (activeTab === 'preferences') {
           const prefTimezoneSelect = document.getElementById('pref-timezone') as HTMLSelectElement;
           if (prefTimezoneSelect) {
@@ -1614,7 +1957,8 @@ import '../../styles/admin.css';
       loadClients(),
       loadDeliverables(1),
       loadWebhooks(),
-      loadSiteSettings()
+      loadSiteSettings(),
+      loadCmsSettings()
     ]);
   }
 
