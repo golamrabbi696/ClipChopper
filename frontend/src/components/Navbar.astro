@@ -142,7 +142,7 @@ header.scrolled { box-shadow: var(--shadow); }
   // Dynamic Logo Loader
   (async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/v1/settings');
+      const res = await fetch('https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/settings');
       if (res.ok) {
         const settings = await res.json();
         const logomark = document.getElementById('site-logomark');

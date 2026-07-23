@@ -15,7 +15,7 @@
     </div>
     <div class="book-form card reveal d3">
       <div class="form-label">Or drop us a quick note</div>
-      <form id="quick-contact-form" action="http://localhost:8000/api/v1/contact" method="POST" novalidate>
+      <form id="quick-contact-form" action="https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/contact" method="POST" novalidate>
         <div class="field">
           <label for="qc-name">Your name</label>
           <input type="text" id="qc-name" name="name" placeholder="Jane Smith" required />
@@ -90,7 +90,7 @@
     submitBtn.setAttribute('disabled', 'true');
     try {
       const data = Object.fromEntries(new FormData(form));
-      const res = await fetch('http://localhost:8000/api/v1/contact', {
+      const res = await fetch('https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data),

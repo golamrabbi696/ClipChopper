@@ -57,13 +57,6 @@ import Footer from '../../components/Footer.astro';
 
     <!-- THE WANT -->
     <section class="want" id="want">
-      <div class="wrap want-inner">
-        <h2 class="reveal">Your buyers scroll every day.</h2>
-        <p class="support reveal d1">
-          Your brand shows up when there's a launch. In between, the feed belongs to whoever keeps posting.
-        </p>
-      </div>
-
       <div class="wrap want-feed-wrap">
         <div class="want-feed reveal d2" aria-label="Example quote card">
           <article class="card feed-post">
@@ -84,6 +77,13 @@ import Footer from '../../components/Footer.astro';
             </div>
           </article>
         </div>
+      </div>
+
+      <div class="wrap want-inner">
+        <h2 class="reveal">Your buyers scroll every day.</h2>
+        <p class="support reveal d1">
+          Your brand shows up when there's a launch. In between, the feed belongs to whoever keeps posting.
+        </p>
       </div>
     </section>
 
@@ -345,7 +345,7 @@ import Footer from '../../components/Footer.astro';
         
         <div class="book-form card reveal d3">
           <div class="form-label">Or drop us a quick note</div>
-          <form id="quick-contact-form" action="http://localhost:8000/api/v1/contact" method="POST" novalidate>
+          <form id="quick-contact-form" action="https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/contact" method="POST" novalidate>
             <div class="field">
               <label for="qc-name">Your name</label>
               <input type="text" id="qc-name" name="name" placeholder="Jane Smith" required />
@@ -558,7 +558,7 @@ import Footer from '../../components/Footer.astro';
 
   .want { text-align: center; }
   .want .support { margin-left: auto; margin-right: auto; max-width: 600px; }
-  .want-feed-wrap { display: flex; justify-content: center; margin-top: 36px; }
+  .want-feed-wrap { display: flex; justify-content: center; margin-bottom: 36px; }
   .want-feed { width: 100%; max-width: 480px; text-align: left; }
   .cost-grid {
     display: grid;
@@ -1079,7 +1079,7 @@ import Footer from '../../components/Footer.astro';
     submitBtn.setAttribute('disabled', 'true');
     try {
       const data = Object.fromEntries(new FormData(form));
-      const res = await fetch('http://localhost:8000/api/v1/contact', {
+      const res = await fetch('https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data),

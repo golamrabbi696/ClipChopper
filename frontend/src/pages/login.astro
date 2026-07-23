@@ -97,7 +97,7 @@ import Footer from '../components/Footer.astro';
     status.textContent = '';
     try {
       const data = Object.fromEntries(new FormData(form));
-      const res = await fetch('http://localhost:8000/api/v1/auth/login', {
+      const res = await fetch('https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data),

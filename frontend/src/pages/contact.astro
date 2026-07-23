@@ -423,7 +423,7 @@ const planLabel = plan === 'monthly' ? 'Subscribe ($399/mo)' : plan === 'one-tim
         status.style.color = '#E86F50';
         return;
       }
-      const res = await fetch('http://localhost:8000/api/v1/bookings', {
+      const res = await fetch('https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data),

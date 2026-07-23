@@ -5,4 +5,12 @@ import react from '@astrojs/react';
 // https://astro.build/config
 export default defineConfig({
   integrations: [react()],
+  server: {
+    host: true,
+  },
+  vite: {
+    server: {
+      allowedHosts: ['web.clipchopper.com', '.clipchopper.com'],
+    },
+  },
 });

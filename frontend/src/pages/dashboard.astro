@@ -124,7 +124,7 @@ import Footer from '../components/Footer.astro';
   // Fetch deliverables
   async function loadDeliverables() {
     try {
-      const res = await fetch('http://localhost:8000/api/v1/dashboard/deliverables', {
+      const res = await fetch('https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/dashboard/deliverables', {
         headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
       });
       if (res.status === 401) { window.location.href = '/login'; return; }
