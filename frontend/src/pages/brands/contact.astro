@@ -329,6 +329,7 @@ const plan = Astro.url.searchParams.get('plan') ?? '';
     "Pacific/Auckland"
   ];
 
+  const defaultTz = "America/New_York";
   if (tzSelect) {
     const timezones = [...popularTimezones];
     if (tz && !timezones.includes(tz)) {
@@ -340,7 +341,7 @@ const plan = Astro.url.searchParams.get('plan') ?? '';
       const opt = document.createElement('option');
       opt.value = zone;
       opt.textContent = zone.replace('_', ' ');
-      if (zone === tz) {
+      if (zone === defaultTz) {
         opt.selected = true;
       }
       tzSelect.appendChild(opt);
