@@ -1,15 +1,16 @@
 ---
+const cacheBuster = 1;
 ---
 <section class="want" id="want">
   <div class="wrap want-inner">
-    <div class="want-text">
-      <h2 class="reveal">The right people should already know your name.</h2>
-      <p class="support reveal d1">
-        You're good at what you do. Growing who knows it comes down to one thing: showing up
-        where they are, week after week. The name you build is yours. It travels, whatever changes at work.
-      </p>
-    </div>
-    
+    <h2 class="reveal">The right people should already know your name.</h2>
+    <p class="support reveal d1">
+      You're good at what you do. Growing who knows it comes down to one thing: showing up
+      where they are, week after week. The name you build is yours. It travels, whatever changes at work.
+    </p>
+  </div>
+  
+  <div class="wrap want-feed-wrap">
     <div class="want-feed reveal d2" aria-label="Example quote card">
       <article class="card feed-post">
         <div class="post-head">
@@ -52,16 +53,11 @@
   </div>
 </section>
 
-<style is:global>
-.want-inner {
-  display: grid;
-  grid-template-columns: 1.1fr .9fr;
-  gap: clamp(36px, 6vw, 72px);
-  align-items: center;
-}
-.want-text { text-align: left; }
-.want-text .support { margin-left: 0; }
-.want-feed { display: flex; flex-direction: column; gap: 16px; text-align: left; }
+<style>
+.want { text-align: center; }
+.want .support { margin-left: auto; margin-right: auto; max-width: 600px; }
+.want-feed-wrap { display: flex; justify-content: center; margin-top: 36px; }
+.want-feed { width: 100%; max-width: 480px; text-align: left; }
 .feed-post { padding: 18px; }
 .post-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .post-avatar {

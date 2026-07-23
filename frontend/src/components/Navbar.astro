@@ -3,6 +3,11 @@ const pathname = Astro.url.pathname;
 const isBrandsPage = pathname === '/brands' || pathname === '/brands/';
 const toggleLink = isBrandsPage ? '/' : '/brands/';
 const toggleText = isBrandsPage ? 'For Personal' : 'For Brands';
+
+// Anchor links dynamic mapping
+const howLink = isBrandsPage ? '#how' : '/#how';
+const pricingLink = isBrandsPage ? '#pricing' : '/#foryou';
+const aboutLink = isBrandsPage ? '#about' : '/#about';
 ---
 <header id="top">
   <div class="wrap navbar">
@@ -12,9 +17,9 @@ const toggleText = isBrandsPage ? 'For Personal' : 'For Brands';
     </a>
     <nav class="navlinks" aria-label="Main navigation">
       <a href={toggleLink}>{toggleText}</a>
-      <a href="/#how">How it works</a>
-      <a href="/#foryou">Pricing</a>
-      <a href="/#about">About</a>
+      <a href={howLink}>How it works</a>
+      <a href={pricingLink}>Pricing</a>
+      <a href={aboutLink}>About</a>
     </nav>
     <a class="btn btn-primary navcta" href="/contact" id="nav-book-cta">Book a call</a>
     <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-expanded="false">
@@ -23,9 +28,9 @@ const toggleText = isBrandsPage ? 'For Personal' : 'For Brands';
   </div>
   <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
     <a href={toggleLink}>{toggleText}</a>
-    <a href="/#how">How it works</a>
-    <a href="/#foryou">Pricing</a>
-    <a href="/#about">About</a>
+    <a href={howLink}>How it works</a>
+    <a href={pricingLink}>Pricing</a>
+    <a href={aboutLink}>About</a>
     <a class="btn btn-primary" href="/contact">Book a call</a>
   </div>
 </header>
