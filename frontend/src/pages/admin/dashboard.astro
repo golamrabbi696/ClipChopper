@@ -66,10 +66,14 @@ import '../../styles/admin.css';
                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                    <span>Website Content</span>
                  </button>
-                 <button class="admin-nav__link admin-nav__link--sub" data-tab="preferences" type="button">
-                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><circle cx="12" cy="12" r="3"></circle><path d="M12 22V12m0 0V2M12 12h10M12 12H2"></path></svg>
-                   <span>Preferences</span>
-                 </button>
+                  <button class="admin-nav__link admin-nav__link--sub" data-tab="preferences" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><circle cx="12" cy="12" r="3"></circle><path d="M12 22V12m0 0V2M12 12h10M12 12H2"></path></svg>
+                    <span>Preferences</span>
+                  </button>
+                  <button class="admin-nav__link admin-nav__link--sub" data-tab="profile" type="button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <span>Profile</span>
+                  </button>
               </div>
             </div>
           </nav>
@@ -745,6 +749,46 @@ import '../../styles/admin.css';
                 <p class="admin-status" id="cms-status" aria-live="polite"></p>
               </div>
             </form>
+          </div>
+
+          <!-- TAB 10: Profile Panel -->
+          <div class="tab-panel" id="panel-profile">
+            <section class="admin-card">
+              <div class="admin-card__header">
+                <h3>My Profile</h3>
+                <p class="admin-help">Update your personal account information and password.</p>
+              </div>
+              <form id="profile-form" class="admin-form" style="max-width: 500px; margin-top: 20px;">
+                <div class="field">
+                  <label for="prof-name">Full Name *</label>
+                  <input type="text" id="prof-name" name="name" required placeholder="ClipChopper Admin" />
+                </div>
+                <div class="field">
+                  <label for="prof-email">Email Address</label>
+                  <input type="email" id="prof-email" disabled style="opacity: 0.6; cursor: not-allowed;" />
+                  <p class="admin-help" style="margin-top: 6px;">Email address cannot be changed.</p>
+                </div>
+                
+                <h4 style="margin: 28px 0 16px; border-top: 1px solid var(--border); padding-top: 20px; color: var(--gold-dk);">Change Password</h4>
+                <p class="admin-help" style="margin-bottom: 16px;">Leave password fields blank if you do not wish to change your password.</p>
+                
+                <div class="field">
+                  <label for="prof-current-pass">Current Password</label>
+                  <input type="password" id="prof-current-pass" name="current_password" placeholder="••••••••" autocomplete="current-password" />
+                </div>
+                <div class="field">
+                  <label for="prof-new-pass">New Password</label>
+                  <input type="password" id="prof-new-pass" name="new_password" placeholder="••••••••" autocomplete="new-password" />
+                </div>
+                <div class="field">
+                  <label for="prof-confirm-pass">Confirm New Password</label>
+                  <input type="password" id="prof-confirm-pass" name="new_password_confirmation" placeholder="••••••••" autocomplete="new-password" />
+                </div>
+                
+                <button class="btn btn-primary" type="submit" id="prof-submit" style="margin-top: 10px;">Save Profile</button>
+                <p class="admin-status" id="profile-status" aria-live="polite"></p>
+              </form>
+            </section>
           </div>
         </section>
       </div>
@@ -1595,6 +1639,18 @@ import '../../styles/admin.css';
     }
   }
 
+  async function loadProfileData() {
+    try {
+      const me = await api('/api/v1/auth/me');
+      const nameInput = document.getElementById('prof-name') as HTMLInputElement;
+      const emailInput = document.getElementById('prof-email') as HTMLInputElement;
+      if (nameInput) nameInput.value = me?.name || '';
+      if (emailInput) emailInput.value = me?.email || '';
+    } catch (err) {
+      console.error('Failed to load profile data.', err);
+    }
+  }
+
   function updateStats() {
     const showing = state.bookings.rows?.length || 0;
     const total = state.bookings.total;
@@ -1859,6 +1915,53 @@ import '../../styles/admin.css';
         }
       }
     });
+
+    // Profile Form Submit
+    const profileForm = document.getElementById('profile-form') as HTMLFormElement;
+    profileForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const statusEl = 'profile-status';
+      showStatus('Saving profile...', statusEl);
+      
+      const submitBtn = document.getElementById('prof-submit') as HTMLButtonElement;
+      if (submitBtn) {
+        submitBtn.textContent = 'Saving…';
+        submitBtn.setAttribute('disabled', 'true');
+      }
+
+      const name = (document.getElementById('prof-name') as HTMLInputElement).value;
+      const currentPassword = (document.getElementById('prof-current-pass') as HTMLInputElement).value;
+      const newPassword = (document.getElementById('prof-new-pass') as HTMLInputElement).value;
+      const confirmPassword = (document.getElementById('prof-confirm-pass') as HTMLInputElement).value;
+
+      try {
+        const payload = await api('/api/v1/auth/profile', {
+          method: 'PUT',
+          body: {
+            name,
+            current_password: currentPassword || null,
+            new_password: newPassword || null,
+            new_password_confirmation: confirmPassword || null
+          }
+        });
+        showStatus('✓ Profile updated successfully!', statusEl);
+        
+        // Clear password fields
+        (document.getElementById('prof-current-pass') as HTMLInputElement).value = '';
+        (document.getElementById('prof-new-pass') as HTMLInputElement).value = '';
+        (document.getElementById('prof-confirm-pass') as HTMLInputElement).value = '';
+        
+        // Refresh session/display name
+        await ensureAdminSession();
+      } catch (err: any) {
+        showStatus(err.message || 'Failed to update profile.', statusEl, true);
+      } finally {
+        if (submitBtn) {
+          submitBtn.textContent = 'Save Profile';
+          submitBtn.removeAttribute('disabled');
+        }
+      }
+    });
   }
 
   // --- Pagination & Search Filters setup ---
@@ -1926,6 +2029,7 @@ import '../../styles/admin.css';
         if (activeTab === 'notifications') await loadWebhooks();
         if (activeTab === 'branding') await loadSiteSettings();
         if (activeTab === 'cms') await loadCmsSettings();
+        if (activeTab === 'profile') await loadProfileData();
         if (activeTab === 'preferences') {
           const prefTimezoneSelect = document.getElementById('pref-timezone') as HTMLSelectElement;
           if (prefTimezoneSelect) {
@@ -1958,7 +2062,8 @@ import '../../styles/admin.css';
       loadDeliverables(1),
       loadWebhooks(),
       loadSiteSettings(),
-      loadCmsSettings()
+      loadCmsSettings(),
+      loadProfileData()
     ]);
   }
 
