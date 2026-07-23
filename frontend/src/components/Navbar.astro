@@ -1,10 +1,11 @@
 ---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo/ClipChopper_Logo.png';
 ---
 <header id="top">
   <div class="wrap navbar">
     <a class="logo" href="/">
-      <span class="logomark" aria-hidden="true">CC</span>
-      <span class="logotype">CLIPCHOPPER</span>
+      <Image src={logo} alt="ClipChopper" class="logo-img" />
     </a>
     <nav class="navlinks" aria-label="Main navigation">
       <a href="/#how">How it works</a>
@@ -48,29 +49,14 @@ header.scrolled { box-shadow: var(--shadow); }
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
   text-decoration: none;
-  color: var(--ink);
   flex-shrink: 0;
 }
-.logomark {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: var(--navy);
-  color: var(--gold);
-  font-weight: 800;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  letter-spacing: .03em;
-}
-.logotype {
-  font-weight: 800;
-  font-size: 13.5px;
-  letter-spacing: .18em;
-  color: var(--ink);
+.logo-img {
+  height: 38px;
+  width: auto;
+  display: block;
+  object-fit: contain;
 }
 
 .navlinks {
