@@ -121,10 +121,14 @@ import Footer from '../components/Footer.astro';
     window.location.href = '/login';
   });
 
+  const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000'
+    : 'https://api.clipchopper.com';
+
   // Fetch deliverables
   async function loadDeliverables() {
     try {
-      const res = await fetch('https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/dashboard/deliverables', {
+      const res = await fetch(`${API_BASE}/api/v1/dashboard/deliverables`, {
         headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
       });
       if (res.status === 401) { window.location.href = '/login'; return; }

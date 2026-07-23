@@ -142,8 +142,12 @@ header.scrolled { box-shadow: var(--shadow); }
 
   // Dynamic Logo Loader
   (async () => {
+    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:8000'
+      : 'https://api.clipchopper.com';
+
     try {
-      const res = await fetch('https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/settings');
+      const res = await fetch(`${API_BASE}/api/v1/settings`);
       if (res.ok) {
         const settings = await res.json();
         const logomark = document.getElementById('site-logomark');

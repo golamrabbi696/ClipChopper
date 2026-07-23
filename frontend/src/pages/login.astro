@@ -95,9 +95,13 @@ import Footer from '../components/Footer.astro';
     btn.textContent = 'Signing in…';
     btn.setAttribute('disabled', 'true');
     status.textContent = '';
+    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:8000'
+      : 'https://api.clipchopper.com';
+
     try {
       const data = Object.fromEntries(new FormData(form));
-      const res = await fetch('https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/auth/login', {
+      const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data),

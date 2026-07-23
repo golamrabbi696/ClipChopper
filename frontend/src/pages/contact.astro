@@ -411,6 +411,10 @@ const planLabel = plan === 'monthly' ? 'Subscribe ($399/mo)' : plan === 'one-tim
     btn.textContent = 'Sending…';
     btn.setAttribute('disabled', 'true');
     status.textContent = '';
+    const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://localhost:8000'
+      : 'https://api.clipchopper.com';
+
     try {
       const data = Object.fromEntries(new FormData(form));
       if (!data.call_date) {
@@ -423,7 +427,7 @@ const planLabel = plan === 'monthly' ? 'Subscribe ($399/mo)' : plan === 'one-tim
         status.style.color = '#E86F50';
         return;
       }
-      const res = await fetch('https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/bookings', {
+      const res = await fetch(`${API_BASE}/api/v1/bookings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data),

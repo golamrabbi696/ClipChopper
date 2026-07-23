@@ -19,9 +19,16 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:4321', 'http://localhost:3000'],
+    'allowed_origins' => [
+        'http://localhost:4321',
+        'http://localhost:3000',
+        'https://web.clipchopper.com'
+    ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [
+        '#^https://.*\.clipchopper\.com$#',
+        '#^https://.*\.trycloudflare\.com$#',
+    ],
 
     'allowed_headers' => ['*'],
 

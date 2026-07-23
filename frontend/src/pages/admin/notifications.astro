@@ -77,7 +77,9 @@ import AdminSidebar from '../../components/admin/AdminSidebar.astro';
 </Layout>
 
 <script>
-  const API_BASE = 'http://127.0.0.1:8000';
+  const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://127.0.0.1:8000'
+    : 'https://api.clipchopper.com';
 
   const TOKEN_KEY = 'cc_admin_token';
   const USER_KEY = 'cc_admin_user';

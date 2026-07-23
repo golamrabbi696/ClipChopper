@@ -15,7 +15,7 @@
     </div>
     <div class="book-form card reveal d3">
       <div class="form-label">Or drop us a quick note</div>
-      <form id="quick-contact-form" action="https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/contact" method="POST" novalidate>
+      <form id="quick-contact-form" action="https://api.clipchopper.com/api/v1/contact" method="POST" novalidate>
         <div class="field">
           <label for="qc-name">Your name</label>
           <input type="text" id="qc-name" name="name" placeholder="Jane Smith" required />
@@ -80,6 +80,10 @@
 </style>
 
 <script>
+  const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:8000'
+    : 'https://api.clipchopper.com';
+
   const form = document.getElementById('quick-contact-form') as HTMLFormElement;
   const success = document.getElementById('qc-success')!;
   const submitBtn = document.getElementById('qc-submit') as HTMLButtonElement;
@@ -90,7 +94,7 @@
     submitBtn.setAttribute('disabled', 'true');
     try {
       const data = Object.fromEntries(new FormData(form));
-      const res = await fetch('https://adopted-trout-informational-crowd.trycloudflare.com/api/v1/contact', {
+      const res = await fetch(`${API_BASE}/api/v1/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data),
