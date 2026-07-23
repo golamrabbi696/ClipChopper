@@ -62,6 +62,10 @@ import '../../styles/admin.css';
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                   <span>Site Branding</span>
                 </button>
+                <button class="admin-nav__link admin-nav__link--sub" data-tab="preferences" type="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="nav-icon"><circle cx="12" cy="12" r="3"></circle><path d="M12 22V12m0 0V2M12 12h10M12 12H2"></path></svg>
+                  <span>Preferences</span>
+                </button>
               </div>
             </div>
           </nav>
@@ -447,6 +451,27 @@ import '../../styles/admin.css';
               </form>
             </section>
           </div>
+
+          <!-- TAB 8: Preferences Panel -->
+          <div class="tab-panel" id="panel-preferences">
+            <section class="admin-card">
+              <div class="admin-card__header">
+                <h3>My Preferences</h3>
+                <p class="admin-help">Customize your personal dashboard display settings.</p>
+              </div>
+              <form id="preferences-form" class="admin-form" style="max-width: 500px; margin-top: 20px;">
+                <div class="field">
+                  <label for="pref-timezone">Preferred Timezone *</label>
+                  <select id="pref-timezone" required>
+                    <!-- Timezones populated by JS -->
+                  </select>
+                  <p class="admin-help" style="margin-top: 6px;">All booking dates and next meeting schedules will be converted and shown in this timezone.</p>
+                </div>
+                <button class="btn btn-primary" type="submit" id="pref-submit">Save Preferences</button>
+                <p class="admin-status" id="preferences-status" aria-live="polite"></p>
+              </form>
+            </section>
+          </div>
         </section>
       </div>
     </div>
@@ -778,11 +803,38 @@ import '../../styles/admin.css';
     clients: []
   };
 
+  const popularTimezones = [
+    "UTC",
+    "America/New_York",
+    "America/Chicago",
+    "America/Denver",
+    "America/Los_Angeles",
+    "America/Phoenix",
+    "America/Anchorage",
+    "Pacific/Honolulu",
+    "Europe/London",
+    "Europe/Paris",
+    "Europe/Berlin",
+    "Europe/Moscow",
+    "Asia/Dubai",
+    "Asia/Kolkata",
+    "Asia/Dhaka",
+    "Asia/Jakarta",
+    "Asia/Singapore",
+    "Asia/Shanghai",
+    "Asia/Tokyo",
+    "Asia/Seoul",
+    "Australia/Sydney",
+    "Australia/Melbourne",
+    "Pacific/Auckland"
+  ];
+
   function formatDateTime(d: Date, includeTz = false) {
     if (!d || isNaN(d.getTime())) return '—';
     try {
+      const selectedTz = localStorage.getItem('cc_admin_timezone') || 'America/New_York';
       const formatter = new Intl.DateTimeFormat('en-US', {
-        timeZone: 'America/New_York',
+        timeZone: selectedTz,
         year: '2-digit',
         month: '2-digit',
         day: '2-digit',
@@ -799,7 +851,8 @@ import '../../styles/admin.css';
       const ampm = parts.find(p => p.type === 'dayPeriod')?.value || '';
       const timeStr = `${day}/${month}/${year}, ${hour}:${minute} ${ampm}`;
       if (includeTz) {
-        return `${timeStr} (Eastern Time)`;
+        const tzLabel = selectedTz === 'America/New_York' ? 'Eastern Time' : selectedTz.replace('_', ' ');
+        return `${timeStr} (${tzLabel})`;
       }
       return timeStr;
     } catch (e) {
@@ -1434,6 +1487,36 @@ import '../../styles/admin.css';
         }
       }
     });
+
+    // Preferences Timezone Dropdown Population
+    const prefTimezoneSelect = document.getElementById('pref-timezone') as HTMLSelectElement;
+    if (prefTimezoneSelect) {
+      const currentTz = localStorage.getItem('cc_admin_timezone') || 'America/New_York';
+      popularTimezones.forEach(zone => {
+        const opt = document.createElement('option');
+        opt.value = zone;
+        opt.textContent = zone.replace('_', ' ');
+        if (zone === currentTz) {
+          opt.selected = true;
+        }
+        prefTimezoneSelect.appendChild(opt);
+      });
+    }
+
+    // Preferences Form Submit
+    const prefForm = document.getElementById('preferences-form');
+    prefForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const statusEl = 'preferences-status';
+      showStatus('Saving preferences...', statusEl);
+      
+      if (prefTimezoneSelect) {
+        localStorage.setItem('cc_admin_timezone', prefTimezoneSelect.value);
+        showStatus('✓ Preferred timezone updated!', statusEl);
+        // Refresh bookings and stats immediately to apply the new timezone display format
+        loadBookings(state.bookings.page);
+      }
+    });
   }
 
   // --- Pagination & Search Filters setup ---
@@ -1490,6 +1573,12 @@ import '../../styles/admin.css';
       }
       if (activeTab === 'notifications') await loadWebhooks();
       if (activeTab === 'branding') await loadSiteSettings();
+      if (activeTab === 'preferences') {
+        const prefTimezoneSelect = document.getElementById('pref-timezone') as HTMLSelectElement;
+        if (prefTimezoneSelect) {
+          prefTimezoneSelect.value = localStorage.getItem('cc_admin_timezone') || 'America/New_York';
+        }
+      }
     });
   }
 
