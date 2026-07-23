@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ClipChopper: Talk for an hour. Show up for a month.</title>
+<meta name="description" content="One call becomes a month of content: 8 short videos, 8 written posts, and 20 quote cards in your branding. Made by a real editor, approved by you. Grow without losing your voice." />
+<meta property="og:title" content="ClipChopper: Build. Grow. Be Seen." />
+<meta property="og:description" content="Talk for an hour. Get a month of content that sounds like you, ready to post." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3F2EF;            /* warm professional gray */
+    --card:#FFFFFF;
+    --border:#E0DEDA;
+    --ink:#141829;           /* ClipChopper navy as text */
+    --muted:#5B617C;
+    --faint:#8A90A8;
+    --gold:#E7B24C;
+    --gold-dk:#C9942F;
+    --coral:#E86F50;
+    --navy:#141829;
+    --cream:#F4F0E7;
+    --maxw:1080px;--pad:clamp(18px,5vw,44px);
+    --r:12px;
+    --shadow:0 1px 2px rgba(20,24,41,.06),0 1px 3px rgba(20,24,41,.04);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',-apple-system,"Segoe UI","Helvetica Neue",Arial,sans-serif;line-height:1.55;overflow-x:hidden}
+  .wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+
+  /* ---------- header ---------- */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+  .navbar{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+  .logomark{width:34px;height:34px;border-radius:8px;background:var(--navy);color:var(--gold);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center}
+  .logotype{font-weight:800;font-size:15px;letter-spacing:.16em}
+  .navcta{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 20px;background:var(--navy);color:var(--cream);font-weight:700;font-size:14px;border-radius:22px;text-decoration:none}
+  .navcta:hover{background:#1e2440}
+
+  /* ---------- shared ---------- */
+  section{padding:clamp(60px,10vw,104px) 0}
+  h1{font-weight:800;font-size:clamp(2.5rem,8.4vw,4.8rem);line-height:1.02;letter-spacing:-.03em}
+  h2{font-weight:800;font-size:clamp(1.7rem,5vw,2.6rem);line-height:1.1;letter-spacing:-.02em;max-width:24ch}
+  .support{font-size:clamp(1rem,2.6vw,1.2rem);color:var(--muted);max-width:54ch;margin-top:16px}
+  .label{font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-dk);margin-bottom:12px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 28px;background:var(--navy);color:var(--cream);font-weight:700;font-size:15.5px;border-radius:26px;text-decoration:none}
+  .btn:hover{background:#1e2440}
+  .btn.gold{background:var(--gold);color:var(--navy)}
+  .btn.gold:hover{background:#f0c06a}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--border)}
+  .btn.ghost:hover{border-color:var(--muted)}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow)}
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease}
+  .reveal.in{opacity:1;transform:none}
+  .d1{transition-delay:.06s}.d2{transition-delay:.12s}.d3{transition-delay:.18s}
+
+  /* ---------- hero with feed ---------- */
+  .hero{padding-top:clamp(44px,7vw,84px)}
+  .herogrid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,5vw,64px);align-items:center}
+  .kick{font-weight:600;font-size:clamp(1rem,2.8vw,1.35rem);color:var(--muted);margin-top:18px}
+  .kick b{color:var(--ink)}
+  .hero .sub{font-size:clamp(1rem,2.6vw,1.15rem);color:var(--muted);max-width:44ch;margin-top:14px}
+  .ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+
+  .feed{display:flex;flex-direction:column;gap:14px}
+  .feedtag{font-weight:700;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .post{padding:16px 16px 12px}
+  .phead{display:flex;align-items:center;gap:10px}
+  .avatar{width:42px;height:42px;border-radius:50%;background:var(--navy);color:var(--gold);font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+  .pwho b{display:block;font-size:14px;line-height:1.25}
+  .pwho span{font-size:12px;color:var(--faint)}
+  .ptext{font-size:14px;margin-top:10px;color:var(--ink)}
+  .pmedia{margin-top:10px;border-radius:10px;overflow:hidden;position:relative}
+  .pmedia.video{background:linear-gradient(150deg,#1D2238,#141829);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center}
+  .pmedia.video .play{width:54px;height:54px;border-radius:50%;background:var(--coral);display:flex;align-items:center;justify-content:center}
+  .pmedia.video .play::after{content:"";border-left:15px solid #fff;border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:4px}
+  .pmedia.video .capbar{position:absolute;left:14px;right:14px;bottom:12px;background:rgba(20,24,41,.75);color:var(--cream);font-weight:600;font-size:12.5px;padding:7px 10px;border-radius:7px}
+  .pmedia.quote{background:linear-gradient(160deg,var(--gold),#EFC272);aspect-ratio:16/10;display:flex;flex-direction:column;justify-content:center;padding:22px}
+  .pmedia.quote .q{font-weight:800;font-size:clamp(1rem,2.4vw,1.3rem);line-height:1.25;color:var(--navy);letter-spacing:-.01em}
+  .pmedia.quote .qa{margin-top:10px;font-weight:700;font-size:12px;color:var(--navy);opacity:.75}
+  .pfoot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-size:12.5px;color:var(--faint)}
+  .reacts{display:flex;align-items:center;gap:6px}
+  .reacts .r{width:20px;height:20px;border-radius:50%;background:var(--cream);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px}
+
+  /* ---------- want ---------- */
+  .want{text-align:center}
+  .want h2,.want .support{margin-left:auto;margin-right:auto}
+  .want .label{display:block}
+
+  /* ---------- cost ---------- */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:32px}
+  .cost{padding:26px 24px}
+  .cost .who{font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+  .cost .big{font-weight:800;font-size:clamp(1.6rem,5.6vw,2.4rem);letter-spacing:-.02em;line-height:1.05}
+  .cost .unit{font-size:14.5px;color:var(--muted);margin-top:6px}
+  .better{margin-top:24px;font-weight:700;font-size:clamp(1.05rem,3.2vw,1.3rem);color:var(--gold-dk)}
+
+  /* ---------- steps ---------- */
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:32px}
+  .step{padding:20px 18px}
+  .step .n{width:34px;height:34px;border-radius:50%;background:var(--gold);color:var(--navy);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+  .step h3{font-weight:700;font-size:1rem;margin-bottom:5px}
+  .step p{color:var(--muted);font-size:.87rem;line-height:1.45}
+
+  /* ---------- what you get (navy inversion) ---------- */
+  .navyband{background:var(--navy);color:var(--cream)}
+  .navyband .label{color:var(--gold)}
+  .navyband .support{color:#B7BCD4}
+  .getgrid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(26px,5vw,56px);margin-top:30px;align-items:start}
+  .getlist{list-style:none}
+  .getlist li{position:relative;padding:13px 0 13px 36px;border-bottom:1px solid rgba(244,240,231,.14);font-size:clamp(.96rem,2.7vw,1.06rem);color:#B7BCD4}
+  .getlist li:last-child{border-bottom:none}
+  .getlist li b{color:var(--cream);font-weight:700}
+  .getlist li::before{content:"";position:absolute;left:3px;top:18px;width:15px;height:15px;border-radius:4px;border:2px solid var(--gold)}
+  .aside{border-left:3px solid var(--gold);padding:4px 0 4px 20px}
+  .aside .big{font-weight:800;font-size:clamp(1.35rem,4.2vw,1.8rem);letter-spacing:-.02em;line-height:1.15;color:var(--cream)}
+  .aside .big span{color:var(--gold)}
+  .aside p{color:#B7BCD4;margin-top:10px;font-size:.95rem}
+  .chips{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+  .chips span{border:1.5px solid rgba(244,240,231,.28);border-radius:20px;padding:8px 14px;font-size:.82rem;font-weight:600;color:var(--cream)}
+
+  /* ---------- editor ---------- */
+  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}
+  .b{padding:24px 22px}
+  .b h3{font-weight:700;font-size:1.1rem;margin-bottom:8px}
+  .b p{color:var(--muted);font-size:.93rem}
+  .b.mark{border-color:var(--gold)}
+  .b.mark h3{color:var(--gold-dk)}
+  .toolsline{margin-top:18px;color:var(--muted);font-size:.95rem;max-width:62ch}
+
+  /* ---------- audiences as profile cards ---------- */
+  .audgrid{display:grid;grid-template-columns:1fr;gap:26px}
+  .profile{overflow:hidden}
+  .banner{height:76px}
+  .p-you .banner{background:linear-gradient(120deg,var(--navy),#2A3053 60%,var(--gold))}
+  .p-brand .banner{background:linear-gradient(120deg,var(--navy),#2A3053 60%,var(--coral))}
+  .pbody{padding:0 22px 24px;position:relative}
+  .pavatar{width:72px;height:72px;border-radius:50%;border:4px solid var(--card);margin-top:-36px;background:var(--navy);color:var(--gold);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center}
+  .p-brand .pavatar{border-radius:14px;color:var(--coral)}
+  .pname{font-weight:800;font-size:clamp(1.4rem,4.4vw,1.9rem);letter-spacing:-.02em;margin-top:10px}
+  .p-you .pname em{font-style:normal;color:var(--gold-dk)}
+  .p-brand .pname em{font-style:normal;color:var(--coral)}
+  .psub{color:var(--muted);font-size:.98rem;max-width:60ch;margin-top:6px}
+  .tiers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+  .tier{position:relative;border:1px solid var(--border);border-radius:var(--r);padding:22px 20px;display:flex;flex-direction:column;background:#FCFBF9}
+  .tier .badge{position:absolute;top:-11px;left:20px;color:var(--navy);font-weight:700;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;padding:4px 11px;border-radius:20px}
+  .tier .kind{font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .tier .name{font-weight:800;font-size:1.25rem;margin-top:3px}
+  .tier .price{font-weight:800;font-size:1.8rem;letter-spacing:-.02em;margin:12px 0 0}
+  .tier .per{font-weight:500;font-size:13px;color:var(--faint)}
+  .tier ul{list-style:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+  .tier ul li{position:relative;padding:5px 0 5px 20px;font-size:.92rem}
+  .tier ul li::before{content:"";position:absolute;left:0;top:12px;width:8px;height:8px;border-radius:2px}
+  .tier .turn{margin-top:12px;font-size:.82rem;color:var(--faint);font-weight:600}
+  .tier .payoff{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-weight:700;font-size:.95rem;color:var(--ink)}
+  .p-you .tier .price{color:var(--gold-dk)}
+  .p-you .tier ul li::before{background:var(--gold)}
+  .p-you .tier.feature{border-color:var(--gold)}
+  .p-you .tier .badge{background:var(--gold)}
+  .p-brand .tier .price{color:var(--coral)}
+  .p-brand .tier ul li::before{background:var(--coral)}
+  .p-brand .tier.feature{border-color:var(--coral)}
+  .p-brand .tier .badge{background:var(--coral)}
+
+  /* ---------- proof ---------- */
+  .aboutgrid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(20px,4vw,40px);margin-top:32px;align-items:stretch}
+  .who .banner{height:76px;background:linear-gradient(120deg,var(--navy),#2A3053 60%,var(--gold))}
+  .who .pbody{padding:0 22px 24px;position:relative}
+  .who .pavatar{width:72px;height:72px;border-radius:50%;border:4px solid var(--card);margin-top:-36px;background:var(--navy);color:var(--gold);font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center}
+  .who .wname{font-weight:800;font-size:clamp(1.3rem,4vw,1.7rem);letter-spacing:-.02em;margin-top:10px}
+  .who .wcred{font-weight:700;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dk);margin-top:4px}
+  .who .wbio{color:var(--muted);font-size:.97rem;margin-top:12px}
+  .who .wlink{display:inline-block;margin-top:14px;font-weight:700;font-size:.92rem;color:var(--gold-dk);text-decoration:none}
+  .who .wlink:hover{text-decoration:underline}
+  .teamcard{padding:28px 24px;display:flex;flex-direction:column;justify-content:center}
+  .teamcard .bignum{font-weight:800;font-size:clamp(3rem,9vw,4.6rem);letter-spacing:-.03em;line-height:1;color:var(--gold-dk)}
+  .teamcard .numlabel{font-weight:700;font-size:1.05rem;margin-top:6px}
+  .teamcard p{color:var(--muted);font-size:.97rem;margin-top:12px}
+  .metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:32px}
+  .metric{padding:24px 22px}
+  .metric h3{font-weight:700;font-size:1.05rem;color:var(--gold-dk);margin-bottom:6px}
+  .metric p{color:var(--muted);font-size:.92rem}
+
+  /* ---------- book ---------- */
+  .book{background:var(--navy);color:var(--cream);text-align:center}
+  .book h2,.book .support{margin-left:auto;margin-right:auto}
+  .book .support{color:#B7BCD4}
+  .book .btn{margin-top:26px}
+  .book .endnote{margin-top:24px;font-size:.93rem;color:#B7BCD4}
+  .book .endnote a{color:var(--gold);font-weight:700;text-decoration:none}
+  .book .endnote a:hover{text-decoration:underline}
+
+  footer{border-top:1px solid var(--border);padding:26px 0;background:var(--card)}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;font-size:13px;color:var(--faint)}
+  footer .flogo{font-weight:800;letter-spacing:.18em;color:var(--ink);font-size:13px}
+
+  /* ---------- mobile ---------- */
+  @media (max-width:900px){
+    .herogrid{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr}
+    .step{display:grid;grid-template-columns:auto 1fr;gap:2px 14px}
+    .step .n{margin-bottom:0;grid-row:1 / span 2}
+    .split,.getgrid,.three,.tiers,.metrics,.aboutgrid{grid-template-columns:1fr}
+    .ctas .btn{flex:1 1 100%}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal{opacity:1;transform:none;transition:none}
+  }
+  a:focus-visible{outline:2px solid var(--gold-dk);outline-offset:3px;border-radius:6px}
+</style>
+</head>
+<body>
+
+<header id="top">
+  <div class="wrap navbar">
+    <a class="logo" href="#top"><span class="logomark">CC</span><span class="logotype">CLIPCHOPPER</span></a>
+    <a class="navcta" href="#book">Book a call</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap herogrid">
+    <div>
+      <h1 class="reveal in">Build. Grow.<br>Be Seen.</h1>
+      <p class="kick reveal in d1">More <b>influence</b>. Less <b>time</b>. Still <b>you</b>.</p>
+      <p class="sub reveal in d2">Talk for an hour on a podcast-style call. We turn it into a month of content that sounds like you, ready to post where your people already scroll.</p>
+      <div class="ctas reveal in d2">
+        <a class="btn gold" href="#book">Book a call</a>
+        <a class="btn ghost" href="#foryou">See pricing</a>
+      </div>
+    </div>
+    <div class="feed reveal in d3" aria-label="Examples of the posts we make for you">
+      <div class="feedtag">Your month, in the feed</div>
+
+      <article class="card post">
+        <div class="phead">
+          <span class="avatar">YOU</span>
+          <div class="pwho"><b>You</b><span>Founder &middot; 2d</span></div>
+        </div>
+        <p class="ptext">Most advice in our industry is backwards. Here's what a decade of doing the work actually taught me.</p>
+        <div class="pmedia video">
+          <span class="play" aria-hidden="true"></span>
+          <span class="capbar">"...and that's the part nobody tells you."</span>
+        </div>
+        <div class="pfoot">
+          <span class="reacts"><span class="r">&#128077;</span><span class="r">&#128161;</span>&nbsp;Your buyers</span>
+          <span>Comments &middot; Reposts</span>
+        </div>
+      </article>
+
+      <article class="card post">
+        <div class="phead">
+          <span class="avatar">YOU</span>
+          <div class="pwho"><b>You</b><span>Founder &middot; 5d</span></div>
+        </div>
+        <div class="pmedia quote">
+          <div class="q">"Talk about the problem you solve, not the product you sell."</div>
+          <div class="qa">YOUR NAME &middot; in your branding</div>
+        </div>
+        <div class="pfoot">
+          <span class="reacts"><span class="r">&#128077;</span><span class="r">&#10084;&#65039;</span>&nbsp;The right people</span>
+          <span>Saved &middot; Shared</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- THE WANT -->
+<section class="want">
+  <div class="wrap">
+    <h2 class="reveal">The right people should already know your name.</h2>
+    <p class="support reveal d1">You're good at what you do. Growing who knows it comes down to one thing: showing up where they are, week after week. The name you build is yours. It travels, whatever changes at work.</p>
+  </div>
+</section>
+
+<!-- THE COST -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2 class="reveal">Being seen shouldn't cost you your time or your budget.</h2>
+    <div class="split">
+      <div class="cost card reveal d1">
+        <div class="who">Doing it yourself</div>
+        <div class="big">10 hours</div>
+        <div class="unit">a week you don't have</div>
+      </div>
+      <div class="cost card reveal d2">
+        <div class="who">Hiring an agency</div>
+        <div class="big">$3,000&ndash;$25,000</div>
+        <div class="unit">a month, with a stranger in charge of your voice</div>
+      </div>
+    </div>
+    <p class="better reveal d3">There’s a better way.</p>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" style="padding-top:0">
+  <div class="wrap">
+    <div class="label reveal">How it works</div>
+    <h2 class="reveal">One call. We do everything up to publish.</h2>
+    <p class="support reveal d1">The call is the shoot. We interview you podcast-style, on camera, from wherever you are, and cut that hour into clips with the same polish as the biggest names on TikTok, LinkedIn, and YouTube.</p>
+    <div class="steps">
+      <div class="step card reveal d1"><div class="n">1</div><h3>Book a call</h3><p>Pick a time. No prep, no script, no camera crew.</p></div>
+      <div class="step card reveal d1"><div class="n">2</div><h3>Talk for an hour</h3><p>A podcast-style interview. We bring the questions, built from what’s moving in your field. You answer the way you already do.</p></div>
+      <div class="step card reveal d2"><div class="n">3</div><h3>We build the month</h3><p>We cut the best moments, write the posts, and design the cards, all in your voice.</p></div>
+      <div class="step card reveal d2"><div class="n">4</div><h3>You approve</h3><p>You see everything first. Nothing publishes until you say yes.</p></div>
+      <div class="step card reveal d3"><div class="n">5</div><h3>You post it</h3><p>Everything arrives ready to publish, laid out on a calendar. Post it yourself or hand it to your team.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- THE TOPICS -->
+<section class="want">
+  <div class="wrap">
+    <div class="label reveal">The topics</div>
+    <h2 class="reveal">We bring the topics. You bring the take.</h2>
+    <p class="support reveal d1">Some months you'll arrive with ideas. Most months you won't need to. We watch what your field is talking about, build your interview around the conversations worth joining, and ask the questions only you can answer. The feed is full of recycled AI posts. Yours is a real take on a live conversation.</p>
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<section class="navyband">
+  <div class="wrap">
+    <div class="label reveal">What one hour becomes</div>
+    <h2 class="reveal" style="color:var(--cream)">A full month of content, every month.</h2>
+    <div class="getgrid">
+      <ul class="getlist reveal d1">
+        <li><b>8 short videos</b>, two a week, cut from your call</li>
+        <li><b>8 written posts</b>, the words to run with each video</li>
+        <li><b>20 quote cards</b>, your best lines, in your branding</li>
+        <li><b>Ready to publish</b>, approved and laid out on a calendar</li>
+        <li><b>A monthly report</b>, what landed and what to do next</li>
+      </ul>
+      <div class="aside reveal d2">
+        <div class="big">36 pieces of content from <span>one conversation.</span></div>
+        <p>Enough to show up almost every day, without touching an editing timeline.</p>
+        <div class="chips">
+          <span>LinkedIn</span><span>Instagram</span><span>YouTube</span><span>TikTok</span><span>X</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE EDITOR -->
+<section>
+  <div class="wrap">
+    <div class="label reveal">What you keep</div>
+    <h2 class="reveal">Protect your authenticity.</h2>
+    <p class="support reveal d1">Your real voice. Original content. Genuine influence. Growing your reach shouldn't cost you the thing that makes it worth reaching.</p>
+    <div class="three">
+      <div class="b card mark reveal d1"><h3>Your real voice</h3><p>A real editor learns how you actually talk before anything gets cut: your phrasing, your pace, the things you'd never say. Nothing goes out under your name until you say yes.</p></div>
+      <div class="b card reveal d2"><h3>Original content</h3><p>Every piece is cut from your own words on your own call. Nothing templated, nothing recycled, nothing pulled from thin air.</p></div>
+      <div class="b card reveal d3"><h3>Genuine influence</h3><p>The audience you build is really yours: your accounts, your name, people who showed up for what you actually said.</p></div>
+    </div>
+    <p class="toolsline reveal d3">Modern tools handle the tedious parts backstage, so your money goes to the craft, not the busywork.</p>
+  </div>
+</section>
+
+<!-- AUDIENCES -->
+<section id="foryou" style="padding-top:0">
+  <div class="wrap audgrid">
+
+    <div class="card profile p-you reveal">
+      <div class="banner"></div>
+      <div class="pbody">
+        <div class="pavatar">YOU</div>
+        <div class="pname">For <em>you</em></div>
+        <p class="psub">Founders, execs, coaches, creators, and professionals building a name that travels with them. Your face, your voice, your accounts. One call a month keeps you in front of the people who matter.</p>
+        <div class="tiers">
+          <div class="tier">
+            <div class="kind">One-time</div>
+            <div class="name">Try it once</div>
+            <div class="price">$499</div>
+            <ul>
+              <li>One call becomes 8 short-form videos for social platforms</li>
+              <li>Social captions written for every post</li>
+              <li>20 quote cards for organic reach, with captions and hashtags</li>
+            </ul>
+            <div class="payoff">One month of content, ready to post.</div>
+          </div>
+          <div class="tier feature">
+            <div class="badge">Commit and save</div>
+            <div class="kind">Monthly</div>
+            <div class="name">Subscribe</div>
+            <div class="price">$399<span class="per"> /mo</span></div>
+            <ul>
+              <li>The same full month, every month</li>
+              <li>One call a month; we bring the topics</li>
+              <li>A monthly report: views, leads, and where you show up in AI answers</li>
+              <li>Cancel anytime</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WHO IS BEHIND THIS -->
+<section id="about" style="padding-top:0">
+  <div class="wrap">
+    <div class="label reveal">Who's behind your content</div>
+    <h2 class="reveal">You get a team, not a tool.</h2>
+    <p class="support reveal d1">You show up for one hour a month. Here's who shows up for you.</p>
+    <div class="aboutgrid">
+      <div class="card who reveal d1">
+        <div class="banner"></div>
+        <div class="pbody">
+          <div class="pavatar">DW</div>
+          <div class="wname">Dennis Wakabayashi</div>
+          <div class="wcred">Global Voice of CX</div>
+          <p class="wbio">Customer experience is the discipline of earning trust. Dennis has advised FedEx, McDonald's, AT&amp;T, and Intuit on it, co-authored Long Live CX, hosts CX in the Wild, and is ranked number one in the world on the CX Hall of Fame. Your content clears the bar he sets for global brands.</p>
+          <a class="wlink" href="https://denniswakabayashi.com">denniswakabayashi.com</a>
+        </div>
+      </div>
+      <div class="card teamcard reveal d2">
+        <div class="bignum">45</div>
+        <div class="numlabel">humans behind your account</div>
+        <p>An editor who learns your voice. Writers who draft in it. Designers who build your cards, strategists who plan your month, and reviewers who check every piece before you see it. Your subscription buys the bench, not a freelancer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="label reveal">Every month</div>
+    <h2 class="reveal">You'll see what's working.</h2>
+    <div class="metrics">
+      <div class="metric card reveal d1"><h3>Reach &amp; engagement</h3><p>Views, follows, and the posts pulling real attention, tracked across every platform.</p></div>
+      <div class="metric card reveal d2"><h3>Leads &amp; conversations</h3><p>The inbound, replies, and calls your content starts, tied back to what you posted.</p></div>
+      <div class="metric card reveal d3"><h3>AI answer visibility</h3><p>Whether your name shows up when a buyer asks ChatGPT or Google's AI about your field.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOK -->
+<section class="book" id="book">
+  <div class="wrap">
+    <h2 class="reveal" style="color:var(--cream)">Let's make you impossible to miss.</h2>
+    <p class="support reveal d1">It starts with one call. You talk. We hand you a month of content ready to post. More influence. Less time. Still you.</p>
+    <!-- Point this href at your booking link (Calendly or contact page) -->
+    <a class="btn gold reveal d2" href="/contact/">Book a call</a>
+    <p class="endnote reveal d3">Running a brand’s content? <a href="/brands/">ClipChopper for marketing teams</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="flogo">CLIPCHOPPER</span>
+    <span>clipchopper.com &nbsp;&middot;&nbsp; &copy; 2026 ClipChopper</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add('in');});},{threshold:.15});
+  document.querySelectorAll('.reveal:not(.in)').forEach(function(el){io.observe(el);});
+})();
+</script>
+</body>
+</html>
