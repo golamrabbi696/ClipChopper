@@ -69,12 +69,21 @@ const plan = Astro.url.searchParams.get('plan') ?? '';
               </div>
               
               <div class="cc-booking-calendar__time">
-                <label for="cf-time">Preferred time *</label>
-                <select id="cf-time" name="call_time" required>
-                  <option value="" disabled selected>— Select a time —</option>
-                  <!-- Times populated by JS -->
-                </select>
-                <small class="cc-booking-calendar__hint" id="cal-tz-hint"></small>
+                <div class="time-tz-grid">
+                  <div class="time-field">
+                    <label for="cf-time">Preferred time *</label>
+                    <select id="cf-time" name="call_time" required>
+                      <option value="" disabled selected>— Select a time —</option>
+                      <!-- Times populated by JS -->
+                    </select>
+                  </div>
+                  <div class="tz-field">
+                    <label for="cf-tz-select">Timezone *</label>
+                    <select id="cf-tz-select" required>
+                      <!-- Timezones populated by JS -->
+                    </select>
+                  </div>
+                </div>
               </div>
               
               <div class="cc-booking-calendar__selected" id="cal-selected-text">Select a date above.</div>
@@ -231,20 +240,30 @@ const plan = Astro.url.searchParams.get('plan') ?? '';
 .cc-booking-calendar__time {
   margin-top: 20px;
 }
-.cc-booking-calendar__time label {
+.time-tz-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.time-tz-grid label {
   display: block;
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 8px;
   color: var(--ink);
 }
-.cc-booking-calendar__time select {
+.time-tz-grid select {
   width: 100%;
   padding: 12px 16px;
   border: 1.5px solid var(--border-2);
   border-radius: var(--r-sm);
   background: var(--card);
   color: var(--ink);
+}
+@media (max-width: 480px) {
+  .time-tz-grid {
+    grid-template-columns: 1fr;
+  }
 }
 .cc-booking-calendar__hint {
   display: block;
@@ -281,11 +300,57 @@ const plan = Astro.url.searchParams.get('plan') ?? '';
 <script>
   // Vanilla Calendar Initialization
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const tzHint = document.getElementById('cal-tz-hint');
-  if (tzHint) tzHint.textContent = `Your timezone: ${tz}`;
-  
+  const tzSelect = document.getElementById('cf-tz-select') as HTMLSelectElement;
   const tzInput = document.getElementById('cf-tz-input') as HTMLInputElement;
-  if (tzInput) tzInput.value = tz;
+
+  const popularTimezones = [
+    "UTC",
+    "America/New_York",
+    "America/Chicago",
+    "America/Denver",
+    "America/Los_Angeles",
+    "America/Phoenix",
+    "America/Anchorage",
+    "Pacific/Honolulu",
+    "Europe/London",
+    "Europe/Paris",
+    "Europe/Berlin",
+    "Europe/Moscow",
+    "Asia/Dubai",
+    "Asia/Kolkata",
+    "Asia/Dhaka",
+    "Asia/Jakarta",
+    "Asia/Singapore",
+    "Asia/Shanghai",
+    "Asia/Tokyo",
+    "Asia/Seoul",
+    "Australia/Sydney",
+    "Australia/Melbourne",
+    "Pacific/Auckland"
+  ];
+
+  if (tzSelect) {
+    const timezones = [...popularTimezones];
+    if (tz && !timezones.includes(tz)) {
+      timezones.push(tz);
+    }
+    timezones.sort();
+
+    timezones.forEach(zone => {
+      const opt = document.createElement('option');
+      opt.value = zone;
+      opt.textContent = zone.replace('_', ' ');
+      if (zone === tz) {
+        opt.selected = true;
+      }
+      tzSelect.appendChild(opt);
+    });
+
+    if (tzInput) tzInput.value = tzSelect.value;
+    tzSelect.addEventListener('change', () => {
+      if (tzInput) tzInput.value = tzSelect.value;
+    });
+  }
 
   const timeSelect = document.getElementById('cf-time') as HTMLSelectElement;
   if (timeSelect) {
