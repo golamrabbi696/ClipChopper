@@ -1682,11 +1682,10 @@ import '../../styles/admin.css';
           previewContainer.innerHTML = `<span class="placeholder-text">No image uploaded</span>`;
         }
       }
-
       const darkPreviewContainer = document.getElementById('logo-dark-preview-container');
       if (darkPreviewContainer) {
         if (settings.logo_image_url_dark) {
-          darkPreviewContainer.innerHTML = `<img src="${settings.logo_image_url_dark}" alt="Dark Logo Preview" style="filter: invert(1);" />`;
+          darkPreviewContainer.innerHTML = `<img src="${settings.logo_image_url_dark}" alt="Dark Logo Preview" />`;
         } else {
           darkPreviewContainer.innerHTML = `<span class="placeholder-text">No image uploaded</span>`;
         }
