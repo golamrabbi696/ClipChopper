@@ -136,14 +136,15 @@ import '../../styles/admin.css';
                     <tr>
                       <th>Who</th>
                       <th>Email</th>
-                      <th>Scheduled Date & Time</th>
+                      <th>Scheduled Date &amp; Time</th>
                       <th>Plan</th>
                       <th>Status</th>
                       <th>Created</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody id="bookings-body">
-                    <tr><td colspan="6" class="admin-help text-center">Loading…</td></tr>
+                    <tr><td colspan="7" class="admin-help text-center">Loading…</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -156,6 +157,17 @@ import '../../styles/admin.css';
 
               <p class="admin-status" id="bookings-status" aria-live="polite"></p>
             </section>
+          </div>
+
+          <!-- Booking Details Modal -->
+          <div id="booking-modal-overlay" style="display:none; position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,0.55); backdrop-filter:blur(4px);" aria-modal="true" role="dialog" aria-label="Booking Details">
+            <div id="booking-modal" style="position:absolute; right:0; top:0; bottom:0; width:min(520px,100%); background:var(--surface,#1a1a2e); border-left:1px solid var(--border,#2e2e4a); overflow-y:auto; display:flex; flex-direction:column;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:24px 28px 20px; border-bottom:1px solid var(--border,#2e2e4a);">
+                <h3 style="margin:0; font-size:1.1rem; color:var(--gold,#c9a84c);">Booking Details</h3>
+                <button id="booking-modal-close" type="button" aria-label="Close" style="background:none; border:none; cursor:pointer; color:var(--text-muted,#888); font-size:1.4rem; line-height:1; padding:4px 8px;">&times;</button>
+              </div>
+              <div id="booking-modal-body" style="padding:28px; flex:1; display:flex; flex-direction:column; gap:20px;"></div>
+            </div>
           </div>
 
           <!-- TAB 2: Leads Panel -->
@@ -1307,7 +1319,7 @@ import '../../styles/admin.css';
       state.bookings.total = payload.total || 0;
 
       if (state.bookings.rows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="admin-help text-center">No bookings found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="admin-help text-center">No bookings found.</td></tr>`;
       } else {
         tbody.innerHTML = state.bookings.rows.map(b => {
           const lead = b.lead || {};
@@ -1327,6 +1339,9 @@ import '../../styles/admin.css';
                 </select>
               </td>
               <td>${fmtDate(b.created_at)}</td>
+              <td>
+                <button class="btn btn-ghost booking-detail-btn" data-booking-id="${b.id}" type="button" style="font-size:0.78rem; padding:5px 12px; white-space:nowrap;">View Details</button>
+              </td>
             </tr>
           `;
         }).join('');
@@ -1346,6 +1361,16 @@ import '../../styles/admin.css';
             } catch (err: any) {
               showStatus(err.message || 'Failed to update.', 'bookings-status', true);
             }
+          });
+        });
+
+        // Bind detail buttons
+        document.querySelectorAll('.booking-detail-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const bid = (btn as HTMLElement).getAttribute('data-booking-id');
+            const b = state.bookings.rows.find((r: any) => String(r.id) === bid);
+            if (!b) return;
+            openBookingModal(b);
           });
         });
       }
@@ -1650,6 +1675,110 @@ import '../../styles/admin.css';
       console.error('Failed to load profile data.', err);
     }
   }
+
+  // ── Booking Details Modal ────────────────────────────────────────────
+  function openBookingModal(b: any) {
+    const overlay = document.getElementById('booking-modal-overlay');
+    const body = document.getElementById('booking-modal-body');
+    if (!overlay || !body) return;
+
+    const lead = b.lead || {};
+    const tz = b.call_timezone || '—';
+    const scheduledAt = b.call_scheduled_at ? formatDateTime(new Date(b.call_scheduled_at), true) : '—';
+
+    const statusColors: Record<string, string> = {
+      pending: '#e6b800',
+      confirmed: '#22c55e',
+      completed: '#6366f1',
+      cancelled: '#ef4444',
+    };
+    const statusColor = statusColors[b.status] || '#888';
+
+    const field = (label: string, value: string, multiline = false) => {
+      if (!value || value === '—') return '';
+      return `
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <span style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted,#888); font-weight:600;">${label}</span>
+          <span style="${multiline ? 'white-space:pre-wrap; line-height:1.6;' : ''} color:var(--text,#eee); font-size:0.92rem;">${value}</span>
+        </div>`;
+    };
+
+    body.innerHTML = `
+      <div style="display:flex; align-items:center; gap:12px; padding-bottom:16px; border-bottom:1px solid var(--border,#2e2e4a);">
+        <div style="width:44px;height:44px;border-radius:50%;background:var(--gold,#c9a84c);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:#1a1a2e;flex-shrink:0;">
+          ${(lead.name || '?').charAt(0).toUpperCase()}
+        </div>
+        <div>
+          <div style="font-size:1rem;font-weight:700;color:var(--text,#eee);">${lead.name || '—'}</div>
+          <div style="font-size:0.83rem;color:var(--text-muted,#888);">${lead.email || ''}</div>
+        </div>
+        <span style="margin-left:auto;padding:4px 12px;border-radius:20px;font-size:0.78rem;font-weight:700;background:${statusColor}22;color:${statusColor};border:1px solid ${statusColor}55;text-transform:capitalize;">${b.status || '—'}</span>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        ${field('Plan', b.plan || '—')}
+        ${field('Company', lead.company || '—')}
+        ${field('Scheduled At', scheduledAt)}
+        ${field('Timezone', tz)}
+        ${field('Booking ID', String(b.id))}
+        ${field('Created', fmtDate(b.created_at))}
+      </div>
+
+      ${lead.message ? `
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <span style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted,#888); font-weight:600;">Their Message</span>
+          <div style="background:var(--surface2,#12122a); border:1px solid var(--border,#2e2e4a); border-radius:8px; padding:14px 16px; font-size:0.88rem; line-height:1.65; color:var(--text,#eee); white-space:pre-wrap;">${lead.message}</div>
+        </div>` : ''}
+
+      ${b.notes ? `
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <span style="font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted,#888); font-weight:600;">Admin Notes</span>
+          <div style="background:var(--surface2,#12122a); border:1px solid var(--gold,#c9a84c)44; border-radius:8px; padding:14px 16px; font-size:0.88rem; line-height:1.65; color:var(--text,#eee); white-space:pre-wrap;">${b.notes}</div>
+        </div>` : ''}
+
+      <div style="margin-top:auto; padding-top:16px; border-top:1px solid var(--border,#2e2e4a); display:flex; gap:10px;">
+        <select id="modal-status-select" class="admin-select" style="flex:1;">
+          <option value="pending" ${b.status === 'pending' ? 'selected' : ''}>Pending</option>
+          <option value="confirmed" ${b.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+          <option value="completed" ${b.status === 'completed' ? 'selected' : ''}>Completed</option>
+          <option value="cancelled" ${b.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+        </select>
+        <button class="btn btn-primary" id="modal-save-status" data-id="${b.id}" type="button" style="white-space:nowrap;">Save Status</button>
+      </div>
+      <p class="admin-status" id="modal-status-msg" aria-live="polite" style="margin:0;"></p>
+    `;
+
+    // Wire Save Status inside modal
+    document.getElementById('modal-save-status')?.addEventListener('click', async () => {
+      const newStatus = (document.getElementById('modal-status-select') as HTMLSelectElement).value;
+      const id = b.id;
+      try {
+        await api(`/api/v1/admin/bookings/${id}`, { method: 'PATCH', body: { status: newStatus } });
+        showStatus('✓ Status updated.', 'modal-status-msg');
+        loadBookings(state.bookings.page);
+      } catch (err: any) {
+        showStatus(err.message || 'Failed to update.', 'modal-status-msg', true);
+      }
+    });
+
+    overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeBookingModal() {
+    const overlay = document.getElementById('booking-modal-overlay');
+    if (overlay) overlay.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  // Wire modal close — done once
+  document.getElementById('booking-modal-close')?.addEventListener('click', closeBookingModal);
+  document.getElementById('booking-modal-overlay')?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).id === 'booking-modal-overlay') closeBookingModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeBookingModal();
+  });
 
   function updateStats() {
     const showing = state.bookings.rows?.length || 0;
