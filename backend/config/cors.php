@@ -27,8 +27,9 @@ return [
     ],
 
     'allowed_origins_patterns' => [
-        '#^https://.*\.clipchopper\.com$#',
-        '#^https://.*\.trycloudflare\.com$#',
+        '#^https?://.*\.clipchopper\.com$#',
+        '#^https?://.*\.trycloudflare\.com$#',
+        '#^https?://localhost(:\d+)?$#',
     ],
 
     'allowed_headers' => ['*'],

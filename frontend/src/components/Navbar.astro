@@ -139,36 +139,79 @@ header.scrolled { box-shadow: var(--shadow); }
   window.addEventListener('scroll', () => {
     document.querySelector('header')!.classList.toggle('scrolled', window.scrollY > 8);
   }, { passive: true });
-
   // Dynamic Logo Loader
+  const LOGO_CACHE_KEY = 'cc_logo_settings';
+  const LOGO_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+  function applyLogoSettings(settings: any) {
+    const logomark = document.getElementById('site-logomark');
+    const logotype = document.getElementById('site-logotype');
+    const logoLink = document.getElementById('site-logo-link');
+
+    if (settings.logo_type === 'image' && settings.logo_image_url) {
+      if (logoLink) {
+        const img = document.createElement('img');
+        img.src = settings.logo_image_url;
+        img.alt = settings.logo_text_type || 'ClipChopper';
+        img.className = 'logo-img';
+        img.style.cssText = 'height:36px;max-width:180px;object-fit:contain;';
+        img.onerror = () => {
+          // Image failed — fall back to text
+          logoLink.innerHTML = '';
+          const mk = document.createElement('span');
+          mk.className = 'logomark';
+          mk.id = 'site-logomark';
+          mk.setAttribute('aria-hidden', 'true');
+          mk.textContent = settings.logo_text_mark || 'CC';
+          const lt = document.createElement('span');
+          lt.className = 'logotype';
+          lt.id = 'site-logotype';
+          lt.textContent = settings.logo_text_type || 'CLIPCHOPPER';
+          logoLink.appendChild(mk);
+          logoLink.appendChild(lt);
+        };
+        logoLink.innerHTML = '';
+        logoLink.appendChild(img);
+      }
+    } else {
+      if (logomark) logomark.textContent = settings.logo_text_mark || 'CC';
+      if (logotype) logotype.textContent = settings.logo_text_type || 'CLIPCHOPPER';
+    }
+  }
+
   async function applyNavbarLogo() {
     const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://127.0.0.1:8000'
-      : '';
+      : 'https://api.clipchopper.com';
+
+    // Apply cached value immediately to avoid flash
+    try {
+      const cached = localStorage.getItem(LOGO_CACHE_KEY);
+      if (cached) {
+        const { ts, data } = JSON.parse(cached);
+        if (Date.now() - ts < LOGO_CACHE_TTL) {
+          applyLogoSettings(data);
+        }
+      }
+    } catch {}
 
     try {
       const res = await fetch(`${API_BASE}/api/v1/settings`, { cache: 'no-store' });
       if (!res.ok) return;
       const settings = await res.json();
-      const logomark = document.getElementById('site-logomark');
-      const logotype = document.getElementById('site-logotype');
-      const logoLink = document.getElementById('site-logo-link');
-
-      if (settings.logo_type === 'image' && settings.logo_image_url) {
-        if (logoLink) {
-          logoLink.innerHTML = `<img src="${settings.logo_image_url}" alt="${settings.logo_text_type || 'ClipChopper'}" class="logo-img" style="height: 36px; max-width: 180px; object-fit: contain;" />`;
-        }
-      } else {
-        if (logomark) logomark.textContent = settings.logo_text_mark || 'CC';
-        if (logotype) logotype.textContent = settings.logo_text_type || 'CLIPCHOPPER';
-      }
+      localStorage.setItem(LOGO_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: settings }));
+      applyLogoSettings(settings);
     } catch (err) {
       console.error('Failed to load site branding settings', err);
+      // CORS or network failure — cached version already applied above
     }
   }
 
   applyNavbarLogo();
 
   // Re-apply if admin updates logo from dashboard in same tab
-  window.addEventListener('cc-logo-updated', applyNavbarLogo);
+  window.addEventListener('cc-logo-updated', () => {
+    localStorage.removeItem(LOGO_CACHE_KEY);
+    applyNavbarLogo();
+  });
 </script>
