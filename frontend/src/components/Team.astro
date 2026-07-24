@@ -44,13 +44,54 @@ const metrics = [
     <div class="label reveal" data-cms-key="homepage_metrics_label">Every month</div>
     <h2 class="reveal d1" data-cms-key="homepage_metrics_title">You'll see what's working.</h2>
     <div class="metrics-grid">
-      {metrics.map((m, i) => (
-        <div class={`card metric-card reveal d${i + 2}`}>
-          <div class="metric-icon" aria-hidden="true">📊</div>
-          <h3 data-cms-key={`homepage_metric${i+1}_title`}>{m.h}</h3>
-          <p data-cms-key={`homepage_metric${i+1}_body`}>{m.p}</p>
+
+      <!-- Reach & engagement -->
+      <div class="card metric-card reveal d2">
+        <div class="metric-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="48" height="48" rx="14" fill="#C9A84C" fill-opacity="0.12"/>
+            <path d="M10 34 L20 22 L27 29 L38 14" stroke="#C9A84C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M31 14 H38 V21" stroke="#C9A84C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="20" cy="22" r="2.5" fill="#C9A84C"/>
+            <circle cx="27" cy="29" r="2.5" fill="#C9A84C"/>
+            <circle cx="38" cy="14" r="2.5" fill="#C9A84C"/>
+          </svg>
         </div>
-      ))}
+        <h3 data-cms-key="homepage_metric1_title">Reach &amp; engagement</h3>
+        <p data-cms-key="homepage_metric1_body">Views, follows, and the posts pulling real attention, tracked across every platform.</p>
+      </div>
+
+      <!-- Leads & conversations -->
+      <div class="card metric-card reveal d3">
+        <div class="metric-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="48" height="48" rx="14" fill="#C9A84C" fill-opacity="0.12"/>
+            <path d="M14 16 H34 A3 3 0 0 1 37 19 V29 A3 3 0 0 1 34 32 H26 L20 37 V32 H14 A3 3 0 0 1 11 29 V19 A3 3 0 0 1 14 16 Z" stroke="#C9A84C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="19" cy="24" r="1.8" fill="#C9A84C"/>
+            <circle cx="24" cy="24" r="1.8" fill="#C9A84C"/>
+            <circle cx="29" cy="24" r="1.8" fill="#C9A84C"/>
+          </svg>
+        </div>
+        <h3 data-cms-key="homepage_metric2_title">Leads &amp; conversations</h3>
+        <p data-cms-key="homepage_metric2_body">The inbound, replies, and calls your content starts, tied back to what you posted.</p>
+      </div>
+
+      <!-- AI answer visibility -->
+      <div class="card metric-card reveal d4">
+        <div class="metric-icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="48" height="48" rx="14" fill="#C9A84C" fill-opacity="0.12"/>
+            <!-- brain outline -->
+            <path d="M24 12 C20 12 17 15 17 19 C14 19 12 21 12 24 C12 27 14 29 17 29 C17 31 18.5 33 20 34 L24 36 L28 34 C29.5 33 31 31 31 29 C34 29 36 27 36 24 C36 21 34 19 31 19 C31 15 28 12 24 12 Z" stroke="#C9A84C" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="24" y1="12" x2="24" y2="36" stroke="#C9A84C" stroke-width="2" stroke-dasharray="2 2.5"/>
+            <!-- sparkle top-right -->
+            <path d="M35 10 L36 13 L39 14 L36 15 L35 18 L34 15 L31 14 L34 13 Z" fill="#C9A84C"/>
+          </svg>
+        </div>
+        <h3 data-cms-key="homepage_metric3_title">AI answer visibility</h3>
+        <p data-cms-key="homepage_metric3_body">Whether your name shows up when a buyer asks ChatGPT or Google's AI about your field.</p>
+      </div>
+
     </div>
   </div>
 </section>
@@ -142,7 +183,17 @@ const metrics = [
   margin-top: 36px;
 }
 .metric-card { padding: 28px 24px; }
-.metric-icon { font-size: 24px; margin-bottom: 12px; }
+.metric-icon {
+  width: 52px;
+  height: 52px;
+  margin-bottom: 18px;
+  flex-shrink: 0;
+}
+.metric-icon svg {
+  width: 52px;
+  height: 52px;
+  display: block;
+}
 .metric-card h3 { color: var(--gold-dk); margin-bottom: 8px; }
 .metric-card p { font-size: .92rem; }
 
