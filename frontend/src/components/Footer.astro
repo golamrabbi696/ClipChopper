@@ -13,8 +13,7 @@ const contactLink = isBrandsPage ? '/brands/contact' : '/contact';
 <footer>
   <div class="wrap footer-inner">
     <div class="footer-brand" id="site-footer-link">
-      <div class="f-logomark" id="footer-logomark" aria-hidden="true">CC</div>
-      <span class="f-logotype" id="footer-logotype">CLIPCHOPPER</span>
+      <img id="footer-logo-img" src="/images/logo.png" alt="ClipChopper" style="height:28px;max-width:140px;object-fit:contain;display:block;" />
     </div>
     <nav class="footer-nav" aria-label="Footer navigation">
       <a href={toggleLink}>{toggleText}</a>
@@ -80,76 +79,35 @@ footer {
 </style>
 
 <script>
-  // Dynamic Footer Logo Loader
+  // Footer logo: swap src from localStorage on load (no flash)
   const LOGO_CACHE_KEY = 'cc_logo_settings';
-  const LOGO_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
-
-  function applyFooterLogoSettings(settings: any) {
-    const logomark = document.getElementById('footer-logomark');
-    const logotype = document.getElementById('footer-logotype');
-    const brandLink = document.getElementById('site-footer-link');
-
-    if (settings.logo_type === 'image' && settings.logo_image_url) {
-      if (brandLink) {
-        const img = document.createElement('img');
-        img.src = settings.logo_image_url;
-        img.alt = settings.logo_text_type || 'ClipChopper';
-        img.style.cssText = 'height:28px;max-width:140px;object-fit:contain;';
-        img.onerror = () => {
-          brandLink.innerHTML = '';
-          const mk = document.createElement('div');
-          mk.className = 'f-logomark';
-          mk.id = 'footer-logomark';
-          mk.setAttribute('aria-hidden', 'true');
-          mk.textContent = settings.logo_text_mark || 'CC';
-          const lt = document.createElement('span');
-          lt.className = 'f-logotype';
-          lt.id = 'footer-logotype';
-          lt.textContent = settings.logo_text_type || 'CLIPCHOPPER';
-          brandLink.appendChild(mk);
-          brandLink.appendChild(lt);
-        };
-        brandLink.innerHTML = '';
-        brandLink.appendChild(img);
+  try {
+    const cached = localStorage.getItem(LOGO_CACHE_KEY);
+    if (cached) {
+      const { data } = JSON.parse(cached);
+      const img = document.getElementById('footer-logo-img') as HTMLImageElement;
+      if (img && data?.logo_image_url) {
+        img.src = data.logo_image_url;
+        if (data.logo_text_type) img.alt = data.logo_text_type;
       }
-    } else {
-      if (logomark) logomark.textContent = settings.logo_text_mark || 'CC';
-      if (logotype) logotype.textContent = settings.logo_text_type || 'CLIPCHOPPER';
     }
-  }
+  } catch {}
 
-  async function applyFooterLogo() {
+  // When admin saves branding, update src
+  window.addEventListener('cc-logo-updated', async () => {
     const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
       ? 'http://127.0.0.1:8000'
       : 'https://api.clipchopper.com';
-
-    // Apply cached value immediately
-    try {
-      const cached = localStorage.getItem(LOGO_CACHE_KEY);
-      if (cached) {
-        const { ts, data } = JSON.parse(cached);
-        if (Date.now() - ts < LOGO_CACHE_TTL) {
-          applyFooterLogoSettings(data);
-        }
-      }
-    } catch {}
-
     try {
       const res = await fetch(`${API_BASE}/api/v1/settings`, { cache: 'no-store' });
       if (!res.ok) return;
       const settings = await res.json();
       localStorage.setItem(LOGO_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: settings }));
-      applyFooterLogoSettings(settings);
-    } catch (err) {
-      console.error('Failed to load footer branding settings', err);
-    }
-  }
-
-  applyFooterLogo();
-
-  // Re-apply if admin updates logo from dashboard in same tab
-  window.addEventListener('cc-logo-updated', () => {
-    localStorage.removeItem(LOGO_CACHE_KEY);
-    applyFooterLogo();
+      const img = document.getElementById('footer-logo-img') as HTMLImageElement;
+      if (img && settings.logo_image_url) {
+        img.src = settings.logo_image_url;
+        img.alt = settings.logo_text_type || 'ClipChopper';
+      }
+    } catch {}
   });
 </script>

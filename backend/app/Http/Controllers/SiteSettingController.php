@@ -43,6 +43,13 @@ class SiteSettingController extends Controller
             // Store new file
             $path = $request->file('logo_image')->store('logos', 'public');
             $settings->logo_image_path = $path;
+
+            // Also copy to frontend public folder so static <img> tag always shows latest logo
+            $frontendLogoPath = base_path('../frontend/public/images/logo.png');
+            if (!is_dir(dirname($frontendLogoPath))) {
+                mkdir(dirname($frontendLogoPath), 0755, true);
+            }
+            copy(Storage::disk('public')->path($path), $frontendLogoPath);
         }
 
         $settings->logo_type = $validated['logo_type'];
