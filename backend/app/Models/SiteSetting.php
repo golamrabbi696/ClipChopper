@@ -11,6 +11,7 @@ class SiteSetting extends Model
         'logo_text_mark',
         'logo_text_type',
         'logo_image_path',
+        'logo_image_path_dark',
     ];
 
     public static function singleton(): self

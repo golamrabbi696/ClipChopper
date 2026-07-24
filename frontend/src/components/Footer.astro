@@ -13,7 +13,10 @@ const contactLink = isBrandsPage ? '/brands/contact' : '/contact';
 <footer>
   <div class="wrap footer-inner">
     <div class="footer-brand" id="site-footer-link">
-      <img id="footer-logo-img" src="/images/logo.png" alt="ClipChopper" style="height:28px;max-width:140px;object-fit:contain;display:block;" />
+      <picture id="footer-logo-picture">
+        <source id="footer-logo-dark-src" media="(prefers-color-scheme: dark)" srcset="/images/logo-dark.png" />
+        <img id="footer-logo-img" src="/images/logo.png" alt="ClipChopper" style="height:28px;max-width:140px;object-fit:contain;display:block;" />
+      </picture>
     </div>
     <nav class="footer-nav" aria-label="Footer navigation">
       <a href={toggleLink}>{toggleText}</a>
@@ -86,9 +89,13 @@ footer {
     if (cached) {
       const { data } = JSON.parse(cached);
       const img = document.getElementById('footer-logo-img') as HTMLImageElement;
+      const darkSrc = document.getElementById('footer-logo-dark-src') as HTMLSourceElement;
       if (img && data?.logo_image_url) {
         img.src = data.logo_image_url;
         if (data.logo_text_type) img.alt = data.logo_text_type;
+      }
+      if (darkSrc && data?.logo_image_url_dark) {
+        darkSrc.srcset = data.logo_image_url_dark;
       }
     }
   } catch {}
@@ -104,9 +111,13 @@ footer {
       const settings = await res.json();
       localStorage.setItem(LOGO_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: settings }));
       const img = document.getElementById('footer-logo-img') as HTMLImageElement;
+      const darkSrc = document.getElementById('footer-logo-dark-src') as HTMLSourceElement;
       if (img && settings.logo_image_url) {
         img.src = settings.logo_image_url;
         img.alt = settings.logo_text_type || 'ClipChopper';
+      }
+      if (darkSrc && settings.logo_image_url_dark) {
+        darkSrc.srcset = settings.logo_image_url_dark;
       }
     } catch {}
   });

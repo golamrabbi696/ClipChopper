@@ -13,7 +13,10 @@ const contactLink = isBrandsPage ? '/brands/contact' : '/contact';
 <header id="top">
   <div class="wrap navbar">
     <a class="logo" href="/" id="site-logo-link">
-      <img id="site-logo-img" src="/images/logo.png" alt="ClipChopper" class="logo-img" style="height:36px;max-width:180px;object-fit:contain;display:block;" />
+      <picture id="site-logo-picture">
+        <source id="site-logo-dark-src" media="(prefers-color-scheme: dark)" srcset="/images/logo-dark.png" />
+        <img id="site-logo-img" src="/images/logo.png" alt="ClipChopper" class="logo-img" style="height:36px;max-width:180px;object-fit:contain;display:block;" />
+      </picture>
     </a>
     <nav class="navlinks" aria-label="Main navigation">
       <a href={toggleLink}>{toggleText}</a>
@@ -138,16 +141,20 @@ header.scrolled { box-shadow: var(--shadow); }
   window.addEventListener('scroll', () => {
     document.querySelector('header')!.classList.toggle('scrolled', window.scrollY > 8);
   }, { passive: true });
-  // Logo: apply any admin-saved override from localStorage (no flash — same img element, just src swap)
+  // Logo: apply any admin-saved override from localStorage (no flash — same elements, just src swap)
   const LOGO_CACHE_KEY = 'cc_logo_settings';
   try {
     const cached = localStorage.getItem(LOGO_CACHE_KEY);
     if (cached) {
       const { data } = JSON.parse(cached);
       const img = document.getElementById('site-logo-img') as HTMLImageElement;
+      const darkSrc = document.getElementById('site-logo-dark-src') as HTMLSourceElement;
       if (img && data?.logo_image_url) {
         img.src = data.logo_image_url;
         if (data.logo_text_type) img.alt = data.logo_text_type;
+      }
+      if (darkSrc && data?.logo_image_url_dark) {
+        darkSrc.srcset = data.logo_image_url_dark;
       }
     }
   } catch {}
@@ -163,9 +170,13 @@ header.scrolled { box-shadow: var(--shadow); }
       const settings = await res.json();
       localStorage.setItem(LOGO_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: settings }));
       const img = document.getElementById('site-logo-img') as HTMLImageElement;
+      const darkSrc = document.getElementById('site-logo-dark-src') as HTMLSourceElement;
       if (img && settings.logo_image_url) {
         img.src = settings.logo_image_url;
         img.alt = settings.logo_text_type || 'ClipChopper';
+      }
+      if (darkSrc && settings.logo_image_url_dark) {
+        darkSrc.srcset = settings.logo_image_url_dark;
       }
     } catch {}
   });

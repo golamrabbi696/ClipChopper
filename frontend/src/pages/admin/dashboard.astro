@@ -416,16 +416,47 @@ import '../../styles/admin.css';
 
                 <!-- Image Logo Options -->
                 <div id="branding-image-options" class="branding-options-group hidden">
-                  <div class="field">
-                    <label for="brand-logo-image">Upload Logo Image (PNG, SVG, JPG - Max 2MB)</label>
-                    <input id="brand-logo-image" name="logo_image" type="file" accept="image/*" />
-                  </div>
-                  <div class="field">
-                    <label>Current Logo Preview</label>
-                    <div class="logo-preview-box" id="logo-preview-container">
-                      <span class="placeholder-text">No image uploaded</span>
+
+                  <!-- Light Mode Logo -->
+                  <div class="logo-upload-pair">
+                    <div class="logo-upload-block">
+                      <div class="logo-upload-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                        Light Mode Logo
+                      </div>
+                      <p class="admin-help" style="margin-bottom:10px;">Shown on white/light backgrounds (desktop, light theme).</p>
+                      <div class="field">
+                        <label for="brand-logo-image">Upload Light Logo (PNG, SVG – Max 2MB)</label>
+                        <input id="brand-logo-image" name="logo_image" type="file" accept="image/*" />
+                      </div>
+                      <div class="field">
+                        <label>Current Light Logo Preview</label>
+                        <div class="logo-preview-box logo-preview-light" id="logo-preview-container">
+                          <span class="placeholder-text">No image uploaded</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Dark Mode Logo -->
+                    <div class="logo-upload-block">
+                      <div class="logo-upload-label">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                        Dark Mode Logo
+                      </div>
+                      <p class="admin-help" style="margin-bottom:10px;">Shown on dark/black backgrounds (mobile dark theme, dark browser).</p>
+                      <div class="field">
+                        <label for="brand-logo-image-dark">Upload Dark Logo (PNG, SVG – Max 2MB)</label>
+                        <input id="brand-logo-image-dark" name="logo_image_dark" type="file" accept="image/*" />
+                      </div>
+                      <div class="field">
+                        <label>Current Dark Logo Preview</label>
+                        <div class="logo-preview-box logo-preview-dark" id="logo-dark-preview-container">
+                          <span class="placeholder-text">No image uploaded</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
+
                 </div>
 
                 <div class="admin-form__actions">
@@ -1075,6 +1106,43 @@ import '../../styles/admin.css';
     object-fit: contain;
   }
 
+  .logo-preview-dark {
+    background: #141829;
+    border-color: rgba(255,255,255,0.12);
+  }
+  .logo-preview-dark .placeholder-text {
+    color: rgba(255,255,255,0.35);
+  }
+
+  .logo-upload-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 8px;
+  }
+
+  .logo-upload-block {
+    border: 1px solid rgba(20,24,41,0.1);
+    border-radius: 12px;
+    padding: 18px;
+  }
+
+  .logo-upload-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+
+  @media (max-width: 700px) {
+    .logo-upload-pair { grid-template-columns: 1fr; }
+  }
+
   .placeholder-text {
     font-size: 13px;
     color: var(--faint);
@@ -1609,9 +1677,18 @@ import '../../styles/admin.css';
 
       if (previewContainer) {
         if (settings.logo_image_url) {
-          previewContainer.innerHTML = `<img src="${settings.logo_image_url}" alt="Logo Preview" />`;
+          previewContainer.innerHTML = `<img src="${settings.logo_image_url}" alt="Light Logo Preview" />`;
         } else {
           previewContainer.innerHTML = `<span class="placeholder-text">No image uploaded</span>`;
+        }
+      }
+
+      const darkPreviewContainer = document.getElementById('logo-dark-preview-container');
+      if (darkPreviewContainer) {
+        if (settings.logo_image_url_dark) {
+          darkPreviewContainer.innerHTML = `<img src="${settings.logo_image_url_dark}" alt="Dark Logo Preview" style="filter: invert(1);" />`;
+        } else {
+          darkPreviewContainer.innerHTML = `<span class="placeholder-text">No image uploaded</span>`;
         }
       }
 

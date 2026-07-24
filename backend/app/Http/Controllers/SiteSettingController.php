@@ -11,62 +11,76 @@ class SiteSettingController extends Controller
     public function index()
     {
         $settings = SiteSetting::singleton();
-        
-        // If there's an image path, return the full asset URL
-        $data = $settings->toArray();
-        if ($settings->logo_image_path) {
-            $data['logo_image_url'] = asset('storage/' . $settings->logo_image_path);
-        } else {
-            $data['logo_image_url'] = null;
-        }
-
+        $data = $this->buildResponse($settings);
         return response()->json($data);
     }
 
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'logo_type'       => 'required|in:text,image',
-            'logo_text_mark'  => 'nullable|string|max:10',
-            'logo_text_type'  => 'nullable|string|max:50',
-            'logo_image'      => 'nullable|image|max:2048', // max 2MB
+            'logo_type'            => 'required|in:text,image',
+            'logo_text_mark'       => 'nullable|string|max:10',
+            'logo_text_type'       => 'nullable|string|max:50',
+            'logo_image'           => 'nullable|image|max:2048',
+            'logo_image_dark'      => 'nullable|image|max:2048',
         ]);
 
         $settings = SiteSetting::singleton();
 
-        // Handle image upload
+        // Handle light logo upload
         if ($request->hasFile('logo_image')) {
-            // Delete old file if exists
             if ($settings->logo_image_path) {
                 Storage::disk('public')->delete($settings->logo_image_path);
             }
-            // Store new file
             $path = $request->file('logo_image')->store('logos', 'public');
             $settings->logo_image_path = $path;
 
-            // Also copy to frontend public folder so static <img> tag always shows latest logo
-            $frontendLogoPath = base_path('../frontend/public/images/logo.png');
-            if (!is_dir(dirname($frontendLogoPath))) {
-                mkdir(dirname($frontendLogoPath), 0755, true);
-            }
-            copy(Storage::disk('public')->path($path), $frontendLogoPath);
+            // Copy to frontend public so static <img> is always current
+            $this->copyToFrontend($path, 'logo.png');
         }
 
-        $settings->logo_type = $validated['logo_type'];
-        $settings->logo_text_mark = $validated['logo_text_mark'] ?? $settings->logo_text_mark;
-        $settings->logo_text_type = $validated['logo_text_type'] ?? $settings->logo_text_type;
+        // Handle dark logo upload
+        if ($request->hasFile('logo_image_dark')) {
+            if ($settings->logo_image_path_dark) {
+                Storage::disk('public')->delete($settings->logo_image_path_dark);
+            }
+            $pathDark = $request->file('logo_image_dark')->store('logos', 'public');
+            $settings->logo_image_path_dark = $pathDark;
+
+            // Copy to frontend public
+            $this->copyToFrontend($pathDark, 'logo-dark.png');
+        }
+
+        $settings->logo_type       = $validated['logo_type'];
+        $settings->logo_text_mark  = $validated['logo_text_mark'] ?? $settings->logo_text_mark;
+        $settings->logo_text_type  = $validated['logo_text_type'] ?? $settings->logo_text_type;
         $settings->save();
 
-        $data = $settings->toArray();
-        if ($settings->logo_image_path) {
-            $data['logo_image_url'] = asset('storage/' . $settings->logo_image_path);
-        } else {
-            $data['logo_image_url'] = null;
-        }
-
         return response()->json([
-            'message' => 'Site branding settings updated successfully.',
-            'settings' => $data
+            'message'  => 'Site branding settings updated successfully.',
+            'settings' => $this->buildResponse($settings),
         ]);
+    }
+
+    private function buildResponse(SiteSetting $settings): array
+    {
+        $data = $settings->toArray();
+        $data['logo_image_url']      = $settings->logo_image_path
+            ? asset('storage/' . $settings->logo_image_path)
+            : null;
+        $data['logo_image_url_dark'] = $settings->logo_image_path_dark
+            ? asset('storage/' . $settings->logo_image_path_dark)
+            : null;
+        return $data;
+    }
+
+    private function copyToFrontend(string $storagePath, string $filename): void
+    {
+        $frontendPath = base_path('../frontend/public/images/' . $filename);
+        $dir = dirname($frontendPath);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        copy(Storage::disk('public')->path($storagePath), $frontendPath);
     }
 }
